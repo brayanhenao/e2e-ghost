@@ -1,25 +1,34 @@
-const {When, Then, BeforeStep, Given} = require('@cucumber/cucumber');
+const {When, Given, Then} = require('@cucumber/cucumber');
 const expect = require('chai').expect;
-const properties = require('../../../properties.json');
 
-BeforeStep({}, async function() {
-	this.driver.url(`http://localhost:${properties.GHOST_PORT}/ghost/#/signin`);
-	let emailElement = await this.driver.$('#ember6');
-	await emailElement.setValue(properties.EMAIL);
-	await new Promise(r => setTimeout(r, 1000));
+const LoginPage = require('./page_objects/login_page.js');
+const PostPage = require('./page_objects/post_page.js');
+const MemberPage = require('./page_objects/member_page.js');
+const PagePage = require('./page_objects/page_page.js');
 
-	let passwordElement = await this.driver.$('#ember8');
-	await passwordElement.setValue(properties.PASSWORD);
-	await new Promise(r => setTimeout(r, 1000));
+// Setup pages
+const loginPage = new LoginPage(this.driver);
+const postPage = new PostPage(this.driver);
+const pagePage = new PagePage(this.driver);
+const memberPage = new MemberPage(this.driver);
 
-	this.driver.takeScreenshot();
 
-	let submitElement = await this.driver.$('button[type="submit"]');
-	await submitElement.click();
+// Login actions
+Given('I login into ghost admin console', loginPage.EnterLoginCredentials);
 
-	return new Promise(r => setTimeout(r, 3000));
-});
+// Post actions
+When('I navigate to posts', postPage.NavigateToPosts);
 
-Given('I go to posts', async function() {
-	await this.driver.url('http://localhost:2368/posts');
-});
+When('I click the create posts button', postPage.ClickCreatePostButton);
+
+When('I fill in the title with {string}', postPage.FillInTitle);
+
+When('I fill in the content with {string}', postPage.FillInContent);
+
+When('I click the publish button', postPage.ClickPublishButton);
+
+When('I click the continue publish button', postPage.ClickPublishContinueButton);
+
+When('I click the publish now button', postPage.ClickPublishNowButton);
+
+Then('I should see the post title {string} in the list of posts', postPage.VerifyPostTitle);

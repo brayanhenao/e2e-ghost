@@ -106,11 +106,12 @@ function setup_env_npm {
     then
         echo "ghost-cli could not be found. Installing ghost-cli..."
         npm install ghost-cli@latest -g
-        ## Setup ghost url to port 4200
-        ghost config url http://localhost:4200
     else
         echo "ghost-cli is already installed"
     fi
+
+    ## Setup ghost url to port 4200
+    ghost config url http://localhost:4200
 }
 
 ### Main function
