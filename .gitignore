@@ -350,3 +350,6 @@ $RECYCLE.BIN/
 reports
 
 # End of https://www.toptal.com/developers/gitignore/api/node,macos,visualstudiocode,intellij,windows,linux
+
+**/node_modules
+.idea

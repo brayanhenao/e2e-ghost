@@ -10,17 +10,17 @@ Then('I see that the post is not liked', async function () {
 
 When('I enter email {kraken-string}', async function (email) {
 	let element = await this.driver.$('#ember6');
-	return await element.setValue(email);
+	return element.setValue(email);
 });
 
 When('I enter password {kraken-string}', async function (password) {
 	let element = await this.driver.$('#ember8');
-	return await element.setValue(password);
+	return element.setValue(password);
 });
 
 When('I click login', async function () {
 	let element = await this.driver.$('button[type="submit"]');
-	return await element.click();
+	return element.click();
 });
 
 BeforeStep({}, async function () {
@@ -29,28 +29,28 @@ BeforeStep({}, async function () {
 	let passwordElement = await this.driver.$('#ember6');
 	await passwordElement.setValue(email);
 	let submitElement = await this.driver.$('button[type="submit"]');
-	return await submitElement.click();
+	return submitElement.click();
 });
 
 When('I go to test', async function () {
 	let element = await this.driver.$(
 		'div[data-functional-selector="my-kahoot-module__662a267d-c95a-4662-8d4a-12a28b9ba169__kahoot-card_title"]'
 	);
-	return await element.click();
+	return element.click();
 });
 
 When('I click play on test', async function () {
 	let element = await this.driver.$(
 		'button[data-functional-selector="play-button"]'
 	);
-	return await element.click();
+	return element.click();
 });
 
 When('I select teach mode', async function () {
 	let element = await this.driver.$(
 		'button[data-functional-selector="play-kahoot-dialog__host-live-game"]'
 	);
-	return await element.click();
+	return element.click();
 });
 
 When('I select classic mode', async function () {
@@ -58,7 +58,7 @@ When('I select classic mode', async function () {
 	let element = await this.driver.$(
 		'button[data-functional-selector="launch-button"]'
 	);
-	return await element.click();
+	return element.click();
 });
 
 When('I send game code to user {int}', async function (userId) {
@@ -69,21 +69,20 @@ When('I send game code to user {int}', async function (userId) {
 	let codeEnd = await codeParts[1].getText();
 	let code = `${codeStart}${codeEnd}`;
 	await this.driver.writeSignal(userId, code);
-	return;
 });
 
 When('I click start', async function () {
 	let element = await this.driver.$(
 		'button[data-functional-selector="start-button"]'
 	);
-	return await element.click();
+	return element.click();
 });
 
 When('I click next', async function () {
 	let element = await this.driver.$(
 		'button[data-functional-selector="next-button"]'
 	);
-	return await element.click();
+	return element.click();
 });
 
 /* 

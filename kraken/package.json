@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "kraken": "npx kraken-node run"
   },
   "keywords": [],
-  "author": "Ocralo <ocralo@gmail.com>",
+  "author": "",
   "license": "MIT",
   "dependencies": {
+    "@cucumber/cucumber": "^8.7.0",
     "chai": "^4.3.7",
     "kraken-node": "^1.0.24"
   }
