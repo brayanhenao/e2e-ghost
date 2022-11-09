@@ -1,4 +1,5 @@
 {
-  "EMAIL": "r.escobarl@uniandes.edu.co",
-  "PASSWORD": "Uniandes123456"
+  "EMAIL": "prueba@prueba.com",
+  "PASSWORD": "Uniandes123456",
+  "GHOST_PORT": "4200"
 }

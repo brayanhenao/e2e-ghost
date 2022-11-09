@@ -10,7 +10,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@cucumber/cucumber": "^8.7.0",
+    "@cucumber/cucumber": "7.2.1",
     "chai": "^4.3.7",
     "kraken-node": "^1.0.24"
   }

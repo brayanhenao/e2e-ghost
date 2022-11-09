@@ -353,3 +353,4 @@ reports
 
 **/node_modules
 .idea
+kraken/.kraken
