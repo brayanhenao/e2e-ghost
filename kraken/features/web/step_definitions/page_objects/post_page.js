@@ -33,7 +33,7 @@ module.exports = class PostPage {
 	}
 
 	async ClickPublishContinueButton() {
-		let publishContinueElement = await this.driver.$('span=Continue, final review →');
+		let publishContinueElement = await this.driver.$('.gh-publish-cta > button');
 		await publishContinueElement.click();
 	}
 
