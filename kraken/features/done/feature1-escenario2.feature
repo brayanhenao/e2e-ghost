@@ -15,4 +15,4 @@ Feature: Create Post
     And I wait for 2 seconds
     Then I should see the post with title "Post Feature 1 Scenario 2" in the list of posts
     And I should see the post with title "Post Feature 1 Scenario 2" in the list of posts with status "Draft"
-    Then I clean up the posts
+    And I clean up the posts

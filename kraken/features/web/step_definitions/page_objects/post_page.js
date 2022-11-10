@@ -38,7 +38,7 @@ module.exports = class PostPage {
 	}
 
 	async ClickPublishNowButton() {
-		let publishNowElement = await this.driver.$('span=Publish post, right now');
+		let publishNowElement = await this.driver.$('.gh-btn.gh-btn-large.gh-btn-pulse.ember-view');
 		await publishNowElement.click();
 	}
 
@@ -75,7 +75,8 @@ module.exports = class PostPage {
 
 			await postElement.click();
 			await new Promise(r => setTimeout(r, 1000));
-			if (postStatus !== 'Draft') {
+			console.log(`Deleting post with status ${postStatus}`);
+			if (postStatus === 'Published') {
 				let editPostElement = await this.driver.$('.gh-post-list-cta.edit');
 				await editPostElement.click();
 				await new Promise(r => setTimeout(r, 1000));
@@ -94,5 +95,91 @@ module.exports = class PostPage {
 			await this.driver.url(`http://localhost:${properties.GHOST_PORT}/ghost/#/posts`);
 			await new Promise(r => setTimeout(r, 1000));
 		}
+	}
+
+	async SchedulePostForLater(date, time) {
+		let publishDateElement = await this.driver.$('.gh-publish-setting.last');
+		await publishDateElement.click();
+		await new Promise(r => setTimeout(r, 1000));
+
+		// click radio button with label "Schedule for later"
+		let scheduleForLaterElement = await this.driver.$('label=Schedule for later');
+		await scheduleForLaterElement.click();
+		await new Promise(r => setTimeout(r, 1000));
+
+		let datePickerInput = await this.driver.$('.gh-date-time-picker-date > input');
+		await datePickerInput.setValue(date);
+		await new Promise(r => setTimeout(r, 1000));
+
+		let timePickerInput = await this.driver.$('.gh-date-time-picker-time > input');
+		await timePickerInput.setValue(time);
+		await new Promise(r => setTimeout(r, 1000));
+	}
+
+	async VerifyPostTitleScheduledDate(title, date, time) {
+		let postElement = await this.driver.$$(`.ember-view.permalink.gh-list-data.gh-post-list-title`);
+		for (const element of postElement) {
+			let postTitle = await element.$('.gh-content-entry-title').getText();
+
+			let postStatusElement = await element.$('.gh-content-entry-status');
+
+			await postStatusElement.moveTo();
+			await new Promise(r => setTimeout(r, 1000));
+			let postScheduledDate = await element.$('.schedule-details').getText();
+
+			let postScheduledDateFormatted = postScheduledDate.split('on ')[1].split(' to')[0].split(' ').join('-') + ' ' + postScheduledDate.split('at ')[1].split(' (')[0];
+			let auxDate = new Date(postScheduledDateFormatted + ' UTC');
+			postScheduledDateFormatted = auxDate.toISOString().slice(0, 16).replace('T', ' ');
+			console.log(postScheduledDateFormatted);
+
+			if (postTitle === title && postScheduledDateFormatted === `${date} ${time}`) {
+				return;
+			}
+		}
+
+		throw new Error(`Post with title ${title} and date ${date} ${time} not found`);
+	}
+
+	async ClickSettingsMenu() {
+		let settingsMenuElement = await this.driver.$('.settings-menu-toggle');
+		await settingsMenuElement.click();
+	}
+
+	async ClickPostAccessComboBox() {
+		let postAccessComboBoxElement = await this.driver.$('.gh-select');
+		await postAccessComboBoxElement.click();
+	}
+
+	async SelectPostAccessOption(option) {
+		let postAccessOptionElement = await this.driver.$(`option[value="${option}"]`);
+		await postAccessOptionElement.click();
+	}
+
+	async FilterPostsAccessBy(option) {
+		let postAccessFilterElement = await this.driver.$('.gh-contentfilter-menu.gh-contentfilter-visibility');
+		await postAccessFilterElement.click();
+
+		let postAccessFilterOptionElement = await this.driver.$$(`.ember-power-select-option`).filter(async (element) => {
+			let text = await element.getText();
+			console.log(text);
+			return text === option;
+		});
+
+		console.log(postAccessFilterOptionElement);
+
+		await postAccessFilterOptionElement[0].click();
+	}
+
+	async VerifyPostTitleAccess(title, accessOption) {
+		let postElement = await this.driver.$$(`.ember-view.permalink.gh-list-data.gh-post-list-title`);
+		for (const element of postElement) {
+			let postTitle = await element.$('.gh-content-entry-title').getText();
+			let postAccess = await element.$('.gh-content-entry-access').getText();
+			if (postTitle === title && postAccess === accessOption) {
+				return;
+			}
+		}
+
+		throw new Error(`Post with title ${title} and access ${accessOption} not found`);
 	}
 };

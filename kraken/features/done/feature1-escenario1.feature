@@ -18,4 +18,4 @@ Feature: Create Post
     And I click the publish now button
     And I wait for 2 seconds
     And I navigate to posts
-    Then I should see the post title "Post Feature 1 Scenario 1" in the list of posts
+    Then I should see the post with title "Post Feature 1 Scenario 1" in the list of posts
