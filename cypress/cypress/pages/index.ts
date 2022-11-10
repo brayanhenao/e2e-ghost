@@ -3,5 +3,13 @@ import adminPage from './adminPage';
 import dashboardPage from './dashboardPage';
 import postsPage from './postsPage';
 import postsEditPage from './postsEditPage';
+import postDetailPage from './postDetailPage';
 
-export {homePage, adminPage, dashboardPage, postsPage, postsEditPage};
+export {
+	homePage,
+	adminPage,
+	dashboardPage,
+	postsPage,
+	postsEditPage,
+	postDetailPage,
+};

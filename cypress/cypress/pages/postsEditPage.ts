@@ -11,7 +11,12 @@ class postsEditPage implements BasePage {
 	private publishButton = () =>
 		this.headerOptions().find('section button').last();
 
-	private settingsButton = () => cy.get('main button').last();
+	public settingsButton = () => cy.get('main button').last();
+	public settingsMenu = () => cy.get('.settings-menu-content').first();
+
+	//TODO: add other settings if required
+	public settingsPostAccessSelect = () =>
+		this.settingsMenu().find('.form-group select').first();
 
 	private editorContainer = () => cy.get('.gh-koenig-editor-pane').first();
 
@@ -26,13 +31,30 @@ class postsEditPage implements BasePage {
 		cy.visit(this._route);
 	}
 
-	createPost(title: string, content: string, publish = false) {
+	createPost(
+		title: string,
+		content: string,
+		publish: {scheduled: boolean} | boolean = false
+	) {
 		this.titleInput().type(title);
 		this.contentInput().type(content);
 
 		if (publish) {
 			this.publishButton().click();
 			cy.wait(1000);
+			if (typeof publish == 'object') {
+				cy.get('.gh-publish-settings button').last().click();
+				cy.get('.gh-publish-settings .gh-publish-setting-form .gh-radio')
+					.last()
+					.click();
+				cy.get(
+					'.gh-publish-settings .gh-publish-setting-form .gh-date-time-picker'
+				)
+					.last()
+					.click();
+
+				cy.wait(1000);
+			}
 			cy.get('.gh-publish-cta').first().click();
 			cy.wait(1000);
 			cy.get('.gh-publish-cta button').first().click();
