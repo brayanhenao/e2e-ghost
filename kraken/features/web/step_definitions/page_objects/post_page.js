@@ -49,4 +49,50 @@ module.exports = class PostPage {
 		});
 		expect(postTitleElements.length).to.equal(1);
 	}
+
+	async VerifyPostTitleStatus(title, status) {
+		let postElement = await this.driver.$$(`.ember-view.permalink.gh-list-data.gh-post-list-title`);
+		for (const element of postElement) {
+			let postTitle = await element.$('.gh-content-entry-title').getText();
+			let postStatus = await element.$('.gh-content-entry-status').getText();
+			if (postTitle === title && postStatus === status) {
+				return;
+			}
+		}
+
+		throw new Error(`Post with title ${title} and status ${status} not found`);
+	}
+
+	async DeleteAllPosts() {
+		let postElements = await this.driver.$$(`.ember-view.permalink.gh-list-data.gh-post-list-title`).map(async (element) => {
+			let status = await element.$('.gh-content-entry-status').getText();
+			return {element, status};
+		});
+
+		for (let i = 0; i < postElements.length; i++) {
+			let postElement = postElements[i].element;
+			let postStatus = postElements[i].status;
+
+			await postElement.click();
+			await new Promise(r => setTimeout(r, 1000));
+			if (postStatus !== 'Draft') {
+				let editPostElement = await this.driver.$('.gh-post-list-cta.edit');
+				await editPostElement.click();
+				await new Promise(r => setTimeout(r, 1000));
+			}
+
+			let settingsElement = await this.driver.$('.settings-menu-toggle');
+			await settingsElement.click();
+
+			let deleteButton = await this.driver.$('.settings-menu-delete-button');
+			await deleteButton.click();
+			await new Promise(r => setTimeout(r, 1000));
+
+			let confirmDeleteElement = await this.driver.$('span=Delete');
+			await confirmDeleteElement.click();
+			await new Promise(r => setTimeout(r, 1000));
+			await this.driver.url(`http://localhost:${properties.GHOST_PORT}/ghost/#/posts`);
+			await new Promise(r => setTimeout(r, 1000));
+		}
+	}
 };

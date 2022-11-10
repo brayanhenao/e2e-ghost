@@ -1,4 +1,4 @@
-const {When, Given, Then} = require('@cucumber/cucumber');
+const {When, Given, Then, AfterAll} = require('@cucumber/cucumber');
 const expect = require('chai').expect;
 
 const LoginPage = require('./page_objects/login_page.js');
@@ -31,4 +31,8 @@ When('I click the continue publish button', postPage.ClickPublishContinueButton)
 
 When('I click the publish now button', postPage.ClickPublishNowButton);
 
-Then('I should see the post title {string} in the list of posts', postPage.VerifyPostTitle);
+Then('I should see the post with title {string} in the list of posts', postPage.VerifyPostTitle);
+
+Then('I should see the post with title {string} in the list of posts with status {string}', postPage.VerifyPostTitleStatus);
+
+Then('I clean up the posts', postPage.DeleteAllPosts);

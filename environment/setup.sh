@@ -110,8 +110,8 @@ function setup_env_npm {
         echo "ghost-cli is already installed"
     fi
 
-    ## Setup ghost url to port 4200
-    ghost config url http://localhost:4200
+    ## Setup ghost url to port 2368
+    ghost config url http://localhost:2368
 }
 
 ### Main function
