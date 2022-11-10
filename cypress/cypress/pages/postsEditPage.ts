@@ -1,6 +1,6 @@
 import {BasePage, baseUrl} from './basePage';
 class postsEditPage implements BasePage {
-	private _route = `${baseUrl}/ghost/#/editor/post`;
+	private _route = `${baseUrl}/ghost/#/tags/new`;
 
 	private headerOptions = () => cy.get('main section header').first();
 

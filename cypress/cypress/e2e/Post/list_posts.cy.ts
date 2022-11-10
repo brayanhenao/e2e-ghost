@@ -2,7 +2,7 @@ import {adminPage, postsEditPage, postsPage} from '../../pages';
 
 import {faker} from '@faker-js/faker';
 
-describe.only('list_post', () => {
+describe('list_post', () => {
 	let postTitle,
 		postTitle2,
 		postTitle3 = '';
