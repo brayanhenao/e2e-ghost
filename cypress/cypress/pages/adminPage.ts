@@ -15,6 +15,10 @@ class adminPage implements BasePage {
 		this.passwordTextField().type(password);
 		this.signInButton().click();
 	}
+
+	logout() {
+		cy.visit(this._route + '#/signout/');
+	}
 }
 
 export default new adminPage();
