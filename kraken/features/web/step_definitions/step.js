@@ -50,3 +50,22 @@ Then('I should see the post with title {string} in the list of posts with schedu
 Then('I should see the post with title {string} with access {string} in the list of posts filtered by access', postPage.VerifyPostTitleAccess);
 
 Then('I clean up the posts', postPage.DeleteAllPosts);
+
+// Page actions
+When('I navigate to pages', pagePage.NavigateToPages);
+
+When('I click the create page button', pagePage.ClickCreatePageButton);
+
+When('I fill in the page title with {string}', pagePage.FillInTitle);
+
+When('I fill in the page content with {string}', pagePage.FillInDescription);
+
+When('I click the publish page button', pagePage.ClickPublishButton);
+
+When('I click the continue publish page button', pagePage.ClickPublishContinueButton);
+
+When('I click the publish page now button', pagePage.ClickPublishNowButton);
+
+Then('I should see the page with title {string} in the list of pages',pagePage.VerifyPageTitle);
+
+Then('Then I should see the page with title {string} in the list of pages',	pagePage.VerifyPageTitleStatus);
