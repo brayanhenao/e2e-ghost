@@ -1,4 +1,5 @@
-const {When, Given, Then, BeforeAll} = require('@cucumber/cucumber');
+const rimraf = require('rimraf');
+const {When, Given, Then, BeforeAll, Before} = require('@cucumber/cucumber');
 
 const LoginPage = require('./page_objects/login_page.js');
 const PostPage = require('./page_objects/post_page.js');
@@ -7,6 +8,8 @@ const MemberPage = require('./page_objects/member_page.js');
 const PagePage = require('./page_objects/page_page.js');
 
 const GhostAdminAPI = require('../../../utils/ghost_admin_api');
+const path = require('path');
+const fs = require('fs');
 
 // Setup pages
 const loginPage = new LoginPage(this.driver);
@@ -21,9 +24,31 @@ const ghostAdminAPI = new GhostAdminAPI();
 // TearDown data in Ghost
 BeforeAll(ghostAdminAPI.TearDown);
 
+Before(async function() {
+	// Delete all screenshots
+	const screenshotDir = path.join(__dirname, '../../../screenshots');
+	// Delete all directories in the screenshot directory
+	if (fs.existsSync(screenshotDir)) {
+		rimraf.sync(screenshotDir);
+	}
+});
+
 // Common actions
-When('I take a screenshot', async function() {
-	await this.driver.saveScreenshot('./screenshot.png');
+When('I take a screenshot for Feature {string} and Scenario {string}', async function(feature, scenario) {
+	const screnshotsDir = path.join(__dirname, '../../../screenshots');
+	// check if screenshots directory exists
+	if (!fs.existsSync(screnshotsDir)) {
+		fs.mkdirSync(screnshotsDir);
+	}
+
+	// check if feature directory exists
+	const featureDir = path.join(screnshotsDir, feature);
+	if (!fs.existsSync(featureDir)) {
+		fs.mkdirSync(featureDir);
+	}
+
+	const screenshotPath = path.join(featureDir, scenario + '_' + new Date().getTime() + '.png');
+	await this.driver.saveScreenshot(screenshotPath);
 });
 
 // Login actions
@@ -52,13 +77,17 @@ When('I click the post access combo box', postPage.ClickPostAccessComboBox);
 
 When('I select the {string} option', postPage.SelectPostAccessOption);
 
-When('I filter the posts access by {string}', postPage.FilterPostsAccessBy);
+When('I filter the posts access by {string}', postPage.FilterPostsByAccess);
 
 When('I change the publish date to {string} and time to {string}', postPage.ChangePublishDateAndTime);
 
-When('I filter the posts published date by {string}', postPage.FilterPostsPublishedDateBy);
+When('I filter the posts published date by {string}', postPage.FilterPostsByPublishedDate);
+
+When('I filter the posts by status {string}', postPage.FilterPostsByStatus);
 
 Then('I should see the post with title {string} in the list of posts', postPage.VerifyPostTitle);
+
+Then('I should not see the post with title {string} in the list of posts', postPage.VerifyPostTitleNotPresent);
 
 Then('I should see the post with title {string} in the list of posts with status {string}', postPage.VerifyPostTitleStatus);
 
@@ -66,7 +95,14 @@ Then('I should see the post with title {string} in the list of posts with schedu
 
 Then('I should see the post with title {string} with access {string} in the list of posts filtered by access', postPage.VerifyPostTitleAccess);
 
-Then('I clean up the posts', postPage.DeleteAllPosts);
+Then('I should see the post with title {string} in the position {int}', postPage.VerifyPostPosition);
+
+Then('I should see the post with title {string} in the blog', postPage.VerifyPostInBlog);
+
+Then('I should not see the post with title {string} in the blog', postPage.VerifyPostNotInBlog);
+
+Then('I should have access only for {string}', postPage.VerifyPostAccessOnlyFor);
+
 
 // Page actions
 When('I navigate to pages', pagePage.NavigateToPages);
@@ -91,7 +127,7 @@ When('I fill in the date with {string}', pagePage.FillInDateForLater);
 
 When('I fill in the time with {string}', pagePage.FillInTimeForLater);
 
-Then('I should see the page with title {string} in the list of pages',pagePage.VerifyPageTitle);
+Then('I should see the page with title {string} in the list of pages', pagePage.VerifyPageTitle);
 
 Then('I should see the pages with title {string} in the list of pages with status {string}', pagePage.VerifyPageTitleStatus);
 
@@ -104,6 +140,9 @@ When('I click the filter published pages button', pagePage.ClickFilterPublishedP
 
 When('I click the filter draft pages button', pagePage.ClickFilterDrafPageButton);
 
+Then('I should see the page with title {string} in the list of pages', pagePage.VerifyPageTitle);
+
+Then('Then I should see the page with title {string} in the list of pages', pagePage.VerifyPageTitleStatus);
 
 // Tag actions
 When('I navigate to tags', tagPage.NavigateToTags);

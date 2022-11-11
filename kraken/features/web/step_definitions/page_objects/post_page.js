@@ -77,37 +77,51 @@ module.exports = class PostPage {
 	}
 
 	async ChangePublishDateAndTime(date, time) {
+		let datePickerInput = await this.driver.$('.gh-date-time-picker-date > input');
+		await datePickerInput.setValue(date);
+		await new Promise(r => setTimeout(r, 1000));
 
+		let timePickerInput = await this.driver.$('.gh-date-time-picker-time > input');
+		await timePickerInput.click();
+		await timePickerInput.clearValue();
+		await timePickerInput.setValue(time);
+		await new Promise(r => setTimeout(r, 1000));
 	}
 
-	async FilterPostsPublishedDateBy(criteria) {
-		let publishedDateFilterElement = await this.driver.$('.gh-contentfilter-menu.gh-contentfilter-date');
+	async FilterPostsByPublishedDate(criteria) {
+		let publishedDateFilterElement = await this.driver.$('.gh-contentfilter-menu.gh-contentfilter-sort');
 		await publishedDateFilterElement.click();
 
-		let publishedDateFilterOptionElement = await this.driver.$$(`.ember-power-select-option`).filter(async (element) => {
+		let publishedDateFilterOptionElements = await this.driver.$$(`.ember-power-select-option`).filter(async (element) => {
 			let text = await element.getText();
-			console.log(text);
 			return text === criteria;
 		});
 
-		console.log(publishedDateFilterOptionElement);
-
-		await publishedDateFilterOptionElement[0].click();
+		await publishedDateFilterOptionElements[0].click();
 	}
 
-	async FilterPostsAccessBy(option) {
+	async FilterPostsByAccess(option) {
 		let postAccessFilterElement = await this.driver.$('.gh-contentfilter-menu.gh-contentfilter-visibility');
 		await postAccessFilterElement.click();
 
 		let postAccessFilterOptionElement = await this.driver.$$(`.ember-power-select-option`).filter(async (element) => {
 			let text = await element.getText();
-			console.log(text);
 			return text === option;
 		});
 
-		console.log(postAccessFilterOptionElement);
-
 		await postAccessFilterOptionElement[0].click();
+	}
+
+	async FilterPostsByStatus(status) {
+		let postStatusFilterElement = await this.driver.$('.gh-contentfilter-menu.gh-contentfilter-type');
+		await postStatusFilterElement.click();
+
+		let postStatusFilterOptionElement = await this.driver.$$(`.ember-power-select-option`).filter(async (element) => {
+			let text = await element.getText();
+			return text === `${status} posts`;
+		});
+
+		await postStatusFilterOptionElement[0].click();
 	}
 
 	async VerifyPostTitleAccess(title, accessOption) {
@@ -137,7 +151,6 @@ module.exports = class PostPage {
 			let postScheduledDateFormatted = postScheduledDate.split('on ')[1].split(' to')[0].split(' ').join('-') + ' ' + postScheduledDate.split('at ')[1].split(' (')[0];
 			let auxDate = new Date(postScheduledDateFormatted + ' UTC');
 			postScheduledDateFormatted = auxDate.toISOString().slice(0, 16).replace('T', ' ');
-			console.log(postScheduledDateFormatted);
 
 			if (postTitle === title && postScheduledDateFormatted === `${date} ${time}`) {
 				return;
@@ -155,50 +168,86 @@ module.exports = class PostPage {
 		expect(postTitleElements.length).to.equal(1);
 	}
 
+	async VerifyPostTitleNotPresent(title) {
+		let postTitleElements = await this.driver.$$(`.gh-content-entry-title`).filter(async (element) => {
+			let text = await element.getText();
+			return text === title;
+		});
+		expect(postTitleElements.length).to.equal(0);
+	}
+
 	async VerifyPostTitleStatus(title, status) {
 		let postElement = await this.driver.$$(`.ember-view.permalink.gh-list-data.gh-post-list-title`);
+		let array = [];
+
 		for (const element of postElement) {
 			let postTitle = await element.$('.gh-content-entry-title').getText();
 			let postStatus = await element.$('.gh-content-entry-status').getText();
 			if (postTitle === title && postStatus === status) {
-				return;
+				array.push(element);
 			}
 		}
 
-		throw new Error(`Post with title ${title} and status ${status} not found`);
+		expect(array.length).to.equal(1);
 	}
 
-	async DeleteAllPosts() {
-		let postElements = await this.driver.$$(`.ember-view.permalink.gh-list-data.gh-post-list-title`).map(async (element) => {
-			let status = await element.$('.gh-content-entry-status').getText();
-			return {element, status};
+	async VerifyPostPosition(title, position) {
+		let postElements = await this.driver.$$(`.ember-view.permalink.gh-list-data.gh-post-list-title`);
+
+		expect(postElements.length).to.be.greaterThanOrEqual(position);
+		expect(postElements[position - 1]).to.not.be.undefined;
+
+		let postElement = postElements[position - 1];
+		let postTitle = await postElement.$('.gh-content-entry-title').getText();
+		expect(postTitle).to.equal(title);
+	}
+
+	async VerifyPostInBlog(title) {
+
+		// Go to blog
+		await this.driver.url(properties.GHOST_BASE_URL);
+		await new Promise(r => setTimeout(r, 1000));
+
+		// Verify post is in blog
+		const auxArray = [];
+
+		let postElements = await this.driver.$$(`.post-card-title`);
+		for (const element of postElements) {
+			let postTitle = await element.getText();
+			postTitle = postTitle.trimEnd().trimStart();
+			if (postTitle === title) {
+				auxArray.push(element);
+			}
+		}
+
+		expect(auxArray.length).to.equal(1);
+
+		// Open post
+		await auxArray[0].click();
+		await new Promise(r => setTimeout(r, 1000));
+
+		expect(await this.driver.getTitle()).to.equal(title);
+	}
+
+	async VerifyPostNotInBlog(title) {
+
+		// Go to blog
+		await this.driver.url(properties.GHOST_BASE_URL);
+		await new Promise(r => setTimeout(r, 1000));
+
+		// Verify post is not in blog
+		let postTitleElements = await this.driver.$$('.post-card').filter(async (element) => {
+			let text = await element.getText();
+			return text === title;
 		});
 
-		for (let i = 0; i < postElements.length; i++) {
-			let postElement = postElements[i].element;
-			let postStatus = postElements[i].status;
+		expect(postTitleElements.length).to.equal(0);
+	}
 
-			await postElement.click();
-			await new Promise(r => setTimeout(r, 1000));
-			console.log(`Deleting post with status ${postStatus}`);
-			if (postStatus === 'Published') {
-				let editPostElement = await this.driver.$('.gh-post-list-cta.edit');
-				await editPostElement.click();
-				await new Promise(r => setTimeout(r, 1000));
-			}
+	async VerifyPostAccessOnlyFor(accessOption) {
+		let postAcessBanner = await this.driver.$('.gh-post-upgrade-cta-content > h2');
+		let postAcessBannerText = await postAcessBanner.getText();
 
-			let settingsElement = await this.driver.$('.settings-menu-toggle');
-			await settingsElement.click();
-
-			let deleteButton = await this.driver.$('.settings-menu-delete-button');
-			await deleteButton.click();
-			await new Promise(r => setTimeout(r, 1000));
-
-			let confirmDeleteElement = await this.driver.$('span=Delete');
-			await confirmDeleteElement.click();
-			await new Promise(r => setTimeout(r, 1000));
-			await this.driver.url(`${properties.GHOST_BASE_URL}/ghost/#/posts`);
-			await new Promise(r => setTimeout(r, 1000));
-		}
+		expect(postAcessBannerText).to.equal(`This post is for ${accessOption} only`);
 	}
 };

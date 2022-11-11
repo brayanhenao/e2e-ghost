@@ -22,7 +22,7 @@ module.exports = class GhostAdminAPI {
 		const allTags = await api.get('tags', {
 			headers: {
 				Cookie: token,
-			}
+			},
 		});
 
 
@@ -30,7 +30,7 @@ module.exports = class GhostAdminAPI {
 			await api.delete(`tags/${allTags.data.tags[i].id}`, {
 				headers: {
 					Cookie: token,
-				}
+				},
 			});
 		}
 

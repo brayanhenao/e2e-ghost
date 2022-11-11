@@ -21,6 +21,6 @@ module.exports = class LoginPage {
 		let submitElement = await this.driver.$('button[type="submit"]');
 		await submitElement.click();
 
-		return new Promise(r => setTimeout(r, 5000));
+		return new Promise(r => setTimeout(r, 2000));
 	}
 };
