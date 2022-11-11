@@ -11,4 +11,36 @@ module.exports = class TagPage {
 	async NavigateToTags() {
 		await this.driver.url(`${properties.GHOST_BASE_URL}/ghost/#/tags`);
 	}
+
+	async ClickCreateTagsButton() {
+		let createPostElement = await this.driver.$('a[href="#/tags/new/"]');
+		await createPostElement.click();
+	}
+
+	async ClickSaveTagButton() {
+		let saveTagElement = await this.driver.$('.view-actions > button');
+		await saveTagElement.click();
+	}
+
+	async FillInTitle(title) {
+		let titleElement = await this.driver.$('#tag-name');
+		await titleElement.setValue(title);
+	}
+
+	async FillInDescription(content) {
+		let titleElement = await this.driver.$('#tag-description');
+		await titleElement.setValue(content);
+	}
+
+	async VerifyTagTitle(title) {
+		let tagTitleElements = await this.driver.$$(`.gh-tag-list-name`);
+		const arrayAux = [];
+		for (const element of tagTitleElements) {
+			let pageTitle = await element.getText();
+			if (pageTitle === title) {
+				arrayAux.push(element);
+			}
+		}
+		expect(arrayAux.length).to.equal(1);
+	}
 };

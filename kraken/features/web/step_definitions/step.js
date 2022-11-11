@@ -107,3 +107,13 @@ When('I click the filter draft pages button', pagePage.ClickFilterDrafPageButton
 
 // Tag actions
 When('I navigate to tags', tagPage.NavigateToTags);
+
+When('I click the create tag button', tagPage.ClickCreateTagsButton);
+
+When('I fill in the tag name with {string}', tagPage.FillInTitle);
+
+When('I fill in the tag description with {string}', tagPage.FillInDescription);
+
+When('I click the save tag button', tagPage.ClickSaveTagButton);
+
+Then('I should see the tag with title {string} in the list of tags', tagPage.VerifyTagTitle);
