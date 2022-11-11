@@ -66,6 +66,21 @@ Cypress.Commands.add('clearData', () => {
 		});
 	});
 
+	// clear members
+	cy.request(`${baseUrl}/ghost/api/admin/members/?limit=all`).as('members');
+	cy.get<Cypress.Response<{members: [{id: string}]}>>('@members').then(
+		($res) => {
+			const members = $res.body.members;
+			members.forEach((member) => {
+				cy.log(member.id);
+				cy.request(
+					'DELETE',
+					`${baseUrl}/ghost/api/admin/members/${member.id}/`
+				).then(() => {});
+			});
+		}
+	);
+
 	cy.log('all data cleared');
 	return adminPage.logout();
 });

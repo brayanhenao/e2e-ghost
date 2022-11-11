@@ -1,5 +1,6 @@
+import baseAdminPage from './baseAdminPage';
 import {BasePage, baseUrl} from './basePage';
-class tagsEditPage implements BasePage {
+class tagsEditPage extends baseAdminPage implements BasePage {
 	private _route = `${baseUrl}/ghost/#/tags/new`;
 
 	private headerOptions = () => cy.get('main section header').first();
@@ -26,12 +27,6 @@ class tagsEditPage implements BasePage {
 	load() {
 		cy.visit(this._route);
 	}
-
-	createTag(
-		title: string,
-		content: string,
-		publish: {scheduled: boolean} | boolean = false
-	) {}
 }
 
 export default new tagsEditPage();

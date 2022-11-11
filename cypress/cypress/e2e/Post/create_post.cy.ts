@@ -139,4 +139,46 @@ describe('create_post', () => {
 				.should('not.exist');
 		});
 	});
+	it('should create a post and change the access to paid members only', () => {
+		dashboardPage.postsOption().click();
+		cy.wait(1000);
+		const postTitle = faker.lorem.words();
+		const postContent = faker.lorem.paragraphs();
+		postsPage.newPostsButton().click();
+		cy.wait(1000);
+		postsEditPage.settingsButton().click();
+		postsEditPage.settingsPostAccessSelect().select('paid');
+		cy.wait(500);
+		postsEditPage.settingsButton().click();
+
+		postsEditPage.createPost(postTitle, postContent, true);
+		cy.wait(1000);
+
+		postsPage.load();
+
+		postsPage.publishedPostsOption().click();
+		postsPage.postListContainer().contains(postTitle).should('be.visible');
+		cy.wait(1000);
+		postsPage.draftPostsOption().click();
+		postsPage.postListContainer().contains(postTitle).should('not.exist');
+
+		cy.wait(1000);
+
+		homePage.load();
+
+		cy.wait(1000);
+
+		homePage.feedContainer().contains(postTitle).should('be.visible').click();
+
+		cy.fixture('messages').then(({paidSubscribersOnly}) => {
+			postDetailPage
+				.contentContainer()
+				.contains(paidSubscribersOnly)
+				.should('be.visible');
+			postDetailPage
+				.contentContainer()
+				.contains(postContent)
+				.should('not.exist');
+		});
+	});
 });

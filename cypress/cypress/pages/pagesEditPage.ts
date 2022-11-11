@@ -1,6 +1,6 @@
 import {BasePage, baseUrl} from './basePage';
-class postsEditPage implements BasePage {
-	private _route = `${baseUrl}/ghost/#/posts/new`;
+class pagesEditPage implements BasePage {
+	private _route = `${baseUrl}/ghost/#/editor/page`;
 
 	private headerOptions = () => cy.get('main section header').first();
 
@@ -15,7 +15,7 @@ class postsEditPage implements BasePage {
 	public settingsMenu = () => cy.get('.settings-menu-content').first();
 
 	//TODO: add other settings if required
-	public settingsPostAccessSelect = () =>
+	public settingspageAccessSelect = () =>
 		this.settingsMenu().find('.form-group select').first();
 
 	public tagInput = () => this.settingsMenu().find('#tag-input input').first();
@@ -30,7 +30,7 @@ class postsEditPage implements BasePage {
 		cy.visit(this._route);
 	}
 
-	createPost(
+	createPage(
 		title: string,
 		content: string,
 		publish: {scheduled: boolean} | boolean = false
@@ -61,4 +61,4 @@ class postsEditPage implements BasePage {
 	}
 }
 
-export default new postsEditPage();
+export default new pagesEditPage();

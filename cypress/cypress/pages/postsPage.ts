@@ -10,8 +10,12 @@ class postsPage extends baseAdminPage implements BasePage {
 
 	public selectPostStatus = () =>
 		this.actionsContainer().find('.gh-contentfilter-type').first();
-
 	public draftPostOption = () => cy.get('.ember-power-select-option').eq(1);
+
+	public selectSortDate = () =>
+		this.actionsContainer().find('.gh-contentfilter-sort');
+	public newestFirstOption = () => cy.get('.ember-power-select-option').eq(0);
+	public oldestFirstOption = () => cy.get('.ember-power-select-option').eq(1);
 
 	public postListContainer = () => cy.get('.posts-list').first();
 
