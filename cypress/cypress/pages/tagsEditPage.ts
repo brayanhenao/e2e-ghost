@@ -20,6 +20,9 @@ class tagsEditPage implements BasePage {
 
 	public saveButton = () => this.headerOptions().find('button').last();
 
+	public deleteButton = () => cy.get('.gh-btn-red').last();
+	public deleteButtonConfirm = () => cy.get('.modal-content button').last();
+
 	load() {
 		cy.visit(this._route);
 	}

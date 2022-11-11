@@ -8,6 +8,8 @@ describe('list_post', () => {
 		postTitle3 = '';
 
 	before(() => {
+		cy.clearData();
+
 		adminPage.load();
 		cy.fixture('admin').then(({user, password}) => {
 			cy.log(user, password);

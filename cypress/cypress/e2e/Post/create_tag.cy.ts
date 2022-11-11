@@ -3,6 +3,8 @@ import {adminPage, tagsPage, tagsEditPage} from '../../pages';
 import {faker} from '@faker-js/faker';
 
 describe('create_tag', () => {
+	before(cy.clearData);
+
 	beforeEach(() => {
 		adminPage.load();
 		cy.fixture('admin').then(({user, password}) => {

@@ -9,6 +9,9 @@ class tagsPage extends baseAdminPage implements BasePage {
 
 	public tagListContainer = () => cy.get('.tags-list').first();
 
+	public tagListItems = () =>
+		this.tagListContainer().find('.gh-tags-list-item');
+
 	load() {
 		cy.visit(this._route);
 	}

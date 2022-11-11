@@ -10,6 +10,8 @@ import {
 import {faker} from '@faker-js/faker';
 
 describe('create_post', () => {
+	before(cy.clearData);
+
 	beforeEach(() => {
 		adminPage.load();
 		cy.fixture('admin').then(({user, password}) => {
