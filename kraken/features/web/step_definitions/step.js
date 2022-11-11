@@ -93,7 +93,17 @@ When('I fill in the time with {string}', pagePage.FillInTimeForLater);
 
 Then('I should see the page with title {string} in the list of pages',pagePage.VerifyPageTitle);
 
+Then('I should see the pages with title {string} in the list of pages with status {string}', pagePage.VerifyPageTitleStatus);
 
-Then('I should see the pages with title {string} in the list of pages with status {string}',pagePage.VerifyPageTitleStatus);
+// List Pages
+Then('I should see {int} number of pages with status {string}.', pagePage.VerifyNumberPageWithStatus);
+
+When('I click the filter pages button', pagePage.ClickFilterPageButton);
+
+When('I click the filter published pages button', pagePage.ClickFilterPublishedPageButton);
+
+When('I click the filter draft pages button', pagePage.ClickFilterDrafPageButton);
+
+
 // Tag actions
 When('I navigate to tags', tagPage.NavigateToTags);

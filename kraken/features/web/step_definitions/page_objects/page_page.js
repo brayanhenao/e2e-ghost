@@ -49,10 +49,31 @@ module.exports = class PagePage {
 	}
 
 	async ClickScheduleForLaterButton() {
-		let rightNowElement = await this.driver.$(
+		let ScheduleForLaterElement = await this.driver.$(
 			'.gh-publish-schedule > .gh-radio:not([class*="active"])'
 		);
-		await rightNowElement.click();
+		await ScheduleForLaterElement.click();
+	}
+
+	async ClickFilterPageButton() {
+		let FilterPageElement = await this.driver.$(
+			'.gh-contentfilter-menu.gh-contentfilter-type > .gh-contentfilter-menu-trigger'
+		);
+		await FilterPageElement.click();
+	}
+
+	async ClickFilterDrafPageButton() {
+		let FilterDrafPageElement = await this.driver.$(
+			'.ember-power-select-options > .ember-power-select-option:nth-child(2)'
+		);
+		await FilterDrafPageElement.click();
+	}
+
+	async ClickFilterPublishedPageButton() {
+		let filterPublishedPageElement = await this.driver.$(
+			'.ember-power-select-options > .ember-power-select-option:nth-child(3)'
+		);
+		await filterPublishedPageElement.click();
 	}
 
 	async FillInDateForLater(date) {
@@ -99,5 +120,19 @@ module.exports = class PagePage {
 			}
 		}
 		expect(arrayAux.length).to.equal(1);
+	}
+
+	async VerifyNumberPageWithStatus(numberElements, status) {
+		let pageElements = await this.driver.$$(
+			`.ember-view.permalink.gh-list-data.gh-post-list-title`
+		);
+		const arrayAux = [];
+		for (const element of pageElements) {
+			let pageStatus = await element.$('.gh-content-entry-status').getText();
+			if (pageStatus === status) {
+				arrayAux.push(element);
+			}
+		}
+		expect(arrayAux.length).to.equal(numberElements);
 	}
 };
