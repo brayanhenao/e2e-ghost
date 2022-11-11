@@ -146,3 +146,25 @@ When('I fill in the tag description with {string}', tagPage.FillInDescription);
 When('I click the save tag button', tagPage.ClickSaveTagButton);
 
 Then('I should see the tag with title {string} in the list of tags', tagPage.VerifyTagTitle);
+
+Then('Then I should see the page with title {string} in the list of pages',	pagePage.VerifyPageTitleStatus);
+
+
+// Member actions
+When('I navigate to members', memberPage.NavigateToMembers);
+
+When('I click the create New member button', memberPage.ClickCreateNewMemberButton);
+
+When('I fill in the Name with {string}', memberPage.FillInName);
+
+When('I fill in the email with {string}', memberPage.FillInEmail);
+
+When('I fill in the Note with {string}', memberPage.FillInNote);
+
+When('I click the save button', memberPage.ClickSaveButton);
+
+When('I filter members as {string} member', memberPage.FilterMember);
+
+Then('I should see the member with email {string} in the list of members', memberPage.VerifyEmail);
+
+// Then('I clean up the posts', memberPage.DeleteAllPosts);
