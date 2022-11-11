@@ -15,6 +15,8 @@ Feature: Create Post
     And I wait for 2 seconds
     And I navigate to members
     And I wait for 2 seconds
+    And I click on filter member
+    And I wait for 2 seconds
     And I filter members as "subscribed" member
     And I wait for 2 seconds
     Then I should see the member with email "newmember@mail.com" in the list of members

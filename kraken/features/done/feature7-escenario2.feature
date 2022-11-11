@@ -17,6 +17,8 @@ Feature: Create Post
     And I wait for 2 seconds
     And I navigate to members
     And I wait for 2 seconds
+    And I click on filter member
+    And I wait for 2 seconds
     And I filter members as "unsubscribed" member
     And I wait for 2 seconds
     Then I should see the member with email "newmemberunsubscribed@mail.com" in the list of members

@@ -43,11 +43,13 @@ module.exports = class MemberPage {
 		await saveElement.click();
 	}
 
-	async FilterMember(filter) {
+	async ClickFilter(){
 		let filterElement = await this.driver.$('main section[class="view-actions"] .ember-basic-dropdown-trigger');
 		await filterElement.click();
 		let selectElement = await this.driver.$('.gh-member-actions-menu .gh-select select[class="ember-view"]');
 		await selectElement.click();
+	}
+	async FilterMemberBySubscriptionCriteria(filter) {
 		let subscribedOptionElement = await this.driver.$('.gh-member-actions-menu .gh-select select[class="ember-view"] option[value="subscribed"]');
 		await subscribedOptionElement.click();
 		if (filter === 'unsubscribed') {
