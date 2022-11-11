@@ -161,10 +161,10 @@ When('I fill in the email with {string}', memberPage.FillInEmail);
 
 When('I fill in the Note with {string}', memberPage.FillInNote);
 
+When('I set member as unsubscribed', memberPage.SetMemberAsUnsubscribed);
+
 When('I click the save button', memberPage.ClickSaveButton);
 
 When('I filter members as {string} member', memberPage.FilterMember);
 
 Then('I should see the member with email {string} in the list of members', memberPage.VerifyEmail);
-
-// Then('I clean up the posts', memberPage.DeleteAllPosts);

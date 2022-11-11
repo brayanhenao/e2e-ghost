@@ -33,6 +33,11 @@ module.exports = class MemberPage {
 		await noteElement.setValue(note);
 	}
 
+	async SetMemberAsUnsubscribed(){
+		let unsubscribedElement = await this.driver.$('.gh-main-section-content .gh-members-subscribed-checkbox .input-toggle-component');
+		await unsubscribedElement.click();
+	}
+
 	async ClickSaveButton() {
 		let saveElement = await this.driver.$('.gh-btn.gh-btn-primary.gh-btn-icon.ember-view');
 		await saveElement.click();
