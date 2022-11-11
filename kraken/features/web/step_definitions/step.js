@@ -1,17 +1,30 @@
-const {When, Given, Then, AfterAll} = require('@cucumber/cucumber');
-const expect = require('chai').expect;
+const {When, Given, Then, BeforeAll} = require('@cucumber/cucumber');
 
 const LoginPage = require('./page_objects/login_page.js');
 const PostPage = require('./page_objects/post_page.js');
+const TagPage = require('./page_objects/tag_page.js');
 const MemberPage = require('./page_objects/member_page.js');
 const PagePage = require('./page_objects/page_page.js');
+
+const GhostAdminAPI = require('../../../utils/ghost_admin_api');
 
 // Setup pages
 const loginPage = new LoginPage(this.driver);
 const postPage = new PostPage(this.driver);
+const tagPage = new TagPage(this.driver);
 const pagePage = new PagePage(this.driver);
 const memberPage = new MemberPage(this.driver);
 
+// Setup Utils
+const ghostAdminAPI = new GhostAdminAPI();
+
+// TearDown data in Ghost
+BeforeAll(ghostAdminAPI.TearDown);
+
+// Common actions
+When('I take a screenshot', async function() {
+	await this.driver.saveScreenshot('./screenshot.png');
+});
 
 // Login actions
 Given('I login into ghost admin console', loginPage.EnterLoginCredentials);
@@ -41,6 +54,10 @@ When('I select the {string} option', postPage.SelectPostAccessOption);
 
 When('I filter the posts access by {string}', postPage.FilterPostsAccessBy);
 
+When('I change the publish date to {string} and time to {string}', postPage.ChangePublishDateAndTime);
+
+When('I filter the posts published date by {string}', postPage.FilterPostsPublishedDateBy);
+
 Then('I should see the post with title {string} in the list of posts', postPage.VerifyPostTitle);
 
 Then('I should see the post with title {string} in the list of posts with status {string}', postPage.VerifyPostTitleStatus);
@@ -69,3 +86,6 @@ When('I click the publish page now button', pagePage.ClickPublishNowButton);
 Then('I should see the page with title {string} in the list of pages',pagePage.VerifyPageTitle);
 
 Then('Then I should see the page with title {string} in the list of pages',	pagePage.VerifyPageTitleStatus);
+
+// Tag actions
+When('I navigate to tags', tagPage.NavigateToTags);

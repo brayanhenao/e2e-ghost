@@ -7,9 +7,10 @@ Feature: Create Post
     And I wait for 2 seconds
     And I click the create posts button
     And I wait for 2 seconds
+    And I take a screenshot
     And I fill in the title with "Post Feature 1 Scenario 1"
-    And I wait for 2 seconds
     And I fill in the content with "Content for Post Feature 1 Scenario 1"
+    And I take a screenshot
     And I wait for 2 seconds
     And I click the publish button
     And I wait for 2 seconds
@@ -18,4 +19,5 @@ Feature: Create Post
     And I click the publish now button
     And I wait for 2 seconds
     And I navigate to posts
+    And I take a screenshot
     Then I should see the post with title "Post Feature 1 Scenario 1" in the list of posts

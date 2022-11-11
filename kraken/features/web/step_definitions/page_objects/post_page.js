@@ -9,22 +9,12 @@ module.exports = class PostPage {
 	}
 
 	async NavigateToPosts() {
-		await this.driver.url(`http://localhost:${properties.GHOST_PORT}/ghost/#/posts`);
+		await this.driver.url(`${properties.GHOST_BASE_URL}/ghost/#/posts`);
 	}
 
 	async ClickCreatePostButton() {
 		let createPostElement = await this.driver.$('a[href="#/editor/post/"]');
 		await createPostElement.click();
-	}
-
-	async FillInTitle(title) {
-		let titleElement = await this.driver.$('.gh-editor-title.ember-text-area');
-		await titleElement.setValue(title);
-	}
-
-	async FillInContent(content) {
-		let titleElement = await this.driver.$('.koenig-editor__editor.__mobiledoc-editor');
-		await titleElement.setValue(content);
 	}
 
 	async ClickPublishButton() {
@@ -40,6 +30,121 @@ module.exports = class PostPage {
 	async ClickPublishNowButton() {
 		let publishNowElement = await this.driver.$('.gh-btn.gh-btn-large.gh-btn-pulse.ember-view');
 		await publishNowElement.click();
+	}
+
+	async ClickSettingsMenu() {
+		let settingsMenuElement = await this.driver.$('.settings-menu-toggle');
+		await settingsMenuElement.click();
+	}
+
+	async ClickPostAccessComboBox() {
+		let postAccessComboBoxElement = await this.driver.$('.gh-select');
+		await postAccessComboBoxElement.click();
+	}
+
+	async FillInTitle(title) {
+		let titleElement = await this.driver.$('.gh-editor-title.ember-text-area');
+		await titleElement.setValue(title);
+	}
+
+	async FillInContent(content) {
+		let titleElement = await this.driver.$('.koenig-editor__editor.__mobiledoc-editor');
+		await titleElement.setValue(content);
+	}
+
+	async SchedulePostForLater(date, time) {
+		let publishDateElement = await this.driver.$('.gh-publish-setting.last');
+		await publishDateElement.click();
+		await new Promise(r => setTimeout(r, 1000));
+
+		// click radio button with label "Schedule for later"
+		let scheduleForLaterElement = await this.driver.$('label=Schedule for later');
+		await scheduleForLaterElement.click();
+		await new Promise(r => setTimeout(r, 1000));
+
+		let datePickerInput = await this.driver.$('.gh-date-time-picker-date > input');
+		await datePickerInput.setValue(date);
+		await new Promise(r => setTimeout(r, 1000));
+
+		let timePickerInput = await this.driver.$('.gh-date-time-picker-time > input');
+		await timePickerInput.setValue(time);
+		await new Promise(r => setTimeout(r, 1000));
+	}
+
+	async SelectPostAccessOption(option) {
+		let postAccessOptionElement = await this.driver.$(`option[value="${option}"]`);
+		await postAccessOptionElement.click();
+	}
+
+	async ChangePublishDateAndTime(date, time) {
+
+	}
+
+	async FilterPostsPublishedDateBy(criteria) {
+		let publishedDateFilterElement = await this.driver.$('.gh-contentfilter-menu.gh-contentfilter-date');
+		await publishedDateFilterElement.click();
+
+		let publishedDateFilterOptionElement = await this.driver.$$(`.ember-power-select-option`).filter(async (element) => {
+			let text = await element.getText();
+			console.log(text);
+			return text === criteria;
+		});
+
+		console.log(publishedDateFilterOptionElement);
+
+		await publishedDateFilterOptionElement[0].click();
+	}
+
+	async FilterPostsAccessBy(option) {
+		let postAccessFilterElement = await this.driver.$('.gh-contentfilter-menu.gh-contentfilter-visibility');
+		await postAccessFilterElement.click();
+
+		let postAccessFilterOptionElement = await this.driver.$$(`.ember-power-select-option`).filter(async (element) => {
+			let text = await element.getText();
+			console.log(text);
+			return text === option;
+		});
+
+		console.log(postAccessFilterOptionElement);
+
+		await postAccessFilterOptionElement[0].click();
+	}
+
+	async VerifyPostTitleAccess(title, accessOption) {
+		let postElement = await this.driver.$$(`.ember-view.permalink.gh-list-data.gh-post-list-title`);
+		for (const element of postElement) {
+			let postTitle = await element.$('.gh-content-entry-title').getText();
+			let postAccess = await element.$('.gh-content-entry-access').getText();
+			if (postTitle === title && postAccess === accessOption) {
+				return;
+			}
+		}
+
+		throw new Error(`Post with title ${title} and access ${accessOption} not found`);
+	}
+
+	async VerifyPostTitleScheduledDate(title, date, time) {
+		let postElement = await this.driver.$$(`.ember-view.permalink.gh-list-data.gh-post-list-title`);
+		for (const element of postElement) {
+			let postTitle = await element.$('.gh-content-entry-title').getText();
+
+			let postStatusElement = await element.$('.gh-content-entry-status');
+
+			await postStatusElement.moveTo();
+			await new Promise(r => setTimeout(r, 1000));
+			let postScheduledDate = await element.$('.schedule-details').getText();
+
+			let postScheduledDateFormatted = postScheduledDate.split('on ')[1].split(' to')[0].split(' ').join('-') + ' ' + postScheduledDate.split('at ')[1].split(' (')[0];
+			let auxDate = new Date(postScheduledDateFormatted + ' UTC');
+			postScheduledDateFormatted = auxDate.toISOString().slice(0, 16).replace('T', ' ');
+			console.log(postScheduledDateFormatted);
+
+			if (postTitle === title && postScheduledDateFormatted === `${date} ${time}`) {
+				return;
+			}
+		}
+
+		throw new Error(`Post with title ${title} and date ${date} ${time} not found`);
 	}
 
 	async VerifyPostTitle(title) {
@@ -92,94 +197,8 @@ module.exports = class PostPage {
 			let confirmDeleteElement = await this.driver.$('span=Delete');
 			await confirmDeleteElement.click();
 			await new Promise(r => setTimeout(r, 1000));
-			await this.driver.url(`http://localhost:${properties.GHOST_PORT}/ghost/#/posts`);
+			await this.driver.url(`${properties.GHOST_BASE_URL}/ghost/#/posts`);
 			await new Promise(r => setTimeout(r, 1000));
 		}
-	}
-
-	async SchedulePostForLater(date, time) {
-		let publishDateElement = await this.driver.$('.gh-publish-setting.last');
-		await publishDateElement.click();
-		await new Promise(r => setTimeout(r, 1000));
-
-		// click radio button with label "Schedule for later"
-		let scheduleForLaterElement = await this.driver.$('label=Schedule for later');
-		await scheduleForLaterElement.click();
-		await new Promise(r => setTimeout(r, 1000));
-
-		let datePickerInput = await this.driver.$('.gh-date-time-picker-date > input');
-		await datePickerInput.setValue(date);
-		await new Promise(r => setTimeout(r, 1000));
-
-		let timePickerInput = await this.driver.$('.gh-date-time-picker-time > input');
-		await timePickerInput.setValue(time);
-		await new Promise(r => setTimeout(r, 1000));
-	}
-
-	async VerifyPostTitleScheduledDate(title, date, time) {
-		let postElement = await this.driver.$$(`.ember-view.permalink.gh-list-data.gh-post-list-title`);
-		for (const element of postElement) {
-			let postTitle = await element.$('.gh-content-entry-title').getText();
-
-			let postStatusElement = await element.$('.gh-content-entry-status');
-
-			await postStatusElement.moveTo();
-			await new Promise(r => setTimeout(r, 1000));
-			let postScheduledDate = await element.$('.schedule-details').getText();
-
-			let postScheduledDateFormatted = postScheduledDate.split('on ')[1].split(' to')[0].split(' ').join('-') + ' ' + postScheduledDate.split('at ')[1].split(' (')[0];
-			let auxDate = new Date(postScheduledDateFormatted + ' UTC');
-			postScheduledDateFormatted = auxDate.toISOString().slice(0, 16).replace('T', ' ');
-			console.log(postScheduledDateFormatted);
-
-			if (postTitle === title && postScheduledDateFormatted === `${date} ${time}`) {
-				return;
-			}
-		}
-
-		throw new Error(`Post with title ${title} and date ${date} ${time} not found`);
-	}
-
-	async ClickSettingsMenu() {
-		let settingsMenuElement = await this.driver.$('.settings-menu-toggle');
-		await settingsMenuElement.click();
-	}
-
-	async ClickPostAccessComboBox() {
-		let postAccessComboBoxElement = await this.driver.$('.gh-select');
-		await postAccessComboBoxElement.click();
-	}
-
-	async SelectPostAccessOption(option) {
-		let postAccessOptionElement = await this.driver.$(`option[value="${option}"]`);
-		await postAccessOptionElement.click();
-	}
-
-	async FilterPostsAccessBy(option) {
-		let postAccessFilterElement = await this.driver.$('.gh-contentfilter-menu.gh-contentfilter-visibility');
-		await postAccessFilterElement.click();
-
-		let postAccessFilterOptionElement = await this.driver.$$(`.ember-power-select-option`).filter(async (element) => {
-			let text = await element.getText();
-			console.log(text);
-			return text === option;
-		});
-
-		console.log(postAccessFilterOptionElement);
-
-		await postAccessFilterOptionElement[0].click();
-	}
-
-	async VerifyPostTitleAccess(title, accessOption) {
-		let postElement = await this.driver.$$(`.ember-view.permalink.gh-list-data.gh-post-list-title`);
-		for (const element of postElement) {
-			let postTitle = await element.$('.gh-content-entry-title').getText();
-			let postAccess = await element.$('.gh-content-entry-access').getText();
-			if (postTitle === title && postAccess === accessOption) {
-				return;
-			}
-		}
-
-		throw new Error(`Post with title ${title} and access ${accessOption} not found`);
 	}
 };
