@@ -85,7 +85,14 @@ When('I click the publish page now button', pagePage.ClickPublishNowButton);
 
 Then('I should see the page with title {string} in the list of pages',pagePage.VerifyPageTitle);
 
-Then('Then I should see the page with title {string} in the list of pages',	pagePage.VerifyPageTitleStatus);
+Then('I click the Right now page button', pagePage.ClickRightNowButton);
 
+Then('I click the Schedule For Later Button button', pagePage.ClickScheduleForLaterButton);
+
+Then('I fill in the date with {string}', pagePage.FillInDateForLater);
+
+Then('I fill in the time with {string}', pagePage.FillInTimeForLater);
+
+Then('I should see the pages with title {string} in the list of pages with status {string}',pagePage.VerifyPageTitleStatus);
 // Tag actions
 When('I navigate to tags', tagPage.NavigateToTags);

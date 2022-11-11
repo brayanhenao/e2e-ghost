@@ -17,7 +17,6 @@ module.exports = class GhostAdminAPI {
 		});
 
 		const token = response.headers['set-cookie'][0].split(';')[0];
-		console.log(token);
 
 		// Delete all tags
 		const allTags = await api.get('tags', {
@@ -26,7 +25,6 @@ module.exports = class GhostAdminAPI {
 			}
 		});
 
-		console.log(allTags.data.tags);
 
 		for (let i = 0; i < allTags.data.tags.length; i++) {
 			await api.delete(`tags/${allTags.data.tags[i].id}`, {

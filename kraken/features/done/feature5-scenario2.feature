@@ -11,5 +11,6 @@ Feature: Create Page
     And I fill in the page content with "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vitae purus id purus pulvinar porta. Nulla tristique feugiat nibh at blandit. Pellentesque mattis rutrum felis, eu gravida nulla dictum eget. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."
     And I wait for 1 seconds
     And I navigate to pages
-    Then Then I should see the page with title "Post Feature 5 Scenario 2" in the list of pages
+    And I wait for 2 seconds
+    Then I should see the pages with title "Post Feature 5 Scenario 2" in the list of pages with status "Draft"
     

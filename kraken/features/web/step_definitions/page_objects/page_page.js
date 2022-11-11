@@ -9,9 +9,7 @@ module.exports = class PagePage {
 	}
 
 	async NavigateToPages() {
-		await this.driver.url(
-			`http://localhost:${properties.GHOST_PORT}/ghost/#/pages`
-		);
+		await this.driver.url(`${properties.GHOST_BASE_URL}/ghost/#/pages`);
 	}
 
 	async ClickCreatePageButton() {
@@ -43,6 +41,34 @@ module.exports = class PagePage {
 		await publishContinueElement.click();
 	}
 
+	async ClickRightNowButton() {
+		let rightNowElement = await this.driver.$(
+			'.gh-publish-setting.last > .gh-publish-setting-title'
+		);
+		await rightNowElement.click();
+	}
+
+	async ClickScheduleForLaterButton() {
+		let rightNowElement = await this.driver.$(
+			'.gh-publish-schedule > .gh-radio:not([class*="active"])'
+		);
+		await rightNowElement.click();
+	}
+
+	async FillInDateForLater(date) {
+		let dateForLaterElement = await this.driver.$(
+			'.gh-date-time-picker-date > input'
+		);
+		await dateForLaterElement.setValue(date);
+	}
+
+	async FillInTimeForLater(time) {
+		let timeForLaterElement = await this.driver.$(
+			'.gh-date-time-picker-time > input'
+		);
+		await timeForLaterElement.setValue(time);
+	}
+
 	async ClickPublishNowButton() {
 		let publishNowElement = await this.driver.$(
 			'.gh-btn.gh-btn-large.gh-btn-pulse.ember-view'
@@ -61,18 +87,17 @@ module.exports = class PagePage {
 	}
 
 	async VerifyPageTitleStatus(title, status) {
-		let pageElement = await this.driver.$$(
+		let pageElements = await this.driver.$$(
 			`.ember-view.permalink.gh-list-data.gh-post-list-title`
 		);
-
-		for (const element of pageElement) {
+		const arrayAux = [];
+		for (const element of pageElements) {
 			let pageTitle = await element.$('.gh-content-entry-title').getText();
 			let pageStatus = await element.$('.gh-content-entry-status').getText();
 			if (pageTitle === title && pageStatus === status) {
-				return;
+				arrayAux.push(element);
 			}
 		}
-
-		throw new Error(`Page with title ${title} and status ${status} not found`);
+		expect(arrayAux.length).to.equal(1);
 	}
 };
