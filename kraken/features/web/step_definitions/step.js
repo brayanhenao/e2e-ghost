@@ -1,5 +1,4 @@
-const rimraf = require('rimraf');
-const {When, Given, Then, BeforeAll, Before} = require('@cucumber/cucumber');
+const {When, Given, Then, BeforeAll} = require('@cucumber/cucumber');
 
 const LoginPage = require('./page_objects/login_page.js');
 const PostPage = require('./page_objects/post_page.js');
@@ -23,15 +22,6 @@ const ghostAdminAPI = new GhostAdminAPI();
 
 // TearDown data in Ghost
 BeforeAll(ghostAdminAPI.TearDown);
-
-Before(async function() {
-	// Delete all screenshots
-	const screenshotDir = path.join(__dirname, '../../../screenshots');
-	// Delete all directories in the screenshot directory
-	if (fs.existsSync(screenshotDir)) {
-		rimraf.sync(screenshotDir);
-	}
-});
 
 // Common actions
 When('I take a screenshot for Feature {string} and Scenario {string}', async function(feature, scenario) {

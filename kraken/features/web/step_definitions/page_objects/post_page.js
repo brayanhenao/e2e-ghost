@@ -161,26 +161,36 @@ module.exports = class PostPage {
 	}
 
 	async VerifyPostTitle(title) {
-		let postTitleElements = await this.driver.$$(`.gh-content-entry-title`).filter(async (element) => {
-			let text = await element.getText();
-			return text === title;
-		});
-		expect(postTitleElements.length).to.equal(1);
+		let postTitleElements = await this.driver.$$(`.gh-content-entry-title`);
+		let array = [];
+
+		for (const element of postTitleElements) {
+			let postTitle = await element.getText();
+			if (postTitle === title) {
+				array.push(element);
+			}
+		}
+		expect(array.length).to.equal(1);
 	}
 
 	async VerifyPostTitleNotPresent(title) {
-		let postTitleElements = await this.driver.$$(`.gh-content-entry-title`).filter(async (element) => {
-			let text = await element.getText();
-			return text === title;
-		});
-		expect(postTitleElements.length).to.equal(0);
+		let postTitleElements = await this.driver.$$(`.gh-content-entry-title`);
+		let array = [];
+
+		for (const element of postTitleElements) {
+			let postTitle = await element.getText();
+			if (postTitle === title) {
+				array.push(element);
+			}
+		}
+		expect(array.length).to.equal(0);
 	}
 
 	async VerifyPostTitleStatus(title, status) {
-		let postElement = await this.driver.$$(`.ember-view.permalink.gh-list-data.gh-post-list-title`);
+		let postElements = await this.driver.$$(`.ember-view.permalink.gh-list-data.gh-post-list-title`);
 		let array = [];
 
-		for (const element of postElement) {
+		for (const element of postElements) {
 			let postTitle = await element.$('.gh-content-entry-title').getText();
 			let postStatus = await element.$('.gh-content-entry-status').getText();
 			if (postTitle === title && postStatus === status) {

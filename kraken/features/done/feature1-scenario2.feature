@@ -13,7 +13,7 @@ Feature: Create Post
     And I take a screenshot for Feature "F1" and Scenario "SC2"
     And I wait for 2 seconds
     And I navigate to posts
-    And I take a screenshot
+    And I take a screenshot for Feature "F1" and Scenario "SC2"
     Then I should see the post with title "Post Feature 1 Scenario 2" in the list of posts
     And I should see the post with title "Post Feature 1 Scenario 2" in the list of posts with status "Draft"
     And I should not see the post with title "Post Feature 1 Scenario 2" in the blog

@@ -14,7 +14,6 @@ Feature: Create Post
     And I click the settings menu
     And I take a screenshot for Feature "F1" and Scenario "SC4"
     And I click the post access combo box
-    And I take a screenshot for Feature "F1" and Scenario "SC4"
     And I select the "members" option
     And I take a screenshot for Feature "F1" and Scenario "SC4"
     And I click the publish button

@@ -2,8 +2,7 @@ Feature: Create Post
 
   @user1 @web
   Scenario: Create a post and schedule the publish date
-    Given I tear down the data
-    And I login into ghost admin console
+    Given I login into ghost admin console
     When I navigate to posts
     And I wait for 2 seconds
     And I click the create posts button
