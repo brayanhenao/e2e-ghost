@@ -1,7 +1,7 @@
 Feature: Create Page
 
   @user1 @web
-  Scenario: Create page and publish it
+  Scenario: Create page and schedule the publish date
     Given I login into ghost admin console
     When I navigate to pages
     And I wait for 2 seconds
