@@ -194,4 +194,11 @@ When('I click the code injection setting', settingsPage.ClickCodeInjectionFeatur
 
 When('I fill in the Ghost Header with {string}', settingsPage.FillInCodeInjectionEditor);
 
+When('I fill in the Ghost Footer with {string}', settingsPage.FillInCodeInjectionEditorFooter);
+
+When('I scroll down in ghost blog', settingsPage.ScrollDown);
+
 When('I should see the ghost header with text {string}', settingsPage.CheckCustomHeader);
+
+When('I should see the ghost footer with text {string}', settingsPage.CheckCustomFooter);
+
