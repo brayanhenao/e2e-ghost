@@ -169,4 +169,8 @@ When('I click on filter member', memberPage.ClickFilter);
 
 When('I filter members as {string} member', memberPage.FilterMemberBySubscriptionCriteria);
 
+When('I filter members by name with query {string}', memberPage.FilterMemberByName);
+
 Then('I should see the member with email {string} in the list of members', memberPage.VerifyEmail);
+
+Then('I should see the member with name {string} in the list of members', memberPage.VerifyName);

@@ -60,6 +60,13 @@ module.exports = class MemberPage {
 		await applyFilterElement.click();
 	}
 
+	async FilterMemberByName(query) {
+		let inputElement = await this.driver.$('input[aria-label="Name filter"]');
+		await inputElement.setValue(query);
+		let applyFilterElement = await this.driver.$('.gh-btn.gh-btn-primary');
+		await applyFilterElement.click();
+	}
+
 	async VerifyEmail(email) {
 		let memberElement = await this.driver.$$(`.ember-view.gh-list-data`);
 		for (const element of memberElement) {
@@ -71,4 +78,16 @@ module.exports = class MemberPage {
 
 		throw new Error(`Member with email ${email} not found`);
 	}
+
+	async VerifyName(name) {
+		let memberElement = await this.driver.$$(`.ember-view.gh-list-data`);
+		for (const element of memberElement) {
+			let memberName = await element.$('.ma0.pa0.gh-members-list-name').getText();
+			if (memberName === name) {
+				return;
+			}
+		}
+		throw new Error(`Member with name ${name} not found`);
+	}
+
 };
