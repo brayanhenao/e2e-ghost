@@ -42,6 +42,17 @@ module.exports = class PostPage {
 		await postAccessComboBoxElement.click();
 	}
 
+	async FillInSelectTag(content) {
+		let selectTagElement = await this.driver.$('#tag-input');
+		await selectTagElement.click();
+		await selectTagElement.setValue(content);
+	}
+	
+	async ClickInSelectTag() {
+		let selectTagElement = await this.driver.$('.ember-power-select-options > .ember-power-select-option:first-of-type');
+		await selectTagElement.click();
+	}
+
 	async FillInTitle(title) {
 		let titleElement = await this.driver.$('.gh-editor-title.ember-text-area');
 		await titleElement.setValue(title);
