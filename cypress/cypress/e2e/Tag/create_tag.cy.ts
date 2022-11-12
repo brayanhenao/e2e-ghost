@@ -35,7 +35,7 @@ describe('create_tag', () => {
 		tagsPage.tagListContainer().contains(tagName).should('be.visible');
 	});
 
-	it.only('should create an internal tag', () => {
+	it('should count total posts', () => {
 		const tagName = faker.lorem.word();
 		const totalPosts = faker.datatype.number(5);
 

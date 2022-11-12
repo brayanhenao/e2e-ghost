@@ -50,7 +50,7 @@ describe('create_page', () => {
 			.its('status')
 			.should('equal', 404);
 	});
-	it.only('should create a page and schedule its publication', () => {
+	it('should create a page and schedule its publication', () => {
 		const title = faker.lorem.words();
 		const content = faker.lorem.paragraph();
 		pagesPage.load();

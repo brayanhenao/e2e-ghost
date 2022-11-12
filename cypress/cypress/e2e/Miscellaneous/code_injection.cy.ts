@@ -7,7 +7,7 @@ import {
 
 import {faker} from '@faker-js/faker';
 
-describe('create_post', () => {
+describe('code_injection', () => {
 	before(cy.clearData);
 
 	beforeEach(() => {
