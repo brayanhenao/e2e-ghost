@@ -9,7 +9,7 @@ module.exports = class MemberPage {
 	}
 
 	async NavigateToMembers() {
-		await this.driver.url(`http://localhost:${properties.GHOST_PORT}/ghost/#/members`);
+		await this.driver.url(`${properties.GHOST_BASE_URL}/ghost/#/members`);
 	}
 
 	async ClickCreateNewMemberButton() {
