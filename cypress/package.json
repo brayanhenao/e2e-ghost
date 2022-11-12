@@ -1,0 +1,19 @@
+{
+	"name": "cypress-ghost",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"cypress": "cypress",
+		"test": "cypress"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"cypress": "^11.0.0"
+	},
+	"devDependencies": {
+		"@faker-js/faker": "^7.6.0",
+		"typescript": "^4.8.4"
+	}
+}
