@@ -67,6 +67,15 @@ module.exports = class MemberPage {
 		await applyFilterElement.click();
 	}
 
+	async FilterMemberByEmail(query) {
+		let emailOptionElement = await this.driver.$('.gh-member-actions-menu .gh-select select[class="ember-view"] option[value="email"]');
+		await emailOptionElement.click();
+		let inputElement = await this.driver.$('input[aria-label="Email filter"]');
+		await inputElement.setValue(query);
+		let applyFilterElement = await this.driver.$('.gh-btn.gh-btn-primary');
+		await applyFilterElement.click();
+	}
+
 	async VerifyEmail(email) {
 		let memberElement = await this.driver.$$(`.ember-view.gh-list-data`);
 		for (const element of memberElement) {

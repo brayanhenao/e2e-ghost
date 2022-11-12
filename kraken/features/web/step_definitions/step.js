@@ -171,6 +171,8 @@ When('I filter members as {string} member', memberPage.FilterMemberBySubscriptio
 
 When('I filter members by name with query {string}', memberPage.FilterMemberByName);
 
+When('I filter members by email with query {string}', memberPage.FilterMemberByEmail);
+
 Then('I should see the member with email {string} in the list of members', memberPage.VerifyEmail);
 
 Then('I should see the member with name {string} in the list of members', memberPage.VerifyName);
