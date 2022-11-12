@@ -13,4 +13,4 @@ Feature: Create Post
     And I wait for 2 seconds
     And I navigate to ghost blog
     And I wait for 2 seconds
-    Then I should see the ghost header with text "CUSTOM HEADER" in the ghost header
+    Then I should see the ghost header with text "CUSTOM HEADER"

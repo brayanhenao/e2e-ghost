@@ -194,4 +194,4 @@ When('I click the code injection setting', settingsPage.ClickCodeInjectionFeatur
 
 When('I fill in the Ghost Header with {string}', settingsPage.FillInCodeInjectionEditor);
 
-When('I should see the ghost header with text {string} in the ghost header', settingsPage.CheckCustomHeader);
+When('I should see the ghost header with text {string}', settingsPage.CheckCustomHeader);
