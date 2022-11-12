@@ -78,6 +78,18 @@ module.exports = class GhostAdminAPI {
 				},
 			});
 		}
+
+		// Delete ghost header and footer for code injection
+		await api.put('settings/', {
+			settings: [
+				{key: 'codeinjection_head', value: ''},
+				{key: 'codeinjection_foot', value: ''},
+			],
+		}, {
+			headers: {
+				Cookie: token,
+			},
+		});
 	}
 };
 
