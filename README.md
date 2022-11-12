@@ -28,12 +28,12 @@ Las pruebas se desarrollaron con las herramientas Cypress y Kraken Node, para in
 
 |    Funcionalidad    	| Descripcion                                                                                                                                                                                                                         	| Código 	|
 |:-------------------:	|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|--------	|
-|      Crear Post     	| Crear un post con los campos titulo y contenido (texto plano, WYSYWIG, embebidos, archivos, etc), y su estado (borrador, publicado, publicación programada), acceso (miembros, miembros pagos, publico), asignarle tags, y metadata    	| F1     	|
-|     Listar Posts    	| Visualizar una lista de post creados y filtrarlo según estado, acceso, autores, tags y ordenarlo según la fecha                                                                                                                     	| F2     	|
+|      Crear Post     	| Crear un post con los campos título y contenido (texto plano, WYSYWIG, embebidos, archivos, etc), y su estado (borrador, publicado, publicación programada), acceso (miembros, miembros pagos, publico), asignarle tags y metadata    	| F1     	|
+|     Listar Posts    	| Visualizar una lista de posts creados y filtrarlos según estado, acceso, autores, tags y ordenarlo según la fecha                                                                                                                     	| F2     	|
 |      Crear Tag      	| Crear un tag con los campos nombre, color, imagen, slug, descripcion, metadata.                                                                                                                                                     	| F3     	|
 |     Crear Página    	| Crear una página con los campos titulo y contenido (texto plano, WYSYWIG, embebidos, archivos, etc), y su estado (borrador, publicado, publicación programada), acceso (miembros, miembros pagos, publico), asignarle tags, y metadata 	| F4     	|
 |    Listar Paginas   	| Visualizar una lista de paginas creadas y filtrarla según estado, acceso, autores, tags y ordenarlo según la fecha                                                                                                                  	| F5     	|
-|    Crear Miembro    	| Crear un miembro con los campos nombre, correo, labels, nota, y si se encuentra o no suscrito al newsletter"                                                                                                                        	| F6     	|
+|    Crear Miembro    	| Crear un miembro con los campos nombre, correo, labels, nota y si se encuentra o no suscrito al "newsletter"                                                                                                                        	| F6     	|
 |   Listar Miembros   	| Visualizar una lista de miembros creados y aplicar uno o más filtros en cualquiera de sus campos (es, contiene, empieza con, termina con)                                                                                           	| F7     	|
 | Inyección de Código 	| Inyectar código HTML5 en el inicio y final de la página                                                                                                                                                                             	| F8     	|
 
@@ -104,7 +104,7 @@ Las pruebas se desarrollaron con las herramientas Cypress y Kraken Node, para in
 
  - Ingresar al editor para crear un post
 
- - Crear un post con titulo y contenido
+ - Crear un post con título y contenido
 
  - Seleccionar publicar
  
@@ -495,7 +495,7 @@ Las pruebas se desarrollaron con las herramientas Cypress y Kraken Node, para in
 
  - Seleccionar la opción aplicar
 
- - *Verificar* que el miembro en la lista es el miembro del caul se extrajo parte del nombre
+ - *Verificar* que el miembro en la lista es el miembro del cual se extrajo parte del nombre
   
 --------------------------------------------------------
 ### Escenario 19 - (F7)
@@ -568,7 +568,7 @@ Las pruebas se desarrollaron con las herramientas Cypress y Kraken Node, para in
  
  - Seleccionar la opción guardar
 
- - Ingresar a la página principal (No admin)ç
+ - Ingresar a la página principal (No admin)
 
  - *Verificar* que la página contenga el texto
 --------------------------------------------------------
@@ -588,7 +588,7 @@ Las pruebas se desarrollaron con las herramientas Cypress y Kraken Node, para in
  
  - Seleccionar la opción guardar
 
- - Ingresar a la página principal (No admin)ç
+ - Ingresar a la página principal (No admin)
 
  - *Verificar* que la página contenga el texto
 
