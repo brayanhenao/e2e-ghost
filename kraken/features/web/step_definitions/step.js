@@ -63,6 +63,10 @@ When('I schedule post for later with date {string} and time {string}', postPage.
 
 When('I click the settings menu', postPage.ClickSettingsMenu);
 
+When('I fill the tag select with {string}', postPage.FillInSelectTag);
+
+When('I click the select tag', postPage.ClickInSelectTag);
+
 When('I click the post access combo box', postPage.ClickPostAccessComboBox);
 
 When('I select the {string} option', postPage.SelectPostAccessOption);
@@ -134,6 +138,8 @@ Then('I should see the page with title {string} in the list of pages', pagePage.
 
 Then('Then I should see the page with title {string} in the list of pages', pagePage.VerifyPageTitleStatus);
 
+Then('Then I should see the page with title {string} in the list of pages',	pagePage.VerifyPageTitleStatus);
+
 // Tag actions
 When('I navigate to tags', tagPage.NavigateToTags);
 
@@ -147,7 +153,7 @@ When('I click the save tag button', tagPage.ClickSaveTagButton);
 
 Then('I should see the tag with title {string} in the list of tags', tagPage.VerifyTagTitle);
 
-Then('Then I should see the page with title {string} in the list of pages',	pagePage.VerifyPageTitleStatus);
+Then('I should see the tag with name {string} and {int} post in the list of tags',tagPage.VerifyNumbersTagWithTitle);
 
 
 // Member actions

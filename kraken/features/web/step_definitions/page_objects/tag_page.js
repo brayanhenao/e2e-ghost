@@ -33,7 +33,7 @@ module.exports = class TagPage {
 	}
 
 	async VerifyTagTitle(title) {
-		let tagTitleElements = await this.driver.$$(`.gh-tag-list-name`);
+		let tagTitleElements = await this.driver.$$('.gh-tag-list-name');
 		const arrayAux = [];
 		for (const element of tagTitleElements) {
 			let pageTitle = await element.getText();
@@ -42,5 +42,14 @@ module.exports = class TagPage {
 			}
 		}
 		expect(arrayAux.length).to.equal(1);
+	}
+
+	async VerifyNumbersTagWithTitle(title, number) {
+		let element = await this.driver.$(
+			'.gh-list-data.gh-tag-list-posts-count > span.nowrap'
+		);
+		const stringNumber = await element.getText();
+		const textPost = number > 1 ? 'posts' : 'post';
+		expect(stringNumber).to.equal(`${number} ${textPost}`);
 	}
 };
