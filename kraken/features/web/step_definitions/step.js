@@ -5,6 +5,7 @@ const PostPage = require('./page_objects/post_page.js');
 const TagPage = require('./page_objects/tag_page.js');
 const MemberPage = require('./page_objects/member_page.js');
 const PagePage = require('./page_objects/page_page.js');
+const SettingsPage = require('./page_objects/settings_page.js');
 
 const GhostAdminAPI = require('../../../utils/ghost_admin_api');
 const path = require('path');
@@ -16,6 +17,7 @@ const postPage = new PostPage(this.driver);
 const tagPage = new TagPage(this.driver);
 const pagePage = new PagePage(this.driver);
 const memberPage = new MemberPage(this.driver);
+const settingsPage = new SettingsPage(this.driver);
 
 // Setup Utils
 const ghostAdminAPI = new GhostAdminAPI();
@@ -153,7 +155,7 @@ Then('Then I should see the page with title {string} in the list of pages',	page
 // Member actions
 When('I navigate to members', memberPage.NavigateToMembers);
 
-When('I click the create New member button', memberPage.ClickCreateNewMemberButton);
+When('I lick the create New member button', memberPage.ClickCreateNewMemberButton);
 
 When('I fill in the Name with {string}', memberPage.FillInName);
 
@@ -176,3 +178,14 @@ When('I filter members by email with query {string}', memberPage.FilterMemberByE
 Then('I should see the member with email {string} in the list of members', memberPage.VerifyEmail);
 
 Then('I should see the member with name {string} in the list of members', memberPage.VerifyName);
+
+// Code injection actions
+When('I navigate to settings', settingsPage.NavigateToSettings);
+
+When('I navigate to ghost blog', settingsPage.NavigateToGhost);
+
+When('I click the code injection setting', settingsPage.ClickCodeInjectionFeature);
+
+When('I fill in the Ghost Header with {string}', settingsPage.FillInCodeInjectionEditor);
+
+When('I should see the ghost header with text {string} in the ghost header', settingsPage.CheckCustomHeader);
