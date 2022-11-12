@@ -175,11 +175,13 @@ When('I click the save button', memberPage.ClickSaveButton);
 
 When('I click on filter member', memberPage.ClickFilter);
 
+When('I click the Add filter button', memberPage.ClickAddFilter);
+
 When('I filter members as {string} member', memberPage.FilterMemberBySubscriptionCriteria);
 
 When('I filter members by name with query {string}', memberPage.FilterMemberByName);
 
-When('I filter members by email with query {string}', memberPage.FilterMemberByEmail);
+When('I filter members by email with query {string} in position {int}', memberPage.FilterMemberByEmail);
 
 Then('I should see the member with email {string} in the list of members', memberPage.VerifyEmail);
 

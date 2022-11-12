@@ -49,6 +49,12 @@ module.exports = class MemberPage {
 		let selectElement = await this.driver.$('.gh-member-actions-menu .gh-select select[class="ember-view"]');
 		await selectElement.click();
 	}
+
+	async ClickAddFilter(){
+		let addFilterButtonElement = await this.driver.$('.gh-add-filter');
+		await addFilterButtonElement.click();
+	}
+
 	async FilterMemberBySubscriptionCriteria(filter) {
 		let subscribedOptionElement = await this.driver.$('.gh-member-actions-menu .gh-select select[class="ember-view"] option[value="subscribed"]');
 		await subscribedOptionElement.click();
@@ -69,11 +75,11 @@ module.exports = class MemberPage {
 		await applyFilterElement.click();
 	}
 
-	async FilterMemberByEmail(query) {
-		let emailOptionElement = await this.driver.$('.gh-member-actions-menu .gh-select select[class="ember-view"] option[value="email"]');
-		await emailOptionElement.click();
-		let containOptionElement = await this.driver.$('.gh-filter-block .form-group .gh-filter-inputgroup .gh-select select[class="ember-view"] option[value="contains"]');
-		await containOptionElement.click();
+	async FilterMemberByEmail(query, position) {
+		let emailOptionElement = await this.driver.$$('.gh-member-actions-menu .gh-select select[class="ember-view"] option[value="email"]');
+		await emailOptionElement[position - 1].click();
+		let containOptionElement = await this.driver.$$('.gh-filter-block .form-group .gh-filter-inputgroup .gh-select select[class="ember-view"] option[value="contains"]');
+		await containOptionElement[position - 1].click();
 		let inputElement = await this.driver.$('input[aria-label="Email filter"]');
 		await inputElement.setValue(query);
 		let applyFilterElement = await this.driver.$('.gh-btn.gh-btn-primary');

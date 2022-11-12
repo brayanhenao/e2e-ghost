@@ -1,7 +1,7 @@
 Feature: Create Post
 
   @user1 @web
-  Scenario: Create 3 members and filter them by email
+  Scenario: Create 3 members and filter them by name and email
     Given I login into ghost admin console
     When I navigate to members
     And I wait for 2 seconds
@@ -37,6 +37,12 @@ Feature: Create Post
     And I wait for 2 seconds
     And I click on filter member
     And I wait for 2 seconds
-    And I filter members by email with query "b@mail" in position 1
+    And I filter members by name with query "Member"
     And I wait for 2 seconds
+    And I click on filter member
+    And I wait for 2 seconds
+    And I click the Add filter button
+    And I wait for 2 seconds
+    And I filter members by email with query "b@" in position 2
+    And I wait for 10 seconds
     Then I should see the member with email "memberb@mail.com" in the list of members
