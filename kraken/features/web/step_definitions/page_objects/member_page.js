@@ -61,6 +61,8 @@ module.exports = class MemberPage {
 	}
 
 	async FilterMemberByName(query) {
+		let containOptionElement = await this.driver.$('.gh-filter-block .form-group .gh-filter-inputgroup .gh-select select[class="ember-view"] option[value="contains"]');
+		await containOptionElement.click();
 		let inputElement = await this.driver.$('input[aria-label="Name filter"]');
 		await inputElement.setValue(query);
 		let applyFilterElement = await this.driver.$('.gh-btn.gh-btn-primary');
@@ -70,6 +72,8 @@ module.exports = class MemberPage {
 	async FilterMemberByEmail(query) {
 		let emailOptionElement = await this.driver.$('.gh-member-actions-menu .gh-select select[class="ember-view"] option[value="email"]');
 		await emailOptionElement.click();
+		let containOptionElement = await this.driver.$('.gh-filter-block .form-group .gh-filter-inputgroup .gh-select select[class="ember-view"] option[value="contains"]');
+		await containOptionElement.click();
 		let inputElement = await this.driver.$('input[aria-label="Email filter"]');
 		await inputElement.setValue(query);
 		let applyFilterElement = await this.driver.$('.gh-btn.gh-btn-primary');

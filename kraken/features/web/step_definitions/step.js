@@ -161,7 +161,7 @@ Then('I should see the tag with name {string} and {int} post in the list of tags
 // Member actions
 When('I navigate to members', memberPage.NavigateToMembers);
 
-When('I lick the create New member button', memberPage.ClickCreateNewMemberButton);
+When('I click the create New member button', memberPage.ClickCreateNewMemberButton);
 
 When('I fill in the Name with {string}', memberPage.FillInName);
 

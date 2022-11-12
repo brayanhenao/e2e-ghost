@@ -1,7 +1,7 @@
 Feature: Create Post
 
   @user1 @web
-  Scenario: Create a member and filter it
+  Scenario: Create 3 members and filter them by name
     Given I login into ghost admin console
     When I navigate to members
     And I wait for 2 seconds
