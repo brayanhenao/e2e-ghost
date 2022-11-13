@@ -136,12 +136,6 @@ When('I click the filter published pages button', pagePage.ClickFilterPublishedP
 
 When('I click the filter draft pages button', pagePage.ClickFilterDrafPageButton);
 
-Then('I should see the page with title {string} in the list of pages', pagePage.VerifyPageTitle);
-
-Then('Then I should see the page with title {string} in the list of pages', pagePage.VerifyPageTitleStatus);
-
-Then('Then I should see the page with title {string} in the list of pages',	pagePage.VerifyPageTitleStatus);
-
 // Tag actions
 When('I navigate to tags', tagPage.NavigateToTags);
 
