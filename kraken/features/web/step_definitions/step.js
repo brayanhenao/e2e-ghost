@@ -123,9 +123,15 @@ When('I fill in the date with {string}', pagePage.FillInDateForLater);
 
 When('I fill in the time with {string}', pagePage.FillInTimeForLater);
 
+When('I navigate to page with slug {string}', pagePage.NavigateToUrlPages);
+
 Then('I should see the page with title {string} in the list of pages', pagePage.VerifyPageTitle);
 
 Then('I should see the pages with title {string} in the list of pages with status {string}', pagePage.VerifyPageTitleStatus);
+
+Then('I should see the page with title {string} and description {string}', pagePage.VerifyPageTitleAndDescription);
+
+Then('I should see the page response with 404', pagePage.VerifyPage404);
 
 // List Pages
 Then('I should see {int} number of pages with status {string}.', pagePage.VerifyNumberPageWithStatus);

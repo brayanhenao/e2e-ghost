@@ -16,3 +16,5 @@ Feature: Create Page
     And I wait for 2 seconds
     And I take a screenshot for Feature "F4" and Scenario "SC2"
     Then I should see the pages with title "Post Feature 4 Scenario 2" in the list of pages with status "Draft"
+    And I navigate to page with slug "Post Feature 4 Scenario 2"
+    Then I should see the page response with 404

@@ -9,6 +9,7 @@ Feature: Create Page
     And I wait for 2 seconds
     And I take a screenshot for Feature "F4" and Scenario "SC1"
     And I fill in the page title with "Title Page"
+    And I wait for 2 seconds
     And I fill in the page content with "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vitae purus id purus pulvinar porta. Nulla tristique feugiat nibh at blandit. Pellentesque mattis rutrum felis, eu gravida nulla dictum eget. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."
     And I take a screenshot for Feature "F4" and Scenario "SC1"
     And I wait for 1 seconds
@@ -22,3 +23,5 @@ Feature: Create Page
     And I wait for 2 seconds
     And I take a screenshot for Feature "F4" and Scenario "SC1"
     Then I should see the page with title "Title Page" in the list of pages
+    And I navigate to page with slug "title-page"
+    Then I should see the page with title "Title Page" and description "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vitae purus id purus pulvinar porta. Nulla tristique feugiat nibh at blandit. Pellentesque mattis rutrum felis, eu gravida nulla dictum eget. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."
