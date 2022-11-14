@@ -1,4 +1,4 @@
-Feature: Create Post
+Feature: Create Member
 
   @user1 @web
   Scenario: Create a member and filter it

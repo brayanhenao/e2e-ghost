@@ -23,7 +23,8 @@ const settingsPage = new SettingsPage(this.driver);
 const ghostAdminAPI = new GhostAdminAPI();
 
 // TearDown data in Ghost
-BeforeAll(ghostAdminAPI.TearDown);
+// TODO: Ghost v3.42 doesn't have ADMIN API
+// BeforeAll(ghostAdminAPI.TearDown);
 
 // Common actions
 When('I take a screenshot for Feature {string} and Scenario {string}', async function(feature, scenario) {
