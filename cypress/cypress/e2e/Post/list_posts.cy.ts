@@ -9,7 +9,7 @@ describe('list_post', () => {
 			postTitle3 = '';
 
 		before(() => {
-			cy.clearData();
+			// cy.clearData();
 
 			adminPage.load();
 			cy.fixture('admin').then(({user, password}) => {
@@ -81,7 +81,7 @@ describe('list_post', () => {
 			postTitle3 = '';
 
 		before(() => {
-			cy.clearData();
+			// cy.clearData();
 
 			adminPage.load();
 			cy.fixture('admin').then(({user, password}) => {

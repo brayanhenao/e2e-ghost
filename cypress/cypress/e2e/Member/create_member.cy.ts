@@ -8,7 +8,7 @@ describe('create_member', () => {
 		memberName3 = '';
 
 	let memberEmail = '';
-	before(cy.clearData);
+	// before(cy.clearData);
 
 	beforeEach(() => {
 		adminPage.load();

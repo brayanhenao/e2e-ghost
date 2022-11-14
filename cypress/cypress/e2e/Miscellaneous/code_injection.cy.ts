@@ -8,7 +8,7 @@ import {
 import {faker} from '@faker-js/faker';
 
 describe('code_injection', () => {
-	before(cy.clearData);
+	// before(cy.clearData);
 
 	beforeEach(() => {
 		adminPage.load();

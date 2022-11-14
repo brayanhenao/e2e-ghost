@@ -3,7 +3,7 @@ import {adminPage, pagesEditPage, pagesPage, pageDetailPage} from '../../pages';
 import {faker} from '@faker-js/faker';
 
 describe('create_page', () => {
-	before(cy.clearData);
+	// before(cy.clearData);
 
 	beforeEach(() => {
 		adminPage.load();

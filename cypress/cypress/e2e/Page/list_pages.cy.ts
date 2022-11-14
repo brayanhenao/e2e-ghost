@@ -8,7 +8,7 @@ describe('list_pages', () => {
 		pageTitle3 = '';
 
 	before(() => {
-		cy.clearData();
+		// cy.clearData();
 
 		adminPage.load();
 		cy.fixture('admin').then(({user, password}) => {
