@@ -10,6 +10,7 @@ const SettingsPage = require('./page_objects/settings_page.js');
 const GhostAdminAPI = require('../../../utils/ghost_admin_api');
 const path = require('path');
 const fs = require('fs');
+const properties = require('../../../properties.json');
 
 // Setup pages
 const loginPage = new LoginPage(this.driver);
@@ -24,18 +25,21 @@ const ghostAdminAPI = new GhostAdminAPI();
 
 // TearDown data in Ghost
 // TODO: Ghost v3.42 doesn't have ADMIN API
-// BeforeAll(ghostAdminAPI.TearDown);
+
+if (properties.GHOST_VERSION !== '3.42') {
+	BeforeAll(ghostAdminAPI.TearDown);
+}
 
 // Common actions
 When('I take a screenshot for Feature {string} and Scenario {string}', async function(feature, scenario) {
-	const screnshotsDir = path.join(__dirname, '../../../screenshots');
+	const screenshotsDir = path.join(__dirname, '../../../screenshots');
 	// check if screenshots directory exists
-	if (!fs.existsSync(screnshotsDir)) {
-		fs.mkdirSync(screnshotsDir);
+	if (!fs.existsSync(screenshotsDir)) {
+		fs.mkdirSync(screenshotsDir);
 	}
 
 	// check if feature directory exists
-	const featureDir = path.join(screnshotsDir, feature);
+	const featureDir = path.join(screenshotsDir, feature);
 	if (!fs.existsSync(featureDir)) {
 		fs.mkdirSync(featureDir);
 	}
@@ -44,8 +48,31 @@ When('I take a screenshot for Feature {string} and Scenario {string}', async fun
 	await this.driver.saveScreenshot(screenshotPath);
 });
 
+When('I take a screenshot for Feature {string} and Scenario {string} and Step {string}', async function(feature, scenario, step) {
+	const screenshotsDir = path.join(__dirname, '../../../screenshots');
+	// check if screenshots directory exists
+	if (!fs.existsSync(screenshotsDir)) {
+		fs.mkdirSync(screenshotsDir);
+	}
+
+	// check if feature directory exists
+	const featureDir = path.join(screenshotsDir, feature);
+	if (!fs.existsSync(featureDir)) {
+		fs.mkdirSync(featureDir);
+	}
+
+	const screenshotPath = path.join(featureDir, scenario + '_' + step + '.png');
+	await this.driver.saveScreenshot(screenshotPath);
+});
+
+When('I enter login credentials', loginPage.EnterLoginCredentials);
+
+When('I click the login button', loginPage.ClickLoginButton);
+
 // Login actions
-Given('I login into ghost admin console', loginPage.EnterLoginCredentials);
+Given('I login into ghost admin console', loginPage.FullLogin);
+
+Given('I navigate to login page', loginPage.NavigateToLoginPage);
 
 // Post actions
 When('I navigate to posts', postPage.NavigateToPosts);
@@ -150,7 +177,7 @@ When('I click the save tag button', tagPage.ClickSaveTagButton);
 
 Then('I should see the tag with title {string} in the list of tags', tagPage.VerifyTagTitle);
 
-Then('I should see the tag with name {string} and {int} post in the list of tags',tagPage.VerifyNumbersTagWithTitle);
+Then('I should see the tag with name {string} and {int} post in the list of tags', tagPage.VerifyNumbersTagWithTitle);
 
 
 // Member actions

@@ -19,6 +19,10 @@ module.exports = class PostPage {
 
 	async ClickPublishButton() {
 		let publishElement = await this.driver.$('.gh-publish-trigger');
+		if (publishElement === null) {
+			publishElement = await this.driver.$('.gh-publishmenu-trigger');
+		}
+
 		await publishElement.click();
 	}
 
@@ -29,6 +33,9 @@ module.exports = class PostPage {
 
 	async ClickPublishNowButton() {
 		let publishNowElement = await this.driver.$('.gh-btn.gh-btn-large.gh-btn-pulse.ember-view');
+		if (publishNowElement === null) {
+			publishNowElement = await this.driver.$('gh-btn-blue.gh-publishmenu-button.gh-btn-icon');
+		}
 		await publishNowElement.click();
 	}
 
@@ -47,7 +54,7 @@ module.exports = class PostPage {
 		await selectTagElement.click();
 		await selectTagElement.setValue(content);
 	}
-	
+
 	async ClickInSelectTag() {
 		let selectTagElement = await this.driver.$('.ember-power-select-options > .ember-power-select-option:first-of-type');
 		await selectTagElement.click();
