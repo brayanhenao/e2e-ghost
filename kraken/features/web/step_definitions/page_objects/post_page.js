@@ -35,7 +35,7 @@ module.exports = class PostPage {
 			await publishNowElement.click();
 		} else {
 			await publishNowElement.click();
-			let confirmPublishNowElement = await this.driver.$('gh-btn gh-btn-large gh-btn-pulse ember-view');
+			let confirmPublishNowElement = await this.driver.$('.gh-btn.gh-btn-large,gh-btn-pulse.ember-view');
 			await confirmPublishNowElement.click();
 		}
 	}
@@ -53,15 +53,12 @@ module.exports = class PostPage {
 		await postAccessComboBoxElement.click();
 	}
 
-	async FillInSelectTag(content) {
-		let selectTagElement = await this.driver.$('#tag-input');
-		await selectTagElement.click();
-		await selectTagElement.setValue(content);
-	}
-
 	async ClickInSelectTag() {
-		let selectTagElement = await this.driver.$('.ember-power-select-options > .ember-power-select-option:first-of-type');
-		await selectTagElement.click();
+		let selectedTagElement = await this.driver.$('#tag-input');
+		await selectedTagElement.click();
+
+		let tagElement = await this.driver.$('.ember-power-select-options > .ember-power-select-option:first-of-type');
+		await tagElement.click();
 
 		await new Promise(r => setTimeout(r, 2000));
 
@@ -124,6 +121,8 @@ module.exports = class PostPage {
 
 	async ChangePublishDateAndTime(date, time) {
 		let datePickerInput = await this.driver.$('.gh-date-time-picker-date > input');
+		await datePickerInput.click();
+		await datePickerInput.clearValue();
 		await datePickerInput.setValue(date);
 		await new Promise(r => setTimeout(r, 1000));
 

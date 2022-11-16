@@ -38,7 +38,7 @@ Feature: Create Tag
     And I wait for 1 seconds
     And I click the settings menu
     And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "10"
-    And I fill the tag select with "Tag Test"
+    And I wait for 2 seconds
     And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "11"
     And I click the select tag
     And I wait for 2 seconds
@@ -47,59 +47,56 @@ Feature: Create Tag
     And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "12"
     And I click the publish now button
     And I wait for 2 seconds
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "14"
+    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "13"
     And I navigate to posts
     And I wait for 2 seconds
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "15"
+    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "14"
     And I click the create posts button
     And I wait for 2 seconds
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "16"
+    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "15"
     And I fill in the title with "Second Post Feature 3 Scenario 2"
     And I wait for 2 seconds
     And I fill in the content with "Content for Second Post Feature 3 Scenario 2"
     And I wait for 2 seconds
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "17"
+    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "16"
     And I wait for 2 seconds
     And I click the settings menu
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "18"
-    And I fill the tag select with "Tag Test"
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "19"
+    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "17"
     And I click the select tag
     And I wait for 2 seconds
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "20"
+    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "18"
     And I click the publish button
     And I wait for 2 seconds
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "22"
+    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "19"
     And I click the publish now button
     And I wait for 2 seconds
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "23"
+    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "20"
     And I navigate to posts
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "24"
+    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "21"
     And I click the create posts button
     And I wait for 2 seconds
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "25"
+    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "22"
     And I fill in the title with "Third Post Feature 3 Scenario 2"
     And I wait for 2 seconds
     And I fill in the content with "Content for Third Post Feature 3 Scenario 2"
     And I wait for 2 seconds
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "26"
+    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "23"
     And I wait for 2 seconds
     And I click the settings menu
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "27"
-    And I fill the tag select with "Tag Test"
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "28"
+    And I wait for 2 seconds
+    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "24"
     And I click the select tag
     And I wait for 2 seconds
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "29"
+    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "25"
     And I click the publish button
     And I wait for 2 seconds
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "31"
+    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "26"
     And I click the publish now button
     And I wait for 2 seconds
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "32"
+    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "27"
     And I navigate to posts
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "33"
+    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "28"
     And I navigate to tags
     And I wait for 2 seconds
-    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "34"
+    And I take a screenshot for Feature "F3" and Scenario "SC2" and Step "29"
     Then I should see the tag with name "Tag Test" and 3 post in the list of tags

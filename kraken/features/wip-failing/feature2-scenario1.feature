@@ -23,7 +23,8 @@ Feature: List Posts
     And I click the settings menu
     And I wait for 2 seconds
     And I change the publish date to "2022-01-01" and time to "01:00"
-    And I take a screenshot for Feature "F2" and Scenario "SC1" and Step "6"
+    And I wait for 2 seconds
+    And I take a screenshot for Feature "F2" and Scenario "SC1" and Step "12"
     And I click the publish button
     And I wait for 2 seconds
     And I take a screenshot for Feature "F2" and Scenario "SC1" and Step "7"
@@ -44,6 +45,7 @@ Feature: List Posts
     And I click the settings menu
     And I wait for 2 seconds
     And I change the publish date to "2018-01-01" and time to "01:00"
+    And I wait for 2 seconds
     And I take a screenshot for Feature "F2" and Scenario "SC1" and Step "12"
     And I click the publish button
     And I wait for 2 seconds
@@ -65,7 +67,8 @@ Feature: List Posts
     And I click the settings menu
     And I wait for 2 seconds
     And I change the publish date to "2020-01-01" and time to "01:00"
-    And I take a screenshot for Feature "F2" and Scenario "SC1" and Step "18"
+    And I wait for 2 seconds
+    And I take a screenshot for Feature "F2" and Scenario "SC1" and Step "12"
     And I click the publish button
     And I wait for 2 seconds
     And I take a screenshot for Feature "F2" and Scenario "SC1" and Step "19"

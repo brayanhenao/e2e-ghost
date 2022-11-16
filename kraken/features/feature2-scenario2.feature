@@ -2,8 +2,14 @@ Feature: List Posts
 
   @user1 @web
   Scenario: Filter posts by publish date (newest first)
-    Given I login into ghost admin console
-    When I navigate to posts
+    Given I navigate to login page
+    When I enter login credentials
+    And I wait for 2 seconds
+    And I take a screenshot for Feature "F2" and Scenario "SC1" and Step "1"
+    And I click the login button
+    And I wait for 2 seconds
+    And I take a screenshot for Feature "F2" and Scenario "SC1" and Step "2"
+    And I navigate to posts
     And I wait for 2 seconds
     And I click the create posts button
     And I wait for 2 seconds
@@ -16,8 +22,6 @@ Feature: List Posts
     And I change the publish date to "2018-01-01" and time to "01:00"
     And I take a screenshot for Feature "F2" and Scenario "SC2"
     And I click the publish button
-    And I wait for 2 seconds
-    And I click the continue publish button
     And I wait for 2 seconds
     And I click the publish now button
     And I wait for 2 seconds
@@ -35,8 +39,6 @@ Feature: List Posts
     And I take a screenshot for Feature "F2" and Scenario "SC2"
     And I click the publish button
     And I wait for 2 seconds
-    And I click the continue publish button
-    And I wait for 2 seconds
     And I click the publish now button
     And I navigate to posts
     And I wait for 2 seconds
@@ -51,8 +53,6 @@ Feature: List Posts
     And I change the publish date to "2017-01-01" and time to "01:00"
     And I take a screenshot for Feature "F2" and Scenario "SC2"
     And I click the publish button
-    And I wait for 2 seconds
-    And I click the continue publish button
     And I wait for 2 seconds
     And I click the publish now button
     And I navigate to posts

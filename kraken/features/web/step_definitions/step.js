@@ -88,8 +88,6 @@ When('I schedule post for later with date {string} and time {string}', postPage.
 
 When('I click the settings menu', postPage.ClickPostSettingsMenu);
 
-When('I fill the tag select with {string}', postPage.FillInSelectTag);
-
 When('I click the select tag', postPage.ClickInSelectTag);
 
 When('I click the post access combo box', postPage.ClickPostAccessComboBox);
