@@ -23,78 +23,68 @@ module.exports = class PagePage {
 	}
 
 	async FillInDescription(content) {
-		let titleElement = await this.driver.$(
-			'.koenig-editor__editor.__mobiledoc-editor'
-		);
+		let titleElement = await this.driver.$('.koenig-editor__editor.__mobiledoc-editor');
 		await titleElement.setValue(content);
 	}
 
 	async ClickPublishButton() {
 		let publishElement = await this.driver.$('.gh-publish-trigger');
+
+		if (!await publishElement.isExisting()) {
+			publishElement = await this.driver.$('.gh-publishmenu.ember-view');
+		}
+
 		await publishElement.click();
 	}
 
-	async ClickPublishContinueButton() {
-		let publishContinueElement = await this.driver.$(
-			'.gh-publish-cta > button'
-		);
-		await publishContinueElement.click();
-	}
-
 	async ClickRightNowButton() {
-		let rightNowElement = await this.driver.$(
-			'.gh-publish-setting.last > .gh-publish-setting-title'
-		);
+		let publishContinueElement = await this.driver.$('.gh-publish-cta > button');
+		await publishContinueElement.click();
+		let rightNowElement = await this.driver.$('.gh-publish-setting.last > .gh-publish-setting-title');
 		await rightNowElement.click();
 	}
 
 	async ClickScheduleForLaterButton() {
-		let ScheduleForLaterElement = await this.driver.$(
-			'.gh-publish-schedule > .gh-radio:not([class*="active"])'
-		);
+		let ScheduleForLaterElement = await this.driver.$('.gh-publish-schedule > .gh-radio:not([class*="active"])');
 		await ScheduleForLaterElement.click();
 	}
 
 	async ClickFilterPageButton() {
-		let FilterPageElement = await this.driver.$(
-			'.gh-contentfilter-menu.gh-contentfilter-type > .gh-contentfilter-menu-trigger'
-		);
+		let FilterPageElement = await this.driver.$('.gh-contentfilter-menu.gh-contentfilter-type > .gh-contentfilter-menu-trigger');
 		await FilterPageElement.click();
 	}
 
 	async ClickFilterDrafPageButton() {
-		let FilterDrafPageElement = await this.driver.$(
-			'.ember-power-select-options > .ember-power-select-option:nth-child(2)'
-		);
+		let FilterDrafPageElement = await this.driver.$('.ember-power-select-options > .ember-power-select-option:nth-child(2)');
 		await FilterDrafPageElement.click();
 	}
 
 	async ClickFilterPublishedPageButton() {
-		let filterPublishedPageElement = await this.driver.$(
-			'.ember-power-select-options > .ember-power-select-option:nth-child(3)'
-		);
+		let filterPublishedPageElement = await this.driver.$('.ember-power-select-options > .ember-power-select-option:nth-child(3)');
 		await filterPublishedPageElement.click();
 	}
 
 	async FillInDateForLater(date) {
-		let dateForLaterElement = await this.driver.$(
-			'.gh-date-time-picker-date > input'
-		);
+		let dateForLaterElement = await this.driver.$('.gh-date-time-picker-date > input');
 		await dateForLaterElement.setValue(date);
 	}
 
 	async FillInTimeForLater(time) {
-		let timeForLaterElement = await this.driver.$(
-			'.gh-date-time-picker-time > input'
-		);
+		let timeForLaterElement = await this.driver.$('.gh-date-time-picker-time > input');
 		await timeForLaterElement.setValue(time);
 	}
 
 	async ClickPublishNowButton() {
-		let publishNowElement = await this.driver.$(
-			'.gh-btn.gh-btn-large.gh-btn-pulse.ember-view'
-		);
-		await publishNowElement.click();
+		let publishNowElement = await this.driver.$('.gh-publish-cta');
+
+		if (!await publishNowElement.isExisting()) {
+			publishNowElement = await this.driver.$('.gh-btn-blue.gh-publishmenu-button.gh-btn-icon');
+			await publishNowElement.click();
+		} else {
+			await publishNowElement.click();
+			let confirmPublishNowElement = await this.driver.$('.gh-btn.gh-btn-large.gh-btn-pulse.ember-view');
+			await confirmPublishNowElement.click();
+		}
 	}
 
 	async VerifyPageTitle(title) {
@@ -108,9 +98,7 @@ module.exports = class PagePage {
 	}
 
 	async VerifyPageTitleStatus(title, status) {
-		let pageElements = await this.driver.$$(
-			`.ember-view.permalink.gh-list-data.gh-post-list-title`
-		);
+		let pageElements = await this.driver.$$(`.ember-view.permalink.gh-list-data.gh-post-list-title`);
 		const arrayAux = [];
 		for (const element of pageElements) {
 			let pageTitle = await element.$('.gh-content-entry-title').getText();
@@ -123,9 +111,7 @@ module.exports = class PagePage {
 	}
 
 	async VerifyNumberPageWithStatus(numberElements, status) {
-		let pageElements = await this.driver.$$(
-			`.ember-view.permalink.gh-list-data.gh-post-list-title`
-		);
+		let pageElements = await this.driver.$$(`.ember-view.permalink.gh-list-data.gh-post-list-title`);
 		const arrayAux = [];
 		for (const element of pageElements) {
 			let pageStatus = await element.$('.gh-content-entry-status').getText();

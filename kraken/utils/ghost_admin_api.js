@@ -1,8 +1,5 @@
 const properties = require('../properties.json');
 const axios = require('axios');
-const api = axios.create({
-	baseURL: `${properties.GHOST_BASE_URL}/ghost/api/admin/`,
-});
 
 
 module.exports = class GhostAdminAPI {
@@ -10,6 +7,17 @@ module.exports = class GhostAdminAPI {
 	}
 
 	async TearDown() {
+
+		let baseURL;
+		if (properties.GHOST_VERSION === '3.42') {
+			baseURL = `${properties.GHOST_BASE_URL}/ghost/api/v3/admin/`;
+		} else {
+			baseURL = `${properties.GHOST_BASE_URL}/ghost/api/admin/`;
+		}
+
+		const api = axios.create({
+			baseURL,
+		});
 
 		// Get the token from the header set-cookie
 		const response = await api.post('session', {
@@ -65,26 +73,25 @@ module.exports = class GhostAdminAPI {
 		}
 
 		// Delete all members
-		const allMembers = await api.get('members', {
-			headers: {
-				Cookie: token,
-			},
-		});
-
-		for (let i = 0; i < allMembers.data.members.length; i++) {
-			await api.delete(`members/${allMembers.data.members[i].id}`, {
+		if (properties.GHOST_VERSION !== '3.42') {
+			const allMembers = await api.get('members', {
 				headers: {
 					Cookie: token,
 				},
 			});
+
+			for (let i = 0; i < allMembers.data.members.length; i++) {
+				await api.delete(`members/${allMembers.data.members[i].id}`, {
+					headers: {
+						Cookie: token,
+					},
+				});
+			}
 		}
 
 		// Delete ghost header and footer for code injection
 		await api.put('settings/', {
-			settings: [
-				{key: 'codeinjection_head', value: ''},
-				{key: 'codeinjection_foot', value: ''},
-			],
+			settings: [{key: 'codeinjection_head', value: ''}, {key: 'codeinjection_foot', value: ''}],
 		}, {
 			headers: {
 				Cookie: token,

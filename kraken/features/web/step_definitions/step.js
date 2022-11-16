@@ -10,7 +10,6 @@ const SettingsPage = require('./page_objects/settings_page.js');
 const GhostAdminAPI = require('../../../utils/ghost_admin_api');
 const path = require('path');
 const fs = require('fs');
-const properties = require('../../../properties.json');
 
 // Setup pages
 const loginPage = new LoginPage(this.driver);
@@ -26,9 +25,7 @@ const ghostAdminAPI = new GhostAdminAPI();
 // TearDown data in Ghost
 // TODO: Ghost v3.42 doesn't have ADMIN API
 
-if (properties.GHOST_VERSION !== '3.42') {
-	BeforeAll(ghostAdminAPI.TearDown);
-}
+BeforeAll(ghostAdminAPI.TearDown);
 
 // Common actions
 When('I take a screenshot for Feature {string} and Scenario {string}', async function(feature, scenario) {
@@ -85,13 +82,11 @@ When('I fill in the content with {string}', postPage.FillInContent);
 
 When('I click the publish button', postPage.ClickPublishButton);
 
-When('I click the continue publish button', postPage.ClickPublishContinueButton);
-
 When('I click the publish now button', postPage.ClickPublishNowButton);
 
 When('I schedule post for later with date {string} and time {string}', postPage.SchedulePostForLater);
 
-When('I click the settings menu', postPage.ClickSettingsMenu);
+When('I click the settings menu', postPage.ClickPostSettingsMenu);
 
 When('I fill the tag select with {string}', postPage.FillInSelectTag);
 
@@ -139,11 +134,7 @@ When('I fill in the page content with {string}', pagePage.FillInDescription);
 
 When('I click the publish page button', pagePage.ClickPublishButton);
 
-When('I click the continue publish page button', pagePage.ClickPublishContinueButton);
-
 When('I click the publish page now button', pagePage.ClickPublishNowButton);
-
-When('I click the Right now page button', pagePage.ClickRightNowButton);
 
 When('I click the Schedule For Later Button button', pagePage.ClickScheduleForLaterButton);
 

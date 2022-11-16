@@ -22,13 +22,10 @@ Feature: Create Page
     And I click the publish page button
     And I wait for 2 seconds
     And I take a screenshot for Feature "F4" and Scenario "SC1" and Step "6"
-    And I click the continue publish page button
-    And I wait for 2 seconds
-    And I take a screenshot for Feature "F4" and Scenario "SC1" and Step "7"
     And I click the publish page now button
     And I wait for 2 seconds
-    And I take a screenshot for Feature "F4" and Scenario "SC1" and Step "8"
+    And I take a screenshot for Feature "F4" and Scenario "SC1" and Step "7"
     And I navigate to pages
     And I wait for 2 seconds
-    And I take a screenshot for Feature "F4" and Scenario "SC1" and Step "9"
+    And I take a screenshot for Feature "F4" and Scenario "SC1" and Step "8"
     Then I should see the page with title "Title Page" in the list of pages

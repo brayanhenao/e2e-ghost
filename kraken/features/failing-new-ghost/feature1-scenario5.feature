@@ -30,17 +30,14 @@ Feature: Create Post
     And I click the publish button
     And I wait for 2 seconds
     And I take a screenshot for Feature "F1" and Scenario "SC5" and Step "9"
-    And I click the continue publish button
-    And I wait for 2 seconds
-    And I take a screenshot for Feature "F1" and Scenario "SC5" and Step "10"
     And I click the publish now button
     And I wait for 2 seconds
-    And I take a screenshot for Feature "F1" and Scenario "SC5" and Step "9"
-    And I navigate to posts
     And I take a screenshot for Feature "F1" and Scenario "SC5" and Step "10"
+    And I navigate to posts
+    And I take a screenshot for Feature "F1" and Scenario "SC5" and Step "11"
     And I filter the posts access by "Paid members-only"
     And I wait for 2 seconds
-    And I take a screenshot for Feature "F1" and Scenario "SC5" and Step "11"
+    And I take a screenshot for Feature "F1" and Scenario "SC5" and Step "12"
     Then I should see the post with title "Post Feature 1 Scenario 5" in the list of posts
     And I should see the post with title "Post Feature 1 Scenario 5" in the blog
     And I should have access only for "paying subscribers"
