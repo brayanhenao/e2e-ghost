@@ -22,7 +22,8 @@ Modifique el archivo [properties.json](properties.json) con los datos:
 {
   "EMAIL": "<Email del usuario admin de su instalación local de ghost>",
   "PASSWORD": "<Password del usuario admin de su instalación local de ghost>",
-  "GHOST_BASE_URL": "<URL de su instalación local de ghost (con puerto)>"
+  "GHOST_BASE_URL": "<URL de su instalación local de ghost (con puerto)>",
+  "GHOST_VERSION": "<Versión de Ghost a la cual se le harán las pruebas>"
 }
 ```
 
@@ -44,4 +45,4 @@ Kraken genera un reporte de ejecución el la carpeta `reports/`
 
 Además de los reportes, los features genran screenshots del paso a paso. Estos pueden ser encontrados en la
 carpeta `screenshots/`  en la cual, luego de la ejecución, se encontrará una carpeta por cada feature corrido
-con los screenshots de cada escenario en el formato `SCENARIONUMBER_TIMESTAMP.png`
+con los screenshots de cada escenario en el formato `SCENARIONUMBER_STEPNUMBER.png`

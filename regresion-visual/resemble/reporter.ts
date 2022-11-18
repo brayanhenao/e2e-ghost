@@ -51,37 +51,47 @@ async function generateDiffImages(actualGhostImagesPath: string, newGhostImagesP
 		};
 
 		for (const scenario of feature.scenarios) {
-			const actualGhostImage = `${actualGhostImagesPath}/${feature.feature}/${scenario}.png`;
-			const newGhostImage = `${newGhostImagesPath}/${feature.feature}/${scenario}.png`;
+			// All files with the format SCENARIO_NUMBER.png
+			const actualGhostScenarioImages = fs.readdirSync(`${actualGhostImagesPath}/${feature.feature}`).filter((file) => file.startsWith(scenario));
+			const newGhostScenarioImages = fs.readdirSync(`${newGhostImagesPath}/${feature.feature}`).filter((file) => file.startsWith(scenario));
 
-			if (actualGhostImage && newGhostImage) {
-				const results = await compareImagesAsync(actualGhostImage, newGhostImage, options);
-				const diffImage = `${diffImagesPath}/${feature.feature}/${scenario}.png`;
-				const scenarioImageResult: ScenarioImageResult = {
-					scenario: scenario,
-					image: diffImage,
-					results,
-				};
+			for (const actualGhostScenarioImage of actualGhostScenarioImages) {
+				const actualGhostScenarioImagePath = `${actualGhostImagesPath}/${feature.feature}/${actualGhostScenarioImage}`;
+				const newGhostScenarioImagePath = `${newGhostImagesPath}/${feature.feature}/${actualGhostScenarioImage}`;
 
-				// @ts-ignore
-				fs.writeFileSync(diffImage, results.getBuffer());
-				featureImagesResult.scenarios.push(scenarioImageResult);
+				if (newGhostScenarioImages.includes(actualGhostScenarioImage)) {
+					const diffGhostScenarioImagePath = `${featureDiffPath}/${actualGhostScenarioImage}`;
+
+					const results = await compareImagesAsync(actualGhostScenarioImagePath, newGhostScenarioImagePath, options);
+
+					// @ts-ignore
+					fs.writeFileSync(diffGhostScenarioImagePath, results.getBuffer());
+
+					featureImagesResult.scenarios.push({
+						scenario: scenario,
+						image: actualGhostScenarioImage,
+						results: results,
+					});
+				}
 			}
 		}
-
 		featureImagesResults.push(featureImagesResult);
 	}
 
 	return featureImagesResults;
 }
 
+
 async function Runner() {
 	const IMAGES_ACTUAL_GHOST = './images/actual';
-	const IMAGES_NEW_GHOST = './images/new';
+	const IMAGES_OLD_GHOST = './images/new';
 	const IMAGES_DIFF_GHOST = './images/diff';
 
-	// Clear diff images folder
-	fs.rmdirSync(IMAGES_DIFF_GHOST, {recursive: true});
+	// Clear diff images content
+	if (fs.existsSync(IMAGES_DIFF_GHOST)) {
+		fs.rmdirSync(IMAGES_DIFF_GHOST, {recursive: true});
+		fs.mkdirSync(IMAGES_DIFF_GHOST);
+	}
 
 	const FEATURES: FeatureInfo[] = [
 		{
@@ -90,7 +100,7 @@ async function Runner() {
 		},
 		{
 			feature: 'F2',
-			scenarios: ['SC1'],
+			scenarios: ['SC2'],
 		},
 		{
 			feature: 'F3',
@@ -119,7 +129,7 @@ async function Runner() {
 	};
 
 
-	const featureImagesResults = await generateDiffImages(IMAGES_ACTUAL_GHOST, IMAGES_NEW_GHOST, IMAGES_DIFF_GHOST, FEATURES, options);
+	const featureImagesResults = await generateDiffImages(IMAGES_ACTUAL_GHOST, IMAGES_OLD_GHOST, IMAGES_DIFF_GHOST, FEATURES, options);
 
 	generateReport(featureImagesResults);
 }
