@@ -8,59 +8,61 @@ describe('create_member', () => {
 		memberName3 = '';
 
 	let memberEmail = '';
-	// before(cy.clearData);
+	before(cy.clearData);
 
 	beforeEach(() => {
-		adminPage.load();
+		adminPage.load().screenshot();
 		cy.fixture('admin').then(({user, password}) => {
 			cy.log(user, password);
 			adminPage.login(user, password);
-			cy.wait(1000);
+			cy.wait(1000).screenshot();
 		});
 
 		// create a member
-		membersPage.load();
+		membersPage.load().screenshot();
 		membersPage.newMemberButton().click();
 
 		memberName = faker.name.firstName();
 		let lastName = faker.name.lastName();
 		memberEmail = faker.internet.email(memberName, lastName);
 
-		membersEditPage.nameInput().type(`${memberName} ${lastName}`);
-		membersEditPage.emailInput().type(memberEmail);
-		membersEditPage.subscribeToggle().click();
-		membersEditPage.saveButton().click();
+		membersEditPage.nameInput().type(`${memberName} ${lastName}`).screenshot();
+		membersEditPage.emailInput().type(memberEmail).screenshot();
+		membersEditPage.subscribeToggle().click().screenshot();
+		membersEditPage.saveButton().click().screenshot();
 		cy.wait(1000);
 
-		membersPage.load();
+		membersPage.load().screenshot();
 		membersPage.newMemberButton().click();
 
 		memberName2 = faker.name.firstName();
 		lastName = faker.name.lastName();
 
-		membersEditPage.nameInput().type(`${memberName2} ${lastName}`);
+		membersEditPage.nameInput().type(`${memberName2} ${lastName}`).screenshot();
 		membersEditPage
 			.emailInput()
-			.type(faker.internet.email(memberName2, lastName));
-		membersEditPage.saveButton().click();
+			.type(faker.internet.email(memberName2, lastName))
+			.screenshot();
+		membersEditPage.saveButton().click().screenshot();
 		cy.wait(1000);
 
-		membersPage.load();
+		membersPage.load().screenshot();
 		membersPage.newMemberButton().click();
 
 		memberName3 = faker.name.firstName();
 		lastName = faker.name.lastName();
 
-		membersEditPage.nameInput().type(`${memberName3} ${lastName}`);
+		membersEditPage.nameInput().type(`${memberName3} ${lastName}`).screenshot();
 		membersEditPage
 			.emailInput()
-			.type(faker.internet.email(memberName3, lastName));
-		membersEditPage.saveButton().click();
+			.type(faker.internet.email(memberName3, lastName))
+			.screenshot();
+		membersEditPage.saveButton().click().screenshot();
 		cy.wait(1000);
 	});
 
 	it('should list created members', () => {
-		membersPage.load();
+		membersPage.load().screenshot();
 		cy.wait(1000);
 		membersPage
 			.membersListContainer()
@@ -70,15 +72,16 @@ describe('create_member', () => {
 			.membersListContainer()
 			.contains(memberName2)
 			.should('be.visible');
+		cy.screenshot();
 	});
 
 	it('should filter member by subscribed to newsletter', () => {
-		membersPage.load();
+		membersPage.load().screenshot();
 		cy.wait(1000);
-		membersPage.filterButton().click();
+		membersPage.filterButton().click().screenshot();
 		cy.wait(500);
-		membersPage.filterParameterSelect().select('subscribed');
-		membersPage.filterParameterValueSelect().select('true');
+		membersPage.filterParameterSelect().screenshot().select('subscribed');
+		membersPage.filterParameterValueSelect().screenshot().select('true');
 
 		membersPage.filterApplyButton().click();
 		cy.wait(1000);
@@ -87,14 +90,15 @@ describe('create_member', () => {
 			.membersListContainer()
 			.contains(memberName2)
 			.should('be.visible');
+		cy.screenshot();
 	});
 	it('should filter member by not subscribed to newsletter', () => {
-		membersPage.load();
+		membersPage.load().screenshot();
 		cy.wait(1000);
-		membersPage.filterButton().click();
+		membersPage.filterButton().click().screenshot();
 		cy.wait(500);
-		membersPage.filterParameterSelect().select('subscribed');
-		membersPage.filterParameterValueSelect().select('false');
+		membersPage.filterParameterSelect().screenshot().select('subscribed');
+		membersPage.filterParameterValueSelect().screenshot().select('false');
 
 		membersPage.filterApplyButton().click();
 		cy.wait(1000);
@@ -107,16 +111,20 @@ describe('create_member', () => {
 			.membersListContainer()
 			.contains(memberName2)
 			.should('not.exist');
+		cy.screenshot();
 	});
 
 	it('should filter by name', () => {
-		membersPage.load();
+		membersPage.load().screenshot();
 		cy.wait(1000);
-		membersPage.filterButton().click();
+		membersPage.filterButton().click().screenshot();
 		cy.wait(500);
-		membersPage.filterParameterSelect().select('name');
-		membersPage.filterParameterConditionSelect().select('contains');
-		membersPage.filterParameterValueInput().type(memberName);
+		membersPage.filterParameterSelect().screenshot().select('name');
+		membersPage
+			.filterParameterConditionSelect()
+			.screenshot()
+			.select('contains');
+		membersPage.filterParameterValueInput().type(memberName).screenshot();
 
 		membersPage.filterApplyButton().click();
 		cy.wait(1000);
@@ -134,15 +142,22 @@ describe('create_member', () => {
 			.membersListContainer()
 			.contains(memberName3)
 			.should('not.exist');
+		cy.screenshot();
 	});
 	it('should filter by email', () => {
-		membersPage.load();
+		membersPage.load().screenshot();
 		cy.wait(1000);
-		membersPage.filterButton().click();
+		membersPage.filterButton().click().screenshot();
 		cy.wait(500);
-		membersPage.filterParameterSelect().select('email');
-		membersPage.filterParameterConditionSelect().select('contains');
-		membersPage.filterParameterValueInput().type(memberEmail.substring(2));
+		membersPage.filterParameterSelect().screenshot().select('email');
+		membersPage
+			.filterParameterConditionSelect()
+			.screenshot()
+			.select('contains');
+		membersPage
+			.filterParameterValueInput()
+			.type(memberEmail.substring(2))
+			.screenshot();
 
 		membersPage.filterApplyButton().click();
 		cy.wait(1000);
@@ -160,24 +175,38 @@ describe('create_member', () => {
 			.membersListContainer()
 			.contains(memberName3)
 			.should('not.exist');
+
+		cy.screenshot();
 	});
 
 	it('should filter by email and name', () => {
-		membersPage.load();
+		membersPage.load().screenshot();
 		cy.wait(1000);
-		membersPage.filterButton().click();
+		membersPage.filterButton().click().screenshot();
 		cy.wait(500);
 
-		membersPage.filterParameterSelect().select('name');
-		membersPage.filterParameterConditionSelect().select('contains');
-		membersPage.filterParameterValueInput().type(memberName.substring(2));
+		membersPage.filterParameterSelect().screenshot().select('name');
+		membersPage
+			.filterParameterConditionSelect()
+			.screenshot()
+			.select('contains');
+		membersPage
+			.filterParameterValueInput()
+			.type(memberName.substring(2))
+			.screenshot();
 
-		membersPage.filterAddNewFilterButton().click();
+		membersPage.filterAddNewFilterButton().click().screenshot();
 		cy.wait(500);
 
-		membersPage.filterParameterSelect2().select('email');
-		membersPage.filterParameterConditionSelect2().select('contains');
-		membersPage.filterParameterValueInput2().type(memberEmail.substring(2));
+		membersPage.filterParameterSelect2().screenshot().select('email');
+		membersPage
+			.filterParameterConditionSelect2()
+			.screenshot()
+			.select('contains');
+		membersPage
+			.filterParameterValueInput2()
+			.type(memberEmail.substring(2))
+			.screenshot();
 
 		membersPage.filterApplyButton().click();
 		cy.wait(1000);
@@ -195,5 +224,6 @@ describe('create_member', () => {
 			.membersListContainer()
 			.contains(memberName3)
 			.should('not.exist');
+		cy.screenshot();
 	});
 });

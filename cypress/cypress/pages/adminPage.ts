@@ -7,7 +7,7 @@ class adminPage implements BasePage {
 	public signInButton = () => cy.get('button[type="submit"]').first();
 
 	load() {
-		cy.visit(this._route);
+		return cy.visit(this._route);
 	}
 
 	login(user: string, password: string) {

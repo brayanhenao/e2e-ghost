@@ -4,7 +4,7 @@ class homePage implements BasePage {
 	public feedContainer = () => cy.get('.post-feed');
 
 	load() {
-		cy.visit(this._route);
+		return cy.visit(this._route);
 	}
 }
 

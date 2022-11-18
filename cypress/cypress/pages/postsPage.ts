@@ -20,7 +20,7 @@ class postsPage extends baseAdminPage implements BasePage {
 	public postListContainer = () => cy.get('.posts-list').first();
 
 	load() {
-		cy.visit(this._route);
+		return cy.visit(this._route);
 	}
 }
 

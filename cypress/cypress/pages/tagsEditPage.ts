@@ -25,7 +25,7 @@ class tagsEditPage extends baseAdminPage implements BasePage {
 	public deleteButtonConfirm = () => cy.get('.modal-content button').last();
 
 	load() {
-		cy.visit(this._route);
+		return cy.visit(this._route);
 	}
 }
 

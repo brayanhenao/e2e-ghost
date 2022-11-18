@@ -8,17 +8,16 @@ describe('list_pages', () => {
 		pageTitle3 = '';
 
 	before(() => {
-		// cy.clearData();
-
-		adminPage.load();
+		cy.clearData();
+		adminPage.load().screenshot();
 		cy.fixture('admin').then(({user, password}) => {
 			cy.log(user, password);
 			adminPage.login(user, password);
-			cy.wait(1000);
+			cy.wait(1000).screenshot();
 		});
 
 		//draft
-		pagesPage.load();
+		pagesPage.load().screenshot();
 		cy.wait(1000);
 		pagesPage.newPageButton().click();
 		cy.wait(1000);
@@ -28,7 +27,7 @@ describe('list_pages', () => {
 		cy.wait(1000);
 
 		//published
-		pagesPage.load();
+		pagesPage.load().screenshot();
 		cy.wait(1000);
 		pagesPage.newPageButton().click();
 		cy.wait(1000);
@@ -38,7 +37,7 @@ describe('list_pages', () => {
 		cy.wait(1000);
 
 		//draft
-		pagesPage.load();
+		pagesPage.load().screenshot();
 		cy.wait(1000);
 		pagesPage.newPageButton().click();
 		cy.wait(1000);
@@ -51,7 +50,7 @@ describe('list_pages', () => {
 	});
 
 	beforeEach(() => {
-		adminPage.load();
+		adminPage.load().screenshot();
 		cy.fixture('admin').then(({user, password}) => {
 			cy.log(user, password);
 			adminPage.login(user, password);
@@ -60,22 +59,26 @@ describe('list_pages', () => {
 	});
 
 	it('should filter by draft', () => {
-		pagesPage.load();
+		pagesPage.load().screenshot();
 		cy.wait(1000);
 		pagesPage.selectPageStatus().click();
+		cy.screenshot();
 		cy.wait(500);
 		pagesPage.draftPageOption().click();
+		cy.screenshot();
 
 		pagesPage.pageListContainer().contains(pageTitle).should('be.visible');
 		pagesPage.pageListContainer().contains(pageTitle2).should('not.exist');
 		pagesPage.pageListContainer().contains(pageTitle3).should('not.exist');
 	});
 	it('should filter by published', () => {
-		pagesPage.load();
+		pagesPage.load().screenshot();
 		cy.wait(1000);
 		pagesPage.selectPageStatus().click();
+		cy.screenshot();
 		cy.wait(500);
 		pagesPage.publishedPageOption().click();
+		cy.screenshot();
 
 		pagesPage.pageListContainer().contains(pageTitle).should('not.exist');
 		pagesPage.pageListContainer().contains(pageTitle2).should('be.visible');

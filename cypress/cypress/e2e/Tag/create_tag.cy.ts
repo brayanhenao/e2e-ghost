@@ -9,55 +9,62 @@ import {
 import {faker} from '@faker-js/faker';
 
 describe('create_tag', () => {
-	// before(cy.clearData);
+	before(cy.clearData);
 
 	beforeEach(() => {
-		adminPage.load();
+		adminPage.load().screenshot();
 		cy.fixture('admin').then(({user, password}) => {
 			cy.log(user, password);
 			adminPage.login(user, password);
-			cy.wait(1000);
+			cy.wait(1000).screenshot();
 		});
 	});
 
 	it('should create a public tag', () => {
 		const tagName = faker.lorem.word();
-		tagsPage.load();
+		tagsPage.load().screenshot();
 		tagsPage.newTagButton().click();
-		cy.wait(1000);
-		tagsEditPage.nameInput().type(tagName);
-		tagsEditPage.colorInput().type(faker.color.rgb({prefix: ''}));
-		tagsEditPage.descriptionInput().type(faker.lorem.sentence());
+		cy.wait(1000).screenshot();
+		tagsEditPage.nameInput().type(tagName).screenshot();
+		tagsEditPage
+			.colorInput()
+			.type(faker.color.rgb({prefix: ''}))
+			.screenshot();
+		tagsEditPage.descriptionInput().type(faker.lorem.sentence()).screenshot();
 		tagsEditPage.saveButton().click();
-		cy.wait(1000);
+		cy.wait(1000).screenshot();
 
-		tagsPage.load();
+		tagsPage.load().screenshot();
 		tagsPage.tagListContainer().contains(tagName).should('be.visible');
+		cy.screenshot();
 	});
 
 	it('should count total posts', () => {
 		const tagName = faker.lorem.word();
 		const totalPosts = faker.datatype.number(5);
 
-		tagsPage.load();
+		tagsPage.load().screenshot();
 		cy.wait(500);
 		tagsPage.newTagButton().click();
-		cy.wait(1000);
-		tagsEditPage.nameInput().type(tagName);
-		tagsEditPage.colorInput().type(faker.color.rgb({prefix: ''}));
-		tagsEditPage.descriptionInput().type(faker.lorem.sentence());
+		cy.wait(1000).screenshot();
+		tagsEditPage.nameInput().type(tagName).screenshot();
+		tagsEditPage
+			.colorInput()
+			.type(faker.color.rgb({prefix: ''}))
+			.screenshot();
+		tagsEditPage.descriptionInput().type(faker.lorem.sentence()).screenshot();
 		tagsEditPage.saveButton().click();
-		cy.wait(1000);
+		cy.wait(1000).screenshot();
 
 		for (let i = 0; i < totalPosts; i++) {
-			postsPage.load();
+			postsPage.load().screenshot();
 			cy.wait(500);
 			postsPage.newPostsButton().click();
 
-			cy.wait(1000);
+			cy.wait(1000).screenshot();
 
 			postsEditPage.settingsButton().click();
-			postsEditPage.tagInput().type(`${tagName}{enter}`);
+			postsEditPage.tagInput().type(`${tagName}{enter}`).screenshot();
 			cy.wait(500);
 			postsEditPage.settingsButton().click();
 
@@ -69,12 +76,13 @@ describe('create_tag', () => {
 			cy.wait(1000);
 		}
 
-		tagsPage.load();
+		tagsPage.load().screenshot();
 		cy.wait(1000);
 		tagsPage
 			.tagListContainer()
 			.children()
 			.contains(`${totalPosts} posts`)
 			.should('be.visible');
+		cy.screenshot();
 	});
 });

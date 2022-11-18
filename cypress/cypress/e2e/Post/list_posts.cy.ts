@@ -9,17 +9,17 @@ describe('list_post', () => {
 			postTitle3 = '';
 
 		before(() => {
-			// cy.clearData();
+			cy.clearData();
 
-			adminPage.load();
+			adminPage.load().screenshot();
 			cy.fixture('admin').then(({user, password}) => {
 				cy.log(user, password);
 				adminPage.login(user, password);
-				cy.wait(1000);
+				cy.wait(1000).screenshot();
 			});
 
 			//draft
-			postsPage.load();
+			postsPage.load().screenshot();
 			cy.wait(1000);
 			postTitle = faker.lorem.words();
 			const postContent = faker.lorem.paragraphs();
@@ -28,7 +28,7 @@ describe('list_post', () => {
 			cy.wait(1000);
 
 			//published
-			postsPage.load();
+			postsPage.load().screenshot();
 			cy.wait(1000);
 			postTitle2 = faker.lorem.words();
 			const postContent2 = faker.lorem.paragraphs();
@@ -37,7 +37,7 @@ describe('list_post', () => {
 			cy.wait(1000);
 
 			//scheduled
-			postsPage.load();
+			postsPage.load().screenshot();
 			cy.wait(1000);
 			postTitle3 = faker.lorem.words();
 			const postContent3 = faker.lorem.paragraphs();
@@ -49,23 +49,23 @@ describe('list_post', () => {
 		});
 
 		beforeEach(() => {
-			adminPage.load();
+			adminPage.load().screenshot();
 			cy.fixture('admin').then(({user, password}) => {
 				cy.log(user, password);
 				adminPage.login(user, password);
-				cy.wait(1000);
+				cy.wait(1000).screenshot();
 			});
 		});
 
 		it('should list all created posts', () => {
-			postsPage.load();
+			postsPage.load().screenshot();
 			postsPage.postListContainer().contains(postTitle).should('be.visible');
 			postsPage.postListContainer().contains(postTitle2).should('be.visible');
 			postsPage.postListContainer().contains(postTitle3).should('be.visible');
 		});
 
 		it('should filter posts by status - draft', () => {
-			postsPage.load();
+			postsPage.load().screenshot();
 			cy.wait(1000);
 			postsPage.selectPostStatus().click();
 			postsPage.draftPostOption().click();
@@ -81,16 +81,16 @@ describe('list_post', () => {
 			postTitle3 = '';
 
 		before(() => {
-			// cy.clearData();
+			cy.clearData();
 
-			adminPage.load();
+			adminPage.load().screenshot();
 			cy.fixture('admin').then(({user, password}) => {
 				cy.log(user, password);
 				adminPage.login(user, password);
-				cy.wait(1000);
+				cy.wait(1000).screenshot();
 			});
 
-			postsPage.load();
+			postsPage.load().screenshot();
 			cy.wait(1000);
 			postTitle = faker.lorem.words();
 			const postContent = faker.lorem.paragraphs();
@@ -98,7 +98,7 @@ describe('list_post', () => {
 			postsEditPage.createPost(postTitle, postContent, true);
 			cy.wait(1000);
 
-			postsPage.load();
+			postsPage.load().screenshot();
 			cy.wait(1000);
 			postTitle2 = faker.lorem.words();
 			const postContent2 = faker.lorem.paragraphs();
@@ -106,7 +106,7 @@ describe('list_post', () => {
 			postsEditPage.createPost(postTitle2, postContent2, true);
 			cy.wait(1000);
 
-			postsPage.load();
+			postsPage.load().screenshot();
 			cy.wait(1000);
 			postTitle3 = faker.lorem.words();
 			const postContent3 = faker.lorem.paragraphs();
@@ -118,19 +118,22 @@ describe('list_post', () => {
 		});
 
 		beforeEach(() => {
-			adminPage.load();
+			adminPage.load().screenshot();
 			cy.fixture('admin').then(({user, password}) => {
 				cy.log(user, password);
 				adminPage.login(user, password);
-				cy.wait(1000);
+				cy.wait(1000).screenshot();
 			});
 		});
 
 		it('should sort post by publish date  - oldest first ', () => {
-			postsPage.load();
+			postsPage.load().screenshot();
 			cy.wait(1000);
 			postsPage.selectSortDate().click();
+			cy.screenshot();
 			postsPage.oldestFirstOption().click();
+			cy.screenshot();
+
 			postsPage
 				.postListContainer()
 				.children()
@@ -139,12 +142,16 @@ describe('list_post', () => {
 						.contains(i == 0 ? postTitle : i == 1 ? postTitle2 : postTitle3)
 						.should('be.visible');
 				});
+			cy.screenshot();
 		});
 		it('should sort post by publish date  - newest first ', () => {
-			postsPage.load();
+			postsPage.load().screenshot();
 			cy.wait(1000);
 			postsPage.selectSortDate().click();
+			cy.screenshot();
 			postsPage.newestFirstOption().click();
+			cy.screenshot();
+
 			postsPage
 				.postListContainer()
 				.children()
@@ -153,6 +160,7 @@ describe('list_post', () => {
 						.contains(i == 0 ? postTitle3 : i == 1 ? postTitle2 : postTitle)
 						.should('be.visible');
 				});
+			cy.screenshot();
 		});
 	});
 });

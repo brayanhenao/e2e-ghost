@@ -67,7 +67,7 @@ class membersPage extends baseAdminPage implements BasePage {
 		this.filterMenuContainer().find('button').last();
 
 	load() {
-		cy.visit(this._route);
+		return cy.visit(this._route);
 	}
 }
 

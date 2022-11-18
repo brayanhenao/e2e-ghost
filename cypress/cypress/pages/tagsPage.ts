@@ -13,7 +13,7 @@ class tagsPage extends baseAdminPage implements BasePage {
 		this.tagListContainer().find('.gh-tags-list-item');
 
 	load() {
-		cy.visit(this._route);
+		return cy.visit(this._route);
 	}
 }
 

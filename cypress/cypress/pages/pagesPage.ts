@@ -17,7 +17,7 @@ class pagesPage extends baseAdminPage implements BasePage {
 	public pageListContainer = () => cy.get('.pages-list').first();
 
 	load() {
-		cy.visit(this._route);
+		return cy.visit(this._route);
 	}
 }
 

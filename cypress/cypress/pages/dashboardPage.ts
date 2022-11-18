@@ -4,7 +4,7 @@ class dashboardPage extends baseAdminPage implements BasePage {
 	private _route = `${baseUrl}/ghost/#/dashboard`;
 
 	load() {
-		cy.visit(this._route);
+		return cy.visit(this._route);
 	}
 }
 

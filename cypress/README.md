@@ -31,3 +31,9 @@ Ejecución Headed
 ```
  npm run test:headed
 ```
+
+### Screenshots
+
+Además de los reportes, los features genran screenshots del paso a paso. Estos pueden ser encontrados en la
+carpeta `screenshots/`  en la cual, luego de la ejecución, se encontrará una carpeta por cada feature corrido
+con los screenshots de cada escenario.
