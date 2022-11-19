@@ -127,6 +127,18 @@ async function Runner() {
 			feature: 'F4',
 			scenarios: ['SC1'],
 		},
+		{
+			feature: 'F5',
+			scenarios: ['SC1', 'SC2'],
+		},
+		{
+			feature: 'F6',
+			scenarios: ['SC1'],
+		},
+		{
+			feature: 'F8',
+			scenarios: ['SC1', 'SC2'],
+		},
 	];
 
 	const options: ComparisonOptions = {
