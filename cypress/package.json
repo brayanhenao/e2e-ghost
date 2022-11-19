@@ -6,6 +6,8 @@
 	"scripts": {
 		"cypress": "cypress",
 		"test": "cypress run",
+		"test:old": "CYPRESS_GHOST_OLD_VERSION=true cypress run",
+		"test:both": "npm run test:old; npm run test",
 		"test:headed": "cypress run --headed"
 	},
 	"author": "",

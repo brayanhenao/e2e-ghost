@@ -6,6 +6,7 @@ import {
 } from '../../pages';
 
 import {faker} from '@faker-js/faker';
+faker.seed(666); //set seed to keep data consistent
 
 describe('code_injection', () => {
 	before(cy.clearData);
@@ -35,8 +36,7 @@ describe('code_injection', () => {
 
 	it('should insert header', () => {
 		const content = faker.hacker.phrase();
-		settingsPage.load().screenshot();
-		settingsPage.codeInjectionButton().click();
+		codeInjectionPage.load();
 		cy.wait(1000).screenshot();
 		codeInjectionPage
 			.siteHeaderTextArea()
@@ -50,8 +50,7 @@ describe('code_injection', () => {
 	});
 	it('should insert footer', () => {
 		const content = faker.hacker.phrase();
-		settingsPage.load().screenshot();
-		settingsPage.codeInjectionButton().click();
+		codeInjectionPage.load();
 		cy.wait(1000).screenshot();
 		codeInjectionPage
 			.siteFooterTextArea()

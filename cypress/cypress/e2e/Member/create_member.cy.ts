@@ -1,6 +1,7 @@
 import {adminPage, membersPage, membersEditPage} from '../../pages';
 
 import {faker} from '@faker-js/faker';
+faker.seed(666); //set seed to keep data consistent
 
 describe('create_member', () => {
 	let memberName,
@@ -61,15 +62,17 @@ describe('create_member', () => {
 		cy.wait(1000);
 	});
 
-	it('should list created members', () => {
+	it.only('should list created members', () => {
 		membersPage.load().screenshot();
 		cy.wait(1000);
 		membersPage
 			.membersListContainer()
+			.scrollIntoView()
 			.contains(memberName)
 			.should('be.visible');
 		membersPage
 			.membersListContainer()
+			.scrollIntoView()
 			.contains(memberName2)
 			.should('be.visible');
 		cy.screenshot();
@@ -85,9 +88,14 @@ describe('create_member', () => {
 
 		membersPage.filterApplyButton().click();
 		cy.wait(1000);
-		membersPage.membersListContainer().contains(memberName).should('not.exist');
 		membersPage
 			.membersListContainer()
+			.scrollIntoView()
+			.contains(memberName)
+			.should('not.exist');
+		membersPage
+			.membersListContainer()
+			.scrollIntoView()
 			.contains(memberName2)
 			.should('be.visible');
 		cy.screenshot();
@@ -104,11 +112,13 @@ describe('create_member', () => {
 		cy.wait(1000);
 		membersPage
 			.membersListContainer()
+			.scrollIntoView()
 			.contains(memberName)
 			.should('be.visible');
 
 		membersPage
 			.membersListContainer()
+			.scrollIntoView()
 			.contains(memberName2)
 			.should('not.exist');
 		cy.screenshot();
@@ -130,16 +140,19 @@ describe('create_member', () => {
 		cy.wait(1000);
 		membersPage
 			.membersListContainer()
+			.scrollIntoView()
 			.contains(memberName)
 			.should('be.visible');
 
 		membersPage
 			.membersListContainer()
+			.scrollIntoView()
 			.contains(memberName2)
 			.should('not.exist');
 
 		membersPage
 			.membersListContainer()
+			.scrollIntoView()
 			.contains(memberName3)
 			.should('not.exist');
 		cy.screenshot();
@@ -163,16 +176,19 @@ describe('create_member', () => {
 		cy.wait(1000);
 		membersPage
 			.membersListContainer()
+			.scrollIntoView()
 			.contains(memberName)
 			.should('be.visible');
 
 		membersPage
 			.membersListContainer()
+			.scrollIntoView()
 			.contains(memberName2)
 			.should('not.exist');
 
 		membersPage
 			.membersListContainer()
+			.scrollIntoView()
 			.contains(memberName3)
 			.should('not.exist');
 
@@ -212,16 +228,19 @@ describe('create_member', () => {
 		cy.wait(1000);
 		membersPage
 			.membersListContainer()
+			.scrollIntoView()
 			.contains(memberName)
 			.should('be.visible');
 
 		membersPage
 			.membersListContainer()
+			.scrollIntoView()
 			.contains(memberName2)
 			.should('not.exist');
 
 		membersPage
 			.membersListContainer()
+			.scrollIntoView()
 			.contains(memberName3)
 			.should('not.exist');
 		cy.screenshot();

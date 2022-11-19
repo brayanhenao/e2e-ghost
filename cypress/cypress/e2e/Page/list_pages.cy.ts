@@ -1,6 +1,7 @@
 import {adminPage, pagesEditPage, pagesPage} from '../../pages';
 
 import {faker} from '@faker-js/faker';
+faker.seed(666); //set seed to keep data consistent
 
 describe('list_pages', () => {
 	let pageTitle,
@@ -36,7 +37,7 @@ describe('list_pages', () => {
 		pagesEditPage.createPage(pageTitle2, content, true);
 		cy.wait(1000);
 
-		//draft
+		//scheduled
 		pagesPage.load().screenshot();
 		cy.wait(1000);
 		pagesPage.newPageButton().click();
@@ -54,11 +55,11 @@ describe('list_pages', () => {
 		cy.fixture('admin').then(({user, password}) => {
 			cy.log(user, password);
 			adminPage.login(user, password);
-			cy.wait(1000);
+			cy.wait(1000).screenshot();
 		});
 	});
 
-	it('should filter by draft', () => {
+	it.only('should filter by draft', () => {
 		pagesPage.load().screenshot();
 		cy.wait(1000);
 		pagesPage.selectPageStatus().click();
@@ -67,11 +68,23 @@ describe('list_pages', () => {
 		pagesPage.draftPageOption().click();
 		cy.screenshot();
 
-		pagesPage.pageListContainer().contains(pageTitle).should('be.visible');
-		pagesPage.pageListContainer().contains(pageTitle2).should('not.exist');
-		pagesPage.pageListContainer().contains(pageTitle3).should('not.exist');
+		pagesPage
+			.pageListContainer()
+			.scrollIntoView()
+			.contains(pageTitle)
+			.should('be.visible');
+		pagesPage
+			.pageListContainer()
+			.scrollIntoView()
+			.contains(pageTitle2)
+			.should('not.exist');
+		pagesPage
+			.pageListContainer()
+			.scrollIntoView()
+			.contains(pageTitle3)
+			.should('not.exist');
 	});
-	it('should filter by published', () => {
+	it.only('should filter by published', () => {
 		pagesPage.load().screenshot();
 		cy.wait(1000);
 		pagesPage.selectPageStatus().click();
@@ -80,8 +93,20 @@ describe('list_pages', () => {
 		pagesPage.publishedPageOption().click();
 		cy.screenshot();
 
-		pagesPage.pageListContainer().contains(pageTitle).should('not.exist');
-		pagesPage.pageListContainer().contains(pageTitle2).should('be.visible');
-		pagesPage.pageListContainer().contains(pageTitle3).should('not.exist');
+		pagesPage
+			.pageListContainer()
+			.scrollIntoView()
+			.contains(pageTitle)
+			.should('not.exist');
+		pagesPage
+			.pageListContainer()
+			.scrollIntoView()
+			.contains(pageTitle2)
+			.should('be.visible');
+		pagesPage
+			.pageListContainer()
+			.scrollIntoView()
+			.contains(pageTitle3)
+			.should('not.exist');
 	});
 });

@@ -18,7 +18,11 @@ interface FeatureImagesResult {
 	scenarios: ScenarioImageResult[];
 }
 
-function compareImagesAsync(image1: string | ImageData | Buffer, image2: string | ImageData | Buffer, options: ComparisonOptions): Promise<ComparisonResult> {
+function compareImagesAsync(
+	image1: string | ImageData | Buffer,
+	image2: string | ImageData | Buffer,
+	options: ComparisonOptions
+): Promise<ComparisonResult> {
 	return new Promise((resolve, reject) => {
 		compareImages(image1, image2, options)
 			.then((data: ComparisonResult) => {
@@ -34,7 +38,13 @@ function generateReport(featureImagesResults: FeatureImagesResult[]): void {
 	// HTML report
 }
 
-async function generateDiffImages(actualGhostImagesPath: string, newGhostImagesPath: string, diffImagesPath: string, features: FeatureInfo[], options: ComparisonOptions): Promise<FeatureImagesResult[]> {
+async function generateDiffImages(
+	actualGhostImagesPath: string,
+	newGhostImagesPath: string,
+	diffImagesPath: string,
+	features: FeatureInfo[],
+	options: ComparisonOptions
+): Promise<FeatureImagesResult[]> {
 	let featureImagesResults: FeatureImagesResult[];
 	featureImagesResults = [];
 
@@ -52,8 +62,12 @@ async function generateDiffImages(actualGhostImagesPath: string, newGhostImagesP
 
 		for (const scenario of feature.scenarios) {
 			// All files with the format SCENARIO_NUMBER.png
-			const actualGhostScenarioImages = fs.readdirSync(`${actualGhostImagesPath}/${feature.feature}`).filter((file) => file.startsWith(scenario));
-			const newGhostScenarioImages = fs.readdirSync(`${newGhostImagesPath}/${feature.feature}`).filter((file) => file.startsWith(scenario));
+			const actualGhostScenarioImages = fs
+				.readdirSync(`${actualGhostImagesPath}/${feature.feature}`)
+				.filter((file) => file.startsWith(scenario));
+			const newGhostScenarioImages = fs
+				.readdirSync(`${newGhostImagesPath}/${feature.feature}`)
+				.filter((file) => file.startsWith(scenario));
 
 			for (const actualGhostScenarioImage of actualGhostScenarioImages) {
 				const actualGhostScenarioImagePath = `${actualGhostImagesPath}/${feature.feature}/${actualGhostScenarioImage}`;
@@ -62,7 +76,11 @@ async function generateDiffImages(actualGhostImagesPath: string, newGhostImagesP
 				if (newGhostScenarioImages.includes(actualGhostScenarioImage)) {
 					const diffGhostScenarioImagePath = `${featureDiffPath}/${actualGhostScenarioImage}`;
 
-					const results = await compareImagesAsync(actualGhostScenarioImagePath, newGhostScenarioImagePath, options);
+					const results = await compareImagesAsync(
+						actualGhostScenarioImagePath,
+						newGhostScenarioImagePath,
+						options
+					);
 
 					// @ts-ignore
 					fs.writeFileSync(diffGhostScenarioImagePath, results.getBuffer());
@@ -80,7 +98,6 @@ async function generateDiffImages(actualGhostImagesPath: string, newGhostImagesP
 
 	return featureImagesResults;
 }
-
 
 async function Runner() {
 	const IMAGES_ACTUAL_GHOST = './images/actual';
@@ -128,8 +145,13 @@ async function Runner() {
 		ignore: 'antialiasing',
 	};
 
-
-	const featureImagesResults = await generateDiffImages(IMAGES_ACTUAL_GHOST, IMAGES_OLD_GHOST, IMAGES_DIFF_GHOST, FEATURES, options);
+	const featureImagesResults = await generateDiffImages(
+		IMAGES_ACTUAL_GHOST,
+		IMAGES_OLD_GHOST,
+		IMAGES_DIFF_GHOST,
+		FEATURES,
+		options
+	);
 
 	generateReport(featureImagesResults);
 }

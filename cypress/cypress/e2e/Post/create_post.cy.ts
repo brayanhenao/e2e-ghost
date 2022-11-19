@@ -8,8 +8,9 @@ import {
 } from '../../pages';
 
 import {faker} from '@faker-js/faker';
+faker.seed(666); //set seed to keep data consistent
 
-describe('create_post', () => {
+describe.skip('create_post', () => {
 	before(cy.clearData);
 
 	beforeEach(() => {
