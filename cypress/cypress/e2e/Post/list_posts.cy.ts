@@ -4,7 +4,7 @@ import {faker} from '@faker-js/faker';
 faker.seed(666); //set seed to keep data consistent
 
 describe('list_post', () => {
-	context.only('filter', () => {
+	context('filter', () => {
 		let postTitle,
 			postTitle2,
 			postTitle3 = '';

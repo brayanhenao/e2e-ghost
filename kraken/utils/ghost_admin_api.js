@@ -8,12 +8,7 @@ module.exports = class GhostAdminAPI {
 
 	async TearDown() {
 
-		let baseURL;
-		if (properties.GHOST_VERSION === '3.42') {
-			baseURL = `${properties.GHOST_BASE_URL}/ghost/api/v3/admin/`;
-		} else {
-			baseURL = `${properties.GHOST_BASE_URL}/ghost/api/admin/`;
-		}
+		const baseURL = `${properties.GHOST_BASE_URL}/ghost/api/admin/`;
 
 		const api = axios.create({
 			baseURL,
@@ -73,20 +68,18 @@ module.exports = class GhostAdminAPI {
 		}
 
 		// Delete all members
-		if (properties.GHOST_VERSION !== '3.42') {
-			const allMembers = await api.get('members', {
+		const allMembers = await api.get('members', {
+			headers: {
+				Cookie: token,
+			},
+		});
+
+		for (let i = 0; i < allMembers.data.members.length; i++) {
+			await api.delete(`members/${allMembers.data.members[i].id}`, {
 				headers: {
 					Cookie: token,
 				},
 			});
-
-			for (let i = 0; i < allMembers.data.members.length; i++) {
-				await api.delete(`members/${allMembers.data.members[i].id}`, {
-					headers: {
-						Cookie: token,
-					},
-				});
-			}
 		}
 
 		// Delete ghost header and footer for code injection

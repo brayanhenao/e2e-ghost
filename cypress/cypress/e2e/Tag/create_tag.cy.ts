@@ -9,7 +9,7 @@ import {
 import {faker} from '@faker-js/faker';
 faker.seed(666); //set seed to keep data consistent
 
-describe.skip('create_tag', () => {
+describe('create_tag', () => {
 	before(cy.clearData);
 
 	beforeEach(() => {

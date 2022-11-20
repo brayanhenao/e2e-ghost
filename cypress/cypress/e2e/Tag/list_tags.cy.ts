@@ -3,7 +3,7 @@ import {adminPage, tagsPage, tagsEditPage} from '../../pages';
 import {faker} from '@faker-js/faker';
 faker.seed(666); //set seed to keep data consistent
 
-describe.skip('list_tags', () => {
+describe('list_tags', () => {
 	let tagName,
 		tagName2,
 		tagName3 = '';

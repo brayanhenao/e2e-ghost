@@ -3,7 +3,7 @@ import {adminPage, pagesEditPage, pagesPage, pageDetailPage} from '../../pages';
 import {faker} from '@faker-js/faker';
 faker.seed(666); //set seed to keep data consistent
 
-describe.skip('create_page', () => {
+describe('create_page', () => {
 	before(cy.clearData);
 
 	beforeEach(() => {

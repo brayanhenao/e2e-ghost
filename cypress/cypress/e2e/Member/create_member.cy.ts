@@ -62,7 +62,7 @@ describe('create_member', () => {
 		cy.wait(1000);
 	});
 
-	it.only('should list created members', () => {
+	it('should list created members', () => {
 		membersPage.load().screenshot();
 		cy.wait(1000);
 		membersPage
