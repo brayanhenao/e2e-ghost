@@ -26,20 +26,20 @@ const ghostAdminAPI = new GhostAdminAPI();
 BeforeAll(ghostAdminAPI.TearDown);
 
 // Common actions
-When('I take a screenshot for Feature {string} and Scenario {string}', async function(feature, scenario) {
-	const screnshotsDir = path.join(__dirname, '../../../screenshots');
+When('I take a screenshot for Feature {string} and Scenario {string} and Step {string}', async function(feature, scenario, step) {
+	const screenshotsDir = path.join(__dirname, '../../../screenshots');
 	// check if screenshots directory exists
-	if (!fs.existsSync(screnshotsDir)) {
-		fs.mkdirSync(screnshotsDir);
+	if (!fs.existsSync(screenshotsDir)) {
+		fs.mkdirSync(screenshotsDir);
 	}
 
 	// check if feature directory exists
-	const featureDir = path.join(screnshotsDir, feature);
+	const featureDir = path.join(screenshotsDir, feature);
 	if (!fs.existsSync(featureDir)) {
 		fs.mkdirSync(featureDir);
 	}
 
-	const screenshotPath = path.join(featureDir, scenario + '_' + new Date().getTime() + '.png');
+	const screenshotPath = path.join(featureDir, scenario + '_' + step + '.png');
 	await this.driver.saveScreenshot(screenshotPath);
 });
 
@@ -155,7 +155,7 @@ When('I click the save tag button', tagPage.ClickSaveTagButton);
 
 Then('I should see the tag with title {string} in the list of tags', tagPage.VerifyTagTitle);
 
-Then('I should see the tag with name {string} and {int} post in the list of tags',tagPage.VerifyNumbersTagWithTitle);
+Then('I should see the tag with name {string} and {int} post in the list of tags', tagPage.VerifyNumbersTagWithTitle);
 
 
 // Member actions

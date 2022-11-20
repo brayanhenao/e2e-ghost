@@ -7,7 +7,7 @@ class settingsPage extends baseAdminPage implements BasePage {
 		cy.get('main .gh-settings-main-grid').last().find('a').eq(1);
 
 	load() {
-		cy.visit(this._route);
+		return cy.visit(this._route);
 	}
 }
 

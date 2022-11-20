@@ -7,7 +7,7 @@ class postDetailPage implements BasePage {
 	public contentContainer = () => cy.get('.gh-content');
 
 	load() {
-		cy.visit(this._route + this._slug);
+		return cy.visit(this._route + this._slug);
 	}
 
 	setSlug(slug: string) {

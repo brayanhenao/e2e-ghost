@@ -8,7 +8,7 @@ Asegurarse que se encuentra en el directorio `./cypress`  (NO `./cypress/cypress
  npm install
 ```
 
-modificar el archivo [admin.json](cypress/fixtures/admin.json) con las credenciales correspondientes a su instalación local de `ghost`
+Modificar el archivo [admin.json](cypress/fixtures/admin.json) con las credenciales correspondientes a su instalación local de `ghost`
 ```
 {
 	"user": "admin@test.com",
@@ -16,7 +16,7 @@ modificar el archivo [admin.json](cypress/fixtures/admin.json) con las credencia
 }
 
 ```
-verificar que ghost está corriendo en el puerto 2368.
+Verificar que ghost está corriendo en el puerto 2368 o 2369.
 
 # Ejecución
 
@@ -31,3 +31,9 @@ Ejecución Headed
 ```
  npm run test:headed
 ```
+
+### Screenshots
+
+Además de los reportes, los features generan screenshots del paso a paso. Estos pueden ser encontrados en la
+carpeta `screenshots/`  en la cual, luego de la ejecución, se encontrará una carpeta por cada feature corrido
+con los screenshots de cada escenario.

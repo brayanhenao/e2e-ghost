@@ -353,5 +353,6 @@ reports
 
 **/node_modules
 .idea
-kraken/.kraken
-kraken/screenshots
+**/.kraken
+**/screenshots
+regresion-visual/resemble/images/diff

@@ -12,7 +12,7 @@ class codeInjectionPage extends baseAdminPage implements BasePage {
 	public siteFooterTextArea = () => cy.get('main form #ghost-foot').first();
 
 	load() {
-		cy.visit(this._route);
+		return cy.visit(this._route);
 	}
 }
 

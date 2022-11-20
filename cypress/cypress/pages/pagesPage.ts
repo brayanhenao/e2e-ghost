@@ -14,10 +14,10 @@ class pagesPage extends baseAdminPage implements BasePage {
 	public publishedPageOption = () => cy.get('.ember-power-select-option').eq(2);
 	public scheduledPageOption = () => cy.get('.ember-power-select-option').eq(3);
 
-	public pageListContainer = () => cy.get('.pages-list').first();
+	public pageListContainer = () => cy.get('.content-list').first();
 
 	load() {
-		cy.visit(this._route);
+		return cy.visit(this._route);
 	}
 }
 

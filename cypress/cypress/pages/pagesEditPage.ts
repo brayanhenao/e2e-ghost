@@ -9,7 +9,7 @@ class pagesEditPage implements BasePage {
 	private previewButton = () =>
 		this.headerOptions().find('section button').first();
 	private publishButton = () =>
-		this.headerOptions().find('section button').last();
+		this.headerOptions().find('section .gh-btn').last();
 
 	public settingsButton = () => cy.get('main button').last();
 	public settingsMenu = () => cy.get('.settings-menu-content').first();
@@ -27,7 +27,7 @@ class pagesEditPage implements BasePage {
 		this.editorContainer().find('article div').first();
 
 	load() {
-		cy.visit(this._route);
+		return cy.visit(this._route);
 	}
 
 	createPage(
@@ -35,28 +35,30 @@ class pagesEditPage implements BasePage {
 		content: string,
 		publish: {scheduled: boolean} | boolean = false
 	) {
-		this.titleInput().type(title);
-		this.contentInput().type(content);
+		this.titleInput().type(title).screenshot();
+		this.contentInput().type(content).screenshot();
 
 		if (publish) {
 			this.publishButton().click();
 			cy.wait(1000);
 			if (typeof publish == 'object') {
-				cy.get('.gh-publish-settings button').last().click();
-				cy.get('.gh-publish-settings .gh-publish-setting-form .gh-radio')
+				cy.get('div[class*="gh-publish"] div div').last().parent().click();
+				cy.wait(500);
+				cy.get('div[class*="gh-publish"] div[class$="-radio "]')
 					.last()
-					.click();
-				cy.get(
-					'.gh-publish-settings .gh-publish-setting-form .gh-date-time-picker'
-				)
+					.click()
+					.screenshot();
+				cy.get('div[class*="gh-publish"] .gh-date-time-picker')
 					.last()
-					.click();
+					.click()
+					.screenshot();
 
 				cy.wait(1000);
 			}
-			cy.get('.gh-publish-cta').first().click();
-			cy.wait(1000);
-			cy.get('.gh-publish-cta button').first().click();
+			cy.get('div[class*="gh-publish"] button').last().click();
+			cy.wait(1000).screenshot();
+			cy.get('div[class*="gh-publish"] button').first().click();
+			cy.screenshot();
 		}
 	}
 }

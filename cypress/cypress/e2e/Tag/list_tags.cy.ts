@@ -1,8 +1,9 @@
 import {adminPage, tagsPage, tagsEditPage} from '../../pages';
 
 import {faker} from '@faker-js/faker';
+faker.seed(666); //set seed to keep data consistent
 
-describe('list_tags', () => {
+describe.skip('list_tags', () => {
 	let tagName,
 		tagName2,
 		tagName3 = '';
@@ -10,59 +11,72 @@ describe('list_tags', () => {
 	before(() => {
 		cy.clearData();
 
-		adminPage.load();
+		adminPage.load().screenshot();
 		cy.fixture('admin').then(({user, password}) => {
 			cy.log(user, password);
 			adminPage.login(user, password);
-			cy.wait(1000);
+			cy.wait(1000).screenshot();
 		});
 
-		tagsPage.load();
+		tagsPage.load().screenshot();
 		cy.wait(1000);
 		tagName = faker.lorem.word();
 		tagsPage.newTagButton().click();
-		tagsEditPage.nameInput().type(tagName);
-		tagsEditPage.colorInput().type(faker.color.rgb({prefix: ''}));
-		tagsEditPage.descriptionInput().type(faker.lorem.sentence());
+		cy.screenshot();
+		tagsEditPage.nameInput().type(tagName).screenshot();
+		tagsEditPage
+			.colorInput()
+			.type(faker.color.rgb({prefix: ''}))
+			.screenshot();
+		tagsEditPage.descriptionInput().type(faker.lorem.sentence()).screenshot();
 		tagsEditPage.saveButton().click();
-		cy.wait(1000);
+		cy.wait(1000).screenshot();
 
-		tagsPage.load();
+		tagsPage.load().screenshot();
 		cy.wait(1000);
 		tagName2 = faker.lorem.word();
 		tagsPage.newTagButton().click();
-		tagsEditPage.nameInput().type(tagName2);
-		tagsEditPage.colorInput().type(faker.color.rgb({prefix: ''}));
-		tagsEditPage.descriptionInput().type(faker.lorem.sentence());
+		cy.screenshot();
+		tagsEditPage.nameInput().type(tagName2).screenshot();
+		tagsEditPage
+			.colorInput()
+			.type(faker.color.rgb({prefix: ''}))
+			.screenshot();
+		tagsEditPage.descriptionInput().type(faker.lorem.sentence()).screenshot();
 		tagsEditPage.saveButton().click();
-		cy.wait(1000);
+		cy.wait(1000).screenshot();
 
-		tagsPage.load();
+		tagsPage.load().screenshot();
 		cy.wait(1000);
 		tagName3 = faker.lorem.word();
 		tagsPage.newTagButton().click();
-		tagsEditPage.nameInput().type(tagName3);
-		tagsEditPage.colorInput().type(faker.color.rgb({prefix: ''}));
-		tagsEditPage.descriptionInput().type(faker.lorem.sentence());
+		cy.screenshot();
+		tagsEditPage.nameInput().type(tagName3).screenshot();
+		tagsEditPage
+			.colorInput()
+			.type(faker.color.rgb({prefix: ''}))
+			.screenshot();
+		tagsEditPage.descriptionInput().type(faker.lorem.sentence()).screenshot();
 		tagsEditPage.saveButton().click();
-		cy.wait(1000);
+		cy.wait(1000).screenshot();
 
 		adminPage.logout();
 	});
 
 	beforeEach(() => {
-		adminPage.load();
+		adminPage.load().screenshot();
 		cy.fixture('admin').then(({user, password}) => {
 			cy.log(user, password);
 			adminPage.login(user, password);
-			cy.wait(1000);
+			cy.wait(1000).screenshot();
 		});
 	});
 
 	it('should list all created tags', () => {
-		tagsPage.load();
+		tagsPage.load().screenshot();
 		tagsPage.tagListContainer().contains(tagName).should('be.visible');
 		tagsPage.tagListContainer().contains(tagName2).should('be.visible');
 		tagsPage.tagListContainer().contains(tagName3).should('be.visible');
+		cy.screenshot();
 	});
 });

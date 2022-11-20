@@ -20,7 +20,7 @@ class membersEditPage extends baseAdminPage implements BasePage {
 	public saveButton = () => this.headerOptions().find('button').last();
 
 	load() {
-		cy.visit(this._route);
+		return cy.visit(this._route);
 	}
 }
 

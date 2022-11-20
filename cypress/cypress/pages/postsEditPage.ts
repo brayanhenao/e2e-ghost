@@ -27,7 +27,7 @@ class postsEditPage implements BasePage {
 		this.editorContainer().find('article div').first();
 
 	load() {
-		cy.visit(this._route);
+		return cy.visit(this._route);
 	}
 
 	createPost(
@@ -35,28 +35,31 @@ class postsEditPage implements BasePage {
 		content: string,
 		publish: {scheduled: boolean} | boolean = false
 	) {
-		this.titleInput().type(title);
-		this.contentInput().type(content);
+		this.titleInput().type(title).screenshot();
+		this.contentInput().type(content).screenshot();
 
 		if (publish) {
 			this.publishButton().click();
-			cy.wait(1000);
+			cy.wait(1000).screenshot();
 			if (typeof publish == 'object') {
 				cy.get('.gh-publish-settings button').last().click();
 				cy.get('.gh-publish-settings .gh-publish-setting-form .gh-radio')
 					.last()
-					.click();
+					.click()
+					.screenshot();
 				cy.get(
 					'.gh-publish-settings .gh-publish-setting-form .gh-date-time-picker'
 				)
 					.last()
-					.click();
+					.click()
+					.screenshot();
 
 				cy.wait(1000);
 			}
 			cy.get('.gh-publish-cta').first().click();
-			cy.wait(1000);
+			cy.wait(1000).screenshot();
 			cy.get('.gh-publish-cta button').first().click();
+			cy.screenshot();
 		}
 	}
 }
