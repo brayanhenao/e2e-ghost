@@ -26,23 +26,6 @@ const ghostAdminAPI = new GhostAdminAPI();
 BeforeAll(ghostAdminAPI.TearDown);
 
 // Common actions
-When('I take a screenshot for Feature {string} and Scenario {string}', async function(feature, scenario) {
-	const screenshotsDir = path.join(__dirname, '../../../screenshots');
-	// check if screenshots directory exists
-	if (!fs.existsSync(screenshotsDir)) {
-		fs.mkdirSync(screenshotsDir);
-	}
-
-	// check if feature directory exists
-	const featureDir = path.join(screenshotsDir, feature);
-	if (!fs.existsSync(featureDir)) {
-		fs.mkdirSync(featureDir);
-	}
-
-	const screenshotPath = path.join(featureDir, scenario + '_' + new Date().getTime() + '.png');
-	await this.driver.saveScreenshot(screenshotPath);
-});
-
 When('I take a screenshot for Feature {string} and Scenario {string} and Step {string}', async function(feature, scenario, step) {
 	const screenshotsDir = path.join(__dirname, '../../../screenshots');
 	// check if screenshots directory exists

@@ -19,32 +19,21 @@ module.exports = class PostPage {
 
 	async ClickPublishButton() {
 		let publishElement = await this.driver.$('.gh-publish-trigger');
-
-		if (!await publishElement.isExisting()) {
-			publishElement = await this.driver.$('.gh-publishmenu.ember-view');
-		}
-
 		await publishElement.click();
 	}
 
-	async ClickPublishNowButton() {
-		let publishNowElement = await this.driver.$('.gh-publish-cta');
-
-		if (!await publishNowElement.isExisting()) {
-			publishNowElement = await this.driver.$('.gh-btn-blue.gh-publishmenu-button.gh-btn-icon');
-			await publishNowElement.click();
-		} else {
-			await publishNowElement.click();
-			let confirmPublishNowElement = await this.driver.$('.gh-btn.gh-btn-large,gh-btn-pulse.ember-view');
-			await confirmPublishNowElement.click();
-		}
+	async ClickPublishContinueButton() {
+		let publishContinueElement = await this.driver.$('.gh-publish-cta > button');
+		await publishContinueElement.click();
 	}
 
-	async ClickPostSettingsMenu() {
+	async ClickPublishNowButton() {
+		let publishNowElement = await this.driver.$('.gh-btn.gh-btn-large.gh-btn-pulse.ember-view');
+		await publishNowElement.click();
+	}
+
+	async ClickSettingsMenu() {
 		let settingsMenuElement = await this.driver.$('.settings-menu-toggle');
-		if (!await settingsMenuElement.isExisting()) {
-			settingsMenuElement = await this.driver.$('.post-settings');
-		}
 		await settingsMenuElement.click();
 	}
 
@@ -53,57 +42,36 @@ module.exports = class PostPage {
 		await postAccessComboBoxElement.click();
 	}
 
+	async FillInSelectTag(content) {
+		let selectTagElement = await this.driver.$('#tag-input');
+		await selectTagElement.click();
+		await selectTagElement.setValue(content);
+	}
+	
 	async ClickInSelectTag() {
-		let selectedTagElement = await this.driver.$('#tag-input');
-		await selectedTagElement.click();
-
-		let tagElement = await this.driver.$('.ember-power-select-options > .ember-power-select-option:first-of-type');
-		await tagElement.click();
-
-		await new Promise(r => setTimeout(r, 2000));
-
-		let closeSettingsMenuElement = await this.driver.$('.close.settings-menu-header-action');
-		if (await closeSettingsMenuElement.isExisting()) {
-			await closeSettingsMenuElement.click();
-		}
+		let selectTagElement = await this.driver.$('.ember-power-select-options > .ember-power-select-option:first-of-type');
+		await selectTagElement.click();
 	}
 
 	async FillInTitle(title) {
 		let titleElement = await this.driver.$('.gh-editor-title.ember-text-area');
-		await titleElement.click();
 		await titleElement.setValue(title);
 	}
 
 	async FillInContent(content) {
 		let titleElement = await this.driver.$('.koenig-editor__editor.__mobiledoc-editor');
-		await titleElement.click();
 		await titleElement.setValue(content);
 	}
 
 	async SchedulePostForLater(date, time) {
 		let publishDateElement = await this.driver.$('.gh-publish-setting.last');
-		if (!await publishDateElement.isExisting()) {
-			let finalElement;
-			let radioElements = await this.driver.$$('.gh-publishmenu-radio-label');
-			for (const element of radioElements) {
-				let text = await element.getText();
-				console.log(text);
-				if (text.trimEnd().trimStart() === 'Schedule it for later') {
-					finalElement = element;
-					break;
-				}
-			}
-			await finalElement.click();
-			await new Promise(r => setTimeout(r, 1000));
-		} else {
-			await publishDateElement.click();
-			await new Promise(r => setTimeout(r, 1000));
+		await publishDateElement.click();
+		await new Promise(r => setTimeout(r, 1000));
 
-			// click radio button with label "Schedule for later"
-			let scheduleForLaterElement = await this.driver.$('label=Schedule for later');
-			await scheduleForLaterElement.click();
-			await new Promise(r => setTimeout(r, 1000));
-		}
+		// click radio button with label "Schedule for later"
+		let scheduleForLaterElement = await this.driver.$('label=Schedule for later');
+		await scheduleForLaterElement.click();
+		await new Promise(r => setTimeout(r, 1000));
 
 		let datePickerInput = await this.driver.$('.gh-date-time-picker-date > input');
 		await datePickerInput.setValue(date);
@@ -121,8 +89,6 @@ module.exports = class PostPage {
 
 	async ChangePublishDateAndTime(date, time) {
 		let datePickerInput = await this.driver.$('.gh-date-time-picker-date > input');
-		await datePickerInput.click();
-		await datePickerInput.clearValue();
 		await datePickerInput.setValue(date);
 		await new Promise(r => setTimeout(r, 1000));
 
@@ -130,13 +96,7 @@ module.exports = class PostPage {
 		await timePickerInput.click();
 		await timePickerInput.clearValue();
 		await timePickerInput.setValue(time);
-
-		let closeSettingsMenuElement = await this.driver.$('.close.settings-menu-header-action');
-		if (await closeSettingsMenuElement.isExisting()) {
-			await closeSettingsMenuElement.click();
-		}
-
-		await new Promise(r => setTimeout(r, 2000));
+		await new Promise(r => setTimeout(r, 1000));
 	}
 
 	async FilterPostsByPublishedDate(criteria) {
@@ -145,7 +105,7 @@ module.exports = class PostPage {
 
 		let publishedDateFilterOptionElements = await this.driver.$$(`.ember-power-select-option`).filter(async (element) => {
 			let text = await element.getText();
-			return criteria.toLowerCase().includes(text.toLowerCase());
+			return text === criteria;
 		});
 
 		await publishedDateFilterOptionElements[0].click();
@@ -189,51 +149,26 @@ module.exports = class PostPage {
 	}
 
 	async VerifyPostTitleScheduledDate(title, date, time) {
-		let results = [];
-
-		let postElements = await this.driver.$$('.gh-list-row.gh-posts-list-item');
-		for (const element of postElements) {
+		let postElement = await this.driver.$$(`.ember-view.permalink.gh-list-data.gh-post-list-title`);
+		for (const element of postElement) {
 			let postTitle = await element.$('.gh-content-entry-title').getText();
 
 			let postStatusElement = await element.$('.gh-content-entry-status');
-			if (!await postStatusElement.isExisting()) {
-				postStatusElement = await element.$('.gh-post-list-status');
-			}
 
 			await postStatusElement.moveTo();
 			await new Promise(r => setTimeout(r, 1000));
+			let postScheduledDate = await element.$('.schedule-details').getText();
 
-			let postScheduledDate;
+			let postScheduledDateFormatted = postScheduledDate.split('on ')[1].split(' to')[0].split(' ').join('-') + ' ' + postScheduledDate.split('at ')[1].split(' (')[0];
+			let auxDate = new Date(postScheduledDateFormatted + ' UTC');
+			postScheduledDateFormatted = auxDate.toISOString().slice(0, 16).replace('T', ' ');
 
-			let postScheduledDateElement = await element.$('.schedule-details');
-			if (!await postScheduledDateElement.isExisting()) {
-				postScheduledDateElement = await element.$('.gh-post-list-status > div > span');
-				postScheduledDate = await postScheduledDateElement.getAttribute('data-tooltip');
-			} else {
-				postScheduledDate = await postScheduledDateElement.getText();
-			}
-
-			// Get the time
-			let timeRegex = /(\d{2}:\d{2}) \(UTC\)/g;
-			let timeMatch = timeRegex.exec(postScheduledDate);
-			let postScheduledDateTime = timeMatch[1];
-
-			// Get the date
-			let dateRegex = /on (\d{2} \w+ \d{4})/g;
-			let dateMatch = dateRegex.exec(postScheduledDate);
-			let postScheduledDateDate = dateMatch[1];
-			let auxDate = new Date(postScheduledDateDate + ' UTC');
-			postScheduledDateDate = auxDate.toISOString().slice(0, 10);
-
-			console.log(postTitle, title);
-			console.log(postScheduledDateDate, date);
-			console.log(postScheduledDateTime, time);
-			if (postTitle === title && postScheduledDateDate === date && postScheduledDateTime === time) {
-				results.push(element);
+			if (postTitle === title && postScheduledDateFormatted === `${date} ${time}`) {
+				return;
 			}
 		}
 
-		expect(results.length).to.be.equal(1);
+		throw new Error(`Post with title ${title} and date ${date} ${time} not found`);
 	}
 
 	async VerifyPostTitle(title) {
@@ -263,18 +198,13 @@ module.exports = class PostPage {
 	}
 
 	async VerifyPostTitleStatus(title, status) {
-		let postElements = await this.driver.$$(`.gh-list-row.gh-posts-list-item`);
+		let postElements = await this.driver.$$(`.ember-view.permalink.gh-list-data.gh-post-list-title`);
 		let array = [];
 
 		for (const element of postElements) {
 			let postTitle = await element.$('.gh-content-entry-title').getText();
-			let postStatusElement = await element.$('.gh-content-entry-status');
-			if (!await postStatusElement.isExisting()) {
-				postStatusElement = await element.$('.gh-post-list-status');
-			}
-
-			let postStatus = await postStatusElement.getText();
-			if (postTitle === title && postStatus.toLowerCase() === status.toLowerCase()) {
+			let postStatus = await element.$('.gh-content-entry-status').getText();
+			if (postTitle === title && postStatus === status) {
 				array.push(element);
 			}
 		}

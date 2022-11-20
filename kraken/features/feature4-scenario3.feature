@@ -27,3 +27,5 @@ Feature: Create Page
     And I navigate to pages
     And I take a screenshot for Feature "F4" and Scenario "SC3"
     Then I should see the pages with title "Post Feature 4 Scenario 3" in the list of pages with status "Scheduled"
+    And I navigate to page with slug "Post Feature 4 Scenario 3"
+    Then I should see the page response with 404

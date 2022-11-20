@@ -1,4 +1,4 @@
-Feature: List Members
+Feature: Create Post
 
   @user1 @web
   Scenario: Create 3 members and filter them by name
@@ -13,7 +13,7 @@ Feature: List Members
     And I wait for 2 seconds
     And I fill in the email with "membera@mail.com"
     And I wait for 2 seconds
-    And I take a screenshot for Feature "F7" and Scenario "SC1"
+    And I take a screenshot for Feature "F6" and Scenario "SC1"
     And I click the save button
     And I wait for 2 seconds
     And I navigate to members

@@ -1,8 +1,6 @@
 # Ghost E2E Testing - MISW4103 - Kraken
 
-Esta configuración de Kraken está diseñada para la versión de Ghost 5.22.9
-
-## Prerrequisitos
+## Pre-requisitos
 
 ### NodeJS
 
@@ -40,10 +38,10 @@ Para ejecutar todos los features escritos para Kraken, utilice el comando
 
 ### Reports
 
-Kraken genera un reporte de ejecución en la carpeta `reports/`
+Kraken genera un reporte de ejecución el la carpeta `reports/`
 
 ### Screenshots
 
-Además de los reportes, los features generan screenshots del paso a paso. Estos pueden ser encontrados en la
+Además de los reportes, los features genran screenshots del paso a paso. Estos pueden ser encontrados en la
 carpeta `screenshots/`  en la cual, luego de la ejecución, se encontrará una carpeta por cada feature corrido
-con los screenshots de cada escenario en el formato `SCENARIONUMBER_STEPNUMBER.png`
+con los screenshots de cada escenario en el formato `SCENARIONUMBER_TIMESTAMP.png`

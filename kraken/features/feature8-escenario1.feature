@@ -1,4 +1,4 @@
-Feature: Inject Code
+Feature: Create Post
 
   @user1 @web
   Scenario: Inject code into ghost header

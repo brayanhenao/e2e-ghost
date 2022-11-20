@@ -1,4 +1,4 @@
-Feature: List Members
+Feature: Create Post
 
   @user1 @web
   Scenario: Create 3 members and filter them by name and email

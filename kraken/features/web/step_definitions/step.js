@@ -26,23 +26,6 @@ const ghostAdminAPI = new GhostAdminAPI();
 BeforeAll(ghostAdminAPI.TearDown);
 
 // Common actions
-When('I take a screenshot for Feature {string} and Scenario {string}', async function(feature, scenario) {
-	const screenshotsDir = path.join(__dirname, '../../../screenshots');
-	// check if screenshots directory exists
-	if (!fs.existsSync(screenshotsDir)) {
-		fs.mkdirSync(screenshotsDir);
-	}
-
-	// check if feature directory exists
-	const featureDir = path.join(screenshotsDir, feature);
-	if (!fs.existsSync(featureDir)) {
-		fs.mkdirSync(featureDir);
-	}
-
-	const screenshotPath = path.join(featureDir, scenario + '_' + new Date().getTime() + '.png');
-	await this.driver.saveScreenshot(screenshotPath);
-});
-
 When('I take a screenshot for Feature {string} and Scenario {string} and Step {string}', async function(feature, scenario, step) {
 	const screenshotsDir = path.join(__dirname, '../../../screenshots');
 	// check if screenshots directory exists
@@ -60,14 +43,8 @@ When('I take a screenshot for Feature {string} and Scenario {string} and Step {s
 	await this.driver.saveScreenshot(screenshotPath);
 });
 
-When('I enter login credentials', loginPage.EnterLoginCredentials);
-
-When('I click the login button', loginPage.ClickLoginButton);
-
 // Login actions
-Given('I login into ghost admin console', loginPage.FullLogin);
-
-Given('I navigate to login page', loginPage.NavigateToLoginPage);
+Given('I login into ghost admin console', loginPage.EnterLoginCredentials);
 
 // Post actions
 When('I navigate to posts', postPage.NavigateToPosts);
@@ -80,11 +57,15 @@ When('I fill in the content with {string}', postPage.FillInContent);
 
 When('I click the publish button', postPage.ClickPublishButton);
 
+When('I click the continue publish button', postPage.ClickPublishContinueButton);
+
 When('I click the publish now button', postPage.ClickPublishNowButton);
 
 When('I schedule post for later with date {string} and time {string}', postPage.SchedulePostForLater);
 
-When('I click the settings menu', postPage.ClickPostSettingsMenu);
+When('I click the settings menu', postPage.ClickSettingsMenu);
+
+When('I fill the tag select with {string}', postPage.FillInSelectTag);
 
 When('I click the select tag', postPage.ClickInSelectTag);
 
@@ -130,7 +111,11 @@ When('I fill in the page content with {string}', pagePage.FillInDescription);
 
 When('I click the publish page button', pagePage.ClickPublishButton);
 
+When('I click the continue publish page button', pagePage.ClickPublishContinueButton);
+
 When('I click the publish page now button', pagePage.ClickPublishNowButton);
+
+When('I click the Right now page button', pagePage.ClickRightNowButton);
 
 When('I click the Schedule For Later Button button', pagePage.ClickScheduleForLaterButton);
 
@@ -138,9 +123,15 @@ When('I fill in the date with {string}', pagePage.FillInDateForLater);
 
 When('I fill in the time with {string}', pagePage.FillInTimeForLater);
 
+When('I navigate to page with slug {string}', pagePage.NavigateToUrlPages);
+
 Then('I should see the page with title {string} in the list of pages', pagePage.VerifyPageTitle);
 
 Then('I should see the pages with title {string} in the list of pages with status {string}', pagePage.VerifyPageTitleStatus);
+
+Then('I should see the page with title {string} and description {string}', pagePage.VerifyPageTitleAndDescription);
+
+Then('I should see the page response with 404', pagePage.VerifyPage404);
 
 // List Pages
 Then('I should see {int} number of pages with status {string}.', pagePage.VerifyNumberPageWithStatus);
