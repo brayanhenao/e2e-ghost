@@ -59,7 +59,7 @@ describe('list_pages', () => {
 		});
 	});
 
-	it('should filter by draft', () => {
+	it.only('should filter by draft', () => {
 		pagesPage.load().screenshot();
 		cy.wait(1000);
 		pagesPage.selectPageStatus().click();
@@ -84,7 +84,7 @@ describe('list_pages', () => {
 			.contains(pageTitle3)
 			.should('not.exist');
 	});
-	it('should filter by published', () => {
+	it.only('should filter by published', () => {
 		pagesPage.load().screenshot();
 		cy.wait(1000);
 		pagesPage.selectPageStatus().click();

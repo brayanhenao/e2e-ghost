@@ -21,8 +21,7 @@ objetivo de mantenerlas isoladas.
 Las pruebas se desarrollaron con las herramientas Cypress y Kraken Node, para instrucciones específicas de cómo ejecutar
 cada herramienta ingresar a sus respectivos README:
 
-- [Instrucciones Cypress](cypress/README.md)
-- [Instrucciones Cypress usando una nueva versión de Ghost para VRT](cypress-ghost-new-version/README.md)
+- [Instrucciones Cypress (versión nueva y actual)](cypress/README.md)
 - [Instrucciones Kraken](kraken/README.md)
 - [Instrucciones Kraken usando una nueva versión de Ghost para VRT](kraken-ghost-new-version/README.md)
 
