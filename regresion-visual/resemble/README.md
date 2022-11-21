@@ -16,7 +16,7 @@ En el directorio de resemble, instale los módulos necesarios con el comando
 
 ## Ejecución
 
-Para ejecutar el script de genración de las diferencias, ejecute el comando
+Para ejecutar el script de generación de las diferencias, ejecute el comando
 
 ```bash
  npm start
@@ -24,7 +24,9 @@ Para ejecutar el script de genración de las diferencias, ejecute el comando
 
 ## Resultados
 
-Los resultados del scrip son los siguientes:
+Los resultados del script son los siguientes:
 
 - `images/diff` : Carpeta con las diferencias generadas por ResembleJS para cada Scenario.
-- `resemble-report.html` : Reporte generado para mostar las diferencias de cada Scenario.
+- `report.html` : Reporte generado para mostar las diferencias de cada Scenario.
+
+`Nota: Por defecto pueden encontrar unas imágenes de diferencia (resultado del testing) y el reporte html, así que para visualizar los resultados, no es mandatorio ejecutar el script.`
