@@ -24,6 +24,7 @@ cada herramienta ingresar a sus respectivos README:
 - [Instrucciones Cypress (versión nueva y actual)](cypress/README.md)
 - [Instrucciones Kraken](kraken/README.md)
 - [Instrucciones Kraken usando una nueva versión de Ghost para VRT](kraken-ghost-new-version/README.md)
+- [Instrucción para usar Resemble y visualizar el reporte](regresion-visual/resemble/README.md)
 
 ## Ghost versión 5.22.9
 
