@@ -6,6 +6,7 @@ import {
 	Member,
 	InvalidOptions,
 	InvalidOptionConfig,
+	Post,
 } from './interfaces';
 const types: InvalidOptionConfig['datatype'][] = [
 	'bigInt',
@@ -97,6 +98,8 @@ const generateInvalidInput = (
 		? generateRandomInputByType(originalType)
 		: generateRandomInputByType();
 };
+
+//Members
 
 export const generateValidMember = (options?: Options<Member>): Member => {
 	const firstName = faker.name.firstName();
@@ -280,3 +283,57 @@ export const generateManyInvalidMembers = (variantAmounts = 5) => {
 		membersWithBorderCases,
 	};
 };
+
+//Post
+
+export const generateValidPost = (options?: Options<Post>): Post => {
+	const publicationState: 'draft' | 'published' | 'scheduled' =
+		faker.helpers.arrayElement(['draft', 'published', 'scheduled']);
+
+	return {
+		title: faker.lorem.words(),
+		content: {
+			type: 'text',
+			content: faker.lorem.paragraphs(),
+		},
+		publishSettings: {
+			publicationState,
+			publishDate: publicationState
+				? faker.date.recent().toISOString().substring(0, 10)
+				: undefined,
+			publishTime: publicationState
+				? faker.date.recent().toISOString().substring(11, 19)
+				: undefined,
+			tags: faker.datatype.boolean()
+				? faker.lorem.words(faker.datatype.number(10)).split(' ')
+				: undefined,
+			access: faker.helpers.arrayElement([
+				'public',
+				'members',
+				'paid',
+				'tiers',
+			]),
+			excerpt: faker.lorem.paragraph(),
+			featured: faker.datatype.boolean(),
+		},
+	};
+};
+
+export const generateInvalidPost = (
+	options?: InvalidOptions<Post>
+): Invalid<Post> => ({
+	title: generateInvalidInput('word', options?.title),
+	content: {
+		type: 'text',
+		content: generateInvalidInput('text', options?.content),
+	},
+	publishSettings: {
+		publicationState: generateInvalidInput('string', options?.publishSettings),
+		publishDate: generateInvalidInput('date', options?.publishSettings),
+		publishTime: generateInvalidInput('time', options?.publishSettings),
+		tags: generateInvalidInput(['string'], options?.publishSettings),
+		access: generateInvalidInput('string', options?.publishSettings),
+		excerpt: generateInvalidInput('text', options?.publishSettings),
+		featured: generateInvalidInput('boolean', options?.publishSettings),
+	},
+});

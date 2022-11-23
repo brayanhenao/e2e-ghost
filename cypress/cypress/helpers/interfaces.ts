@@ -43,12 +43,12 @@ export interface WYSIWYG {
 
 export interface PublishSettings {
 	publicationState: 'draft' | 'published' | 'scheduled';
-	publishDate: string;
-	publishTime: string;
+	publishDate?: string;
+	publishTime?: string;
 	tags: (string | Tag)[];
 	access: 'public' | 'members' | 'paid' | 'tiers';
 	excerpt: string;
-	author: Author[];
+	author?: Author[];
 	featured: boolean;
 }
 
