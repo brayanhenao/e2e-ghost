@@ -7,6 +7,9 @@ import {
 	InvalidOptions,
 	InvalidOptionConfig,
 	Post,
+	Page,
+	Tag,
+	CodeInjection,
 } from './interfaces';
 const types: InvalidOptionConfig['datatype'][] = [
 	'bigInt',
@@ -39,7 +42,7 @@ const generateInvalidInput = (
 			return arr;
 		}
 
-		if (['email', 'text', 'word', 'null'].includes(randomType)) {
+		if (['email', 'text', 'word', 'null', 'color'].includes(randomType)) {
 			if (randomType === 'email') {
 				const randCase = option?.randCase || faker.datatype.number(3);
 				switch (randCase) {
@@ -70,6 +73,8 @@ const generateInvalidInput = (
 				)
 					? faker.lorem.paragraph(option?.max)
 					: faker.datatype.string(option?.min || option?.max);
+			} else if (randomType === 'color') {
+				return faker.color.rgb({prefix: ''});
 			} else {
 				return faker.datatype.boolean() ? null : undefined;
 			}
@@ -328,12 +333,857 @@ export const generateInvalidPost = (
 		content: generateInvalidInput('text', options?.content),
 	},
 	publishSettings: {
-		publicationState: generateInvalidInput('string', options?.publishSettings),
-		publishDate: generateInvalidInput('date', options?.publishSettings),
-		publishTime: generateInvalidInput('time', options?.publishSettings),
-		tags: generateInvalidInput(['string'], options?.publishSettings),
-		access: generateInvalidInput('string', options?.publishSettings),
-		excerpt: generateInvalidInput('text', options?.publishSettings),
-		featured: generateInvalidInput('boolean', options?.publishSettings),
+		publicationState: generateInvalidInput(
+			'string',
+			options?.publishSettings?.publicationState
+		),
+		publishDate: generateInvalidInput(
+			'date',
+			options?.publishSettings?.publishDate
+		),
+		publishTime: generateInvalidInput(
+			'time',
+			options?.publishSettings?.publishTime
+		),
+		tags: generateInvalidInput(['string'], options?.publishSettings?.tags),
+		access: generateInvalidInput('string', options?.publishSettings?.access),
+		excerpt: generateInvalidInput('text', options?.publishSettings?.excerpt),
+		featured: generateInvalidInput(
+			'boolean',
+			options?.publishSettings?.featured
+		),
 	},
 });
+
+export const generateManyValidPosts = (amount = 100) => {
+	const post: Post[] = [];
+	for (let i = 0; i < amount; i++) {
+		post.push(generateValidPost());
+	}
+	return post;
+};
+
+export const generateManyInvalidPosts = (variantAmounts = 5) => {
+	const validTypes: Record<
+		keyof Post,
+		| InvalidOptionConfig['datatype']
+		| Record<string, InvalidOptionConfig['datatype']>
+	> = {
+		title: 'word',
+		content: {
+			content: 'text',
+		},
+		publishSettings: {
+			publicationState: 'string',
+			publishDate: 'date',
+			publishTime: 'time',
+			tags: ['string'],
+			access: 'string',
+			excerpt: 'text',
+			featured: 'boolean',
+		},
+	};
+	// valid posts missing fields //TODO: multiply for variants if required :D //TODO: combinations
+	const postsWithMissingKeys = generateManyValidPosts(9).map((post, i) => {
+		if (i < 2) {
+			delete post[Object.keys(post)[i]];
+		} else {
+			delete post.publishSettings[Object.keys(post.publishSettings)[i - 2]];
+		}
+		return post;
+	});
+
+	let postWithInvalidTypesPerField: Invalid<Post>[] = [].concat.apply(
+		[],
+		Object.entries(validTypes).map(([k, v]) =>
+			[...types]
+				.filter((t) => t !== v)
+				.map((type) => generateInvalidPost({[k]: {datatype: type}}))
+		)
+	);
+
+	const invalidTypesPerFieldPublishSettings = [].concat.apply(
+		[],
+		Object.entries(validTypes.publishSettings).map(([k, v]) =>
+			[...types]
+				.filter((t) => t !== v)
+				.map((type) =>
+					generateInvalidPost({
+						publishSettings: {
+							[k]: {datatype: type},
+						} as any,
+					})
+				)
+		)
+	);
+	postWithInvalidTypesPerField = postWithInvalidTypesPerField.concat(
+		invalidTypesPerFieldPublishSettings
+	);
+
+	// border cases
+
+	const postsWithBorderCases: Invalid<Post>[] = [];
+	postsWithBorderCases.push(
+		generateInvalidPost({
+			title: {preserveType: true, max: 254, randCase: 2} as any, // title = 255
+			content: {preserveType: true} as any,
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true},
+				access: {preserveType: true},
+				excerpt: {preserveType: true},
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	postsWithBorderCases.push(
+		generateInvalidPost({
+			title: {preserveType: true, max: 255, randCase: 2} as any, // title = 255
+			content: {preserveType: true} as any,
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true},
+				access: {preserveType: true},
+				excerpt: {preserveType: true},
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	postsWithBorderCases.push(
+		generateInvalidPost({
+			title: {preserveType: true, max: 256, randCase: 2} as any, // title = 255
+			content: {preserveType: true} as any,
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true},
+				access: {preserveType: true},
+				excerpt: {preserveType: true},
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	postsWithBorderCases.push(
+		generateInvalidPost({
+			title: {preserveType: true} as any,
+			content: {preserveType: true, max: 2 ** 53 - 2, randCase: 2} as any, // content = 2^53 - 1
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true},
+				access: {preserveType: true},
+				excerpt: {preserveType: true},
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	postsWithBorderCases.push(
+		generateInvalidPost({
+			title: {preserveType: true} as any,
+			content: {preserveType: true, max: 2 ** 53 - 1, randCase: 2} as any, // content = 2^53 - 1
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true},
+				access: {preserveType: true},
+				excerpt: {preserveType: true},
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	postsWithBorderCases.push(
+		generateInvalidPost({
+			title: {preserveType: true} as any,
+			content: {preserveType: true, max: 2 ** 53, randCase: 2} as any, // content = 2^53 - 1
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true},
+				access: {preserveType: true},
+				excerpt: {preserveType: true},
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	postsWithBorderCases.push(
+		generateInvalidPost({
+			title: {preserveType: true} as any,
+			content: {preserveType: true} as any,
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true, max: 999}, // tags = 10000
+				access: {preserveType: true},
+				excerpt: {preserveType: true},
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	postsWithBorderCases.push(
+		generateInvalidPost({
+			title: {preserveType: true} as any,
+			content: {preserveType: true} as any,
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true, max: 10000}, // tags = 10000
+				access: {preserveType: true},
+				excerpt: {preserveType: true},
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	postsWithBorderCases.push(
+		generateInvalidPost({
+			title: {preserveType: true} as any,
+			content: {preserveType: true} as any,
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true, max: 10001}, // tags = 10000
+				access: {preserveType: true},
+				excerpt: {preserveType: true},
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	postsWithBorderCases.push(
+		generateInvalidPost({
+			title: {preserveType: true} as any,
+			content: {preserveType: true} as any,
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true},
+				access: {preserveType: true},
+				excerpt: {preserveType: true, max: 299, randCase: 2}, // excerpt = 300
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	postsWithBorderCases.push(
+		generateInvalidPost({
+			title: {preserveType: true} as any,
+			content: {preserveType: true} as any,
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true},
+				access: {preserveType: true},
+				excerpt: {preserveType: true, max: 300, randCase: 2}, // excerpt = 300
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	postsWithBorderCases.push(
+		generateInvalidPost({
+			title: {preserveType: true} as any,
+			content: {preserveType: true} as any,
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true},
+				access: {preserveType: true},
+				excerpt: {preserveType: true, max: 301, randCase: 2}, // excerpt = 300
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	return {
+		postsWithMissingKeys,
+		postWithInvalidTypesPerField,
+		postsWithBorderCases,
+	};
+};
+
+//Page
+
+export const generateValidPage = (options?: Options<Page>): Page => {
+	const publicationState: 'draft' | 'published' | 'scheduled' =
+		faker.helpers.arrayElement(['draft', 'published', 'scheduled']);
+
+	return {
+		title: faker.lorem.words(),
+		content: {
+			type: 'text',
+			content: faker.lorem.paragraphs(),
+		},
+		publishSettings: {
+			publicationState,
+			publishDate: publicationState
+				? faker.date.recent().toISOString().substring(0, 10)
+				: undefined,
+			publishTime: publicationState
+				? faker.date.recent().toISOString().substring(11, 19)
+				: undefined,
+			tags: faker.datatype.boolean()
+				? faker.lorem.words(faker.datatype.number(10)).split(' ')
+				: undefined,
+			access: faker.helpers.arrayElement([
+				'public',
+				'members',
+				'paid',
+				'tiers',
+			]),
+			excerpt: faker.lorem.paragraph(),
+			featured: faker.datatype.boolean(),
+		},
+	};
+};
+
+export const generateInvalidPage = (
+	options?: InvalidOptions<Page>
+): Invalid<Page> => ({
+	title: generateInvalidInput('word', options?.title),
+	content: {
+		type: 'text',
+		content: generateInvalidInput('text', options?.content),
+	},
+	publishSettings: {
+		publicationState: generateInvalidInput(
+			'string',
+			options?.publishSettings?.publicationState
+		),
+		publishDate: generateInvalidInput(
+			'date',
+			options?.publishSettings?.publishDate
+		),
+		publishTime: generateInvalidInput(
+			'time',
+			options?.publishSettings?.publishTime
+		),
+		tags: generateInvalidInput(['string'], options?.publishSettings?.tags),
+		access: generateInvalidInput('string', options?.publishSettings?.access),
+		excerpt: generateInvalidInput('text', options?.publishSettings?.excerpt),
+		featured: generateInvalidInput(
+			'boolean',
+			options?.publishSettings?.featured
+		),
+	},
+});
+
+export const generateManyValidPages = (amount = 100) => {
+	const page: Page[] = [];
+	for (let i = 0; i < amount; i++) {
+		page.push(generateValidPage());
+	}
+	return page;
+};
+
+export const generateManyInvalidPages = (variantAmounts = 5) => {
+	const validTypes: Record<
+		keyof Page,
+		| InvalidOptionConfig['datatype']
+		| Record<string, InvalidOptionConfig['datatype']>
+	> = {
+		title: 'word',
+		content: {
+			content: 'text',
+		},
+		publishSettings: {
+			publicationState: 'string',
+			publishDate: 'date',
+			publishTime: 'time',
+			tags: ['string'],
+			access: 'string',
+			excerpt: 'text',
+			featured: 'boolean',
+		},
+	};
+	// valid pages missing fields //TODO: multiply for variants if required :D //TODO: combinations
+	const pagesWithMissingKeys = generateManyValidPages(9).map((page, i) => {
+		if (i < 2) {
+			delete page[Object.keys(page)[i]];
+		} else {
+			delete page.publishSettings[Object.keys(page.publishSettings)[i - 2]];
+		}
+		return page;
+	});
+
+	let pageWithInvalidTypesPerField: Invalid<Page>[] = [].concat.apply(
+		[],
+		Object.entries(validTypes).map(([k, v]) =>
+			[...types]
+				.filter((t) => t !== v)
+				.map((type) => generateInvalidPost({[k]: {datatype: type}}))
+		)
+	);
+
+	const invalidTypesPerFieldPublishSettings = [].concat.apply(
+		[],
+		Object.entries(validTypes.publishSettings).map(([k, v]) =>
+			[...types]
+				.filter((t) => t !== v)
+				.map((type) =>
+					generateInvalidPost({
+						publishSettings: {
+							[k]: {datatype: type},
+						} as any,
+					})
+				)
+		)
+	);
+	pageWithInvalidTypesPerField = pageWithInvalidTypesPerField.concat(
+		invalidTypesPerFieldPublishSettings
+	);
+
+	// border cases
+
+	const pagesWithBorderCases: Invalid<Page>[] = [];
+	pagesWithBorderCases.push(
+		generateInvalidPage({
+			title: {preserveType: true, max: 254, randCase: 2} as any, // title = 255
+			content: {preserveType: true} as any,
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true},
+				access: {preserveType: true},
+				excerpt: {preserveType: true},
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	pagesWithBorderCases.push(
+		generateInvalidPage({
+			title: {preserveType: true, max: 255, randCase: 2} as any, // title = 255
+			content: {preserveType: true} as any,
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true},
+				access: {preserveType: true},
+				excerpt: {preserveType: true},
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	pagesWithBorderCases.push(
+		generateInvalidPage({
+			title: {preserveType: true, max: 256, randCase: 2} as any, // title = 255
+			content: {preserveType: true} as any,
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true},
+				access: {preserveType: true},
+				excerpt: {preserveType: true},
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	pagesWithBorderCases.push(
+		generateInvalidPage({
+			title: {preserveType: true} as any,
+			content: {preserveType: true, max: 2 ** 53 - 2, randCase: 2} as any, // content = 2^53 - 1
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true},
+				access: {preserveType: true},
+				excerpt: {preserveType: true},
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	pagesWithBorderCases.push(
+		generateInvalidPage({
+			title: {preserveType: true} as any,
+			content: {preserveType: true, max: 2 ** 53 - 1, randCase: 2} as any, // content = 2^53 - 1
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true},
+				access: {preserveType: true},
+				excerpt: {preserveType: true},
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	pagesWithBorderCases.push(
+		generateInvalidPage({
+			title: {preserveType: true} as any,
+			content: {preserveType: true, max: 2 ** 53, randCase: 2} as any, // content = 2^53 - 1
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true},
+				access: {preserveType: true},
+				excerpt: {preserveType: true},
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	pagesWithBorderCases.push(
+		generateInvalidPage({
+			title: {preserveType: true} as any,
+			content: {preserveType: true} as any,
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true, max: 999}, // tags = 10000
+				access: {preserveType: true},
+				excerpt: {preserveType: true},
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	pagesWithBorderCases.push(
+		generateInvalidPage({
+			title: {preserveType: true} as any,
+			content: {preserveType: true} as any,
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true, max: 10000}, // tags = 10000
+				access: {preserveType: true},
+				excerpt: {preserveType: true},
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	pagesWithBorderCases.push(
+		generateInvalidPage({
+			title: {preserveType: true} as any,
+			content: {preserveType: true} as any,
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true, max: 10001}, // tags = 10000
+				access: {preserveType: true},
+				excerpt: {preserveType: true},
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	pagesWithBorderCases.push(
+		generateInvalidPage({
+			title: {preserveType: true} as any,
+			content: {preserveType: true} as any,
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true},
+				access: {preserveType: true},
+				excerpt: {preserveType: true, max: 299, randCase: 2}, // excerpt = 300
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	pagesWithBorderCases.push(
+		generateInvalidPage({
+			title: {preserveType: true} as any,
+			content: {preserveType: true} as any,
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true},
+				access: {preserveType: true},
+				excerpt: {preserveType: true, max: 300, randCase: 2}, // excerpt = 300
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	pagesWithBorderCases.push(
+		generateInvalidPage({
+			title: {preserveType: true} as any,
+			content: {preserveType: true} as any,
+			publishSettings: {
+				publicationState: {preserveType: true},
+				publishDate: {preserveType: true},
+				publishTime: {preserveType: true},
+				tags: {preserveType: true},
+				access: {preserveType: true},
+				excerpt: {preserveType: true, max: 301, randCase: 2}, // excerpt = 300
+				featured: {preserveType: true},
+				author: {preserveType: true},
+			},
+		})
+	);
+	return {
+		pagesWithMissingKeys,
+		pageWithInvalidTypesPerField,
+		pagesWithBorderCases,
+	};
+};
+
+//Tag
+
+export const generateValidTag = (options?: Options<Tag>): Tag => {
+	const name = faker.lorem.words();
+
+	return {
+		name,
+		slug: faker.helpers.slugify(name),
+		color: faker.color.rgb({prefix: ''}),
+		description: faker.lorem.paragraph(),
+	};
+};
+
+export const generateInvalidTag = (
+	options?: InvalidOptions<Tag>
+): Invalid<Tag> => ({
+	name: generateInvalidInput('word', options?.name),
+	slug: generateInvalidInput('word', options?.slug),
+	color: generateInvalidInput('color', options?.color),
+	description: generateInvalidInput('text', options?.description),
+});
+
+export const generateManyValidTags = (amount = 100) => {
+	const page: Tag[] = [];
+	for (let i = 0; i < amount; i++) {
+		page.push(generateValidTag());
+	}
+	return page;
+};
+
+export const generateManyInvalidTags = (variantAmounts = 5) => {
+	const validTypes: Record<keyof Tag, InvalidOptionConfig['datatype']> = {
+		name: 'word',
+		slug: 'word',
+		color: 'color',
+		description: 'text',
+	};
+	// valid tags missing fields //TODO: multiply for variants if required :D //TODO: combinations
+	const tagsWithMissingKeys = generateManyValidTags(4).map((tag, i) => {
+		delete tag[Object.keys(tag)[i]];
+		return tag;
+	});
+
+	const tagsWithInvalidTypesPerField: Invalid<Tag>[] = [].concat.apply(
+		[],
+		Object.entries(validTypes).map(([k, v]) =>
+			[...types]
+				.filter((t) => t !== v)
+				.map((type) => generateInvalidTag({[k]: {datatype: type}}))
+		)
+	);
+
+	//border cases
+
+	const tagsWithBorderCases: Invalid<Tag>[] = [];
+	tagsWithBorderCases.push(
+		generateInvalidTag({
+			name: {preserveType: true, max: 190, randCase: 2}, //name 191
+			slug: {preserveType: true},
+			description: {preserveType: true},
+			color: {preserveType: true},
+		})
+	);
+	tagsWithBorderCases.push(
+		generateInvalidTag({
+			name: {preserveType: true, max: 191, randCase: 2}, //name 191
+			slug: {preserveType: true},
+			description: {preserveType: true},
+			color: {preserveType: true},
+		})
+	);
+	tagsWithBorderCases.push(
+		generateInvalidTag({
+			name: {preserveType: true, max: 192, randCase: 2}, //name 191
+			slug: {preserveType: true},
+			description: {preserveType: true},
+			color: {preserveType: true},
+		})
+	);
+	tagsWithBorderCases.push(
+		generateInvalidTag({
+			name: {preserveType: true},
+			slug: {preserveType: true, max: 190, randCase: 2}, //slug 191
+			description: {preserveType: true},
+			color: {preserveType: true},
+		})
+	);
+	tagsWithBorderCases.push(
+		generateInvalidTag({
+			name: {preserveType: true},
+			slug: {preserveType: true, max: 191, randCase: 2}, //slug 191
+			description: {preserveType: true},
+			color: {preserveType: true},
+		})
+	);
+	tagsWithBorderCases.push(
+		generateInvalidTag({
+			name: {preserveType: true},
+			slug: {preserveType: true, max: 192, randCase: 2}, //slug 191
+			description: {preserveType: true},
+			color: {preserveType: true},
+		})
+	);
+	tagsWithBorderCases.push(
+		generateInvalidTag({
+			name: {preserveType: true},
+			slug: {preserveType: true},
+			description: {preserveType: true, max: 499, randCase: 2}, // description 500
+			color: {preserveType: true},
+		})
+	);
+	tagsWithBorderCases.push(
+		generateInvalidTag({
+			name: {preserveType: true},
+			slug: {preserveType: true},
+			description: {preserveType: true, max: 500, randCase: 2}, // description 500
+			color: {preserveType: true},
+		})
+	);
+	tagsWithBorderCases.push(
+		generateInvalidTag({
+			name: {preserveType: true},
+			slug: {preserveType: true},
+			description: {preserveType: true, max: 501, randCase: 2}, // description 500
+			color: {preserveType: true},
+		})
+	);
+
+	// variantAmount * 5 fields * 3 cases + (4 borders * fields with border )
+	return {
+		tagsWithMissingKeys,
+		tagsWithInvalidTypesPerField,
+		tagsWithBorderCases,
+	};
+};
+
+// CodeInjection
+
+export const generateValidCodeInjection = (
+	options?: Options<CodeInjection>
+): CodeInjection => ({
+	header: faker.lorem.sentence(),
+	footer: faker.lorem.sentence(),
+});
+
+export const generateInvalidCodeInjection = (
+	options?: InvalidOptions<CodeInjection>
+): Invalid<CodeInjection> => ({
+	header: generateInvalidInput('text', options?.header),
+	footer: generateInvalidInput('text', options?.footer),
+});
+
+export const generateManyValidCodeInjections = (amount = 100) => {
+	const codeInjection: CodeInjection[] = [];
+	for (let i = 0; i < amount; i++) {
+		codeInjection.push(generateValidCodeInjection());
+	}
+	return codeInjection;
+};
+
+export const generateManyInvalidCodeInjections = (variantAmounts = 5) => {
+	const validTypes: Record<
+		keyof CodeInjection,
+		InvalidOptionConfig['datatype']
+	> = {
+		header: 'text',
+		footer: 'text',
+	};
+	// valid codeInjections missing fields //TODO: multiply for variants if required :D //TODO: combinations
+	const codeInjectionsWithMissingKeys = generateManyValidCodeInjections(2).map(
+		(codeInjection, i) => {
+			delete codeInjection[Object.keys(codeInjection)[i]];
+			return codeInjection;
+		}
+	);
+
+	const codeInjectionsWithInvalidTypesPerField: Invalid<CodeInjection>[] =
+		[].concat.apply(
+			[],
+			Object.entries(validTypes).map(([k, v]) =>
+				[...types]
+					.filter((t) => t !== v)
+					.map((type) => generateInvalidCodeInjection({[k]: {datatype: type}}))
+			)
+		);
+
+	//border cases
+
+	const codeInjectionsWithBorderCases: Invalid<CodeInjection>[] = [];
+	codeInjectionsWithBorderCases.push(
+		generateInvalidCodeInjection({
+			header: {preserveType: true, max: 65534, randCase: 2}, //header 65535
+			footer: {preserveType: true},
+		})
+	);
+	codeInjectionsWithBorderCases.push(
+		generateInvalidCodeInjection({
+			header: {preserveType: true, max: 65535, randCase: 2}, //header 65535
+			footer: {preserveType: true},
+		})
+	);
+	codeInjectionsWithBorderCases.push(
+		generateInvalidCodeInjection({
+			header: {preserveType: true, max: 65536, randCase: 2}, //header 65535
+			footer: {preserveType: true},
+		})
+	);
+	codeInjectionsWithBorderCases.push(
+		generateInvalidCodeInjection({
+			header: {preserveType: true},
+			footer: {preserveType: true, max: 65534, randCase: 2}, //footer 65535
+		})
+	);
+	codeInjectionsWithBorderCases.push(
+		generateInvalidCodeInjection({
+			header: {preserveType: true},
+			footer: {preserveType: true, max: 65535, randCase: 2}, //footer 65535
+		})
+	);
+	codeInjectionsWithBorderCases.push(
+		generateInvalidCodeInjection({
+			header: {preserveType: true},
+			footer: {preserveType: true, max: 65536, randCase: 2}, //footer 65535
+		})
+	);
+	// variantAmount * 5 fields * 3 cases + (4 borders * fields with border )
+	return {
+		codeInjectionsWithMissingKeys,
+		codeInjectionsWithInvalidTypesPerField,
+		codeInjectionsWithBorderCases,
+	};
+};

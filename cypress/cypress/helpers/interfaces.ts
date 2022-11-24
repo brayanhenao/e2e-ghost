@@ -26,7 +26,8 @@ export type DataType =
 	| 'email'
 	| 'date'
 	| 'time'
-	| 'date-time';
+	| 'date-time'
+	| 'color';
 export type InvalidOptionConfig = {
 	min?;
 	max?;
@@ -34,7 +35,14 @@ export type InvalidOptionConfig = {
 	datatype?: DataType | DataType[];
 	randCase?: number;
 };
-export type InvalidOptions<T> = Partial<Record<keyof T, InvalidOptionConfig>>;
+export type InvalidOptions<T> = Partial<
+	Record<
+		keyof T,
+		T extends Post | Page
+			? InvalidOptionConfig & Record<keyof PublishSettings, InvalidOptionConfig>
+			: InvalidOptionConfig
+	>
+>;
 
 export interface WYSIWYG {
 	type: 'text'; //improve this to use other kind of WYSIWYG types
@@ -68,10 +76,18 @@ export interface Post {
 
 export interface Tag {
 	name: string;
+	color: string;
+	slug: string;
+	description: string;
 }
 
 export type Page = Post;
 
 export interface Author {
 	name: string;
+}
+
+export interface CodeInjection {
+	header: string;
+	footer: string;
 }
