@@ -1,9 +1,11 @@
 import {adminPage, pagesEditPage, pagesPage, pageDetailPage} from '../../pages';
+import {generateInvalidPage, generateManyInvalidPages, generateValidPage} from '../../helpers/mock';
 
 import {faker} from '@faker-js/faker';
+
 faker.seed(666); //set seed to keep data consistent
 
-describe.skip('create_page', () => {
+describe.only('create_page', () => {
 	before(cy.clearData);
 
 	beforeEach(() => {
@@ -15,7 +17,7 @@ describe.skip('create_page', () => {
 		});
 	});
 
-	it('should create a page and publish it', () => {
+	it('should create a page and publish it with valid data (aleatorio)', () => {
 		const title = faker.lorem.words();
 		const content = faker.lorem.paragraph();
 		pagesPage.load().screenshot();
@@ -35,7 +37,130 @@ describe.skip('create_page', () => {
 		cy.screenshot();
 	});
 
-	it('should create a page and let it draft', () => {
+	it('should create a page and publish it with valid data (a-priori)', () => {
+		cy.fixture('data-pool').then(({pages}) => {
+			const randomPage = pages.valid[Math.floor(Math.random() * pages.valid.length)];
+
+			const title = randomPage.title;
+			const content = randomPage.content.content;
+			pagesPage.load().screenshot();
+			pagesPage.newPageButton().click();
+			pagesEditPage.createPage(title, content, true);
+
+			cy.wait(1000).screenshot();
+			pagesPage.load().screenshot();
+			cy.wait(1000);
+			pagesPage.pageListContainer().contains(title).should('be.visible');
+
+			pageDetailPage.setSlug(faker.helpers.slugify(title));
+			pageDetailPage.load().screenshot();
+			cy.wait(1000);
+			pageDetailPage.contentContainer().then(
+				$container => {
+					cy.log($container.text());
+				},
+			);
+
+			pageDetailPage.contentContainer().contains(title).should('be.visible');
+			pageDetailPage.contentContainer().contains(content).should('be.visible');
+			cy.screenshot();
+		});
+	});
+
+	it('should create a page and publish it with invalid data (a-priori)', () => {
+		cy.fixture('data-pool').then(({pages}) => {
+			const randomPage = pages.invalid.pagesWithBorderCases[Math.floor(Math.random() * pages.invalid.pagesWithBorderCases.length)];
+
+			const title = randomPage.title;
+			const content = randomPage.content.content;
+			pagesPage.load().screenshot();
+			pagesPage.newPageButton().click();
+			pagesEditPage.createPage(title, content, true);
+
+			cy.wait(1000).screenshot();
+			pagesPage.load().screenshot();
+			cy.wait(1000);
+			pagesPage.pageListContainer().contains(title).should('be.visible');
+
+			pageDetailPage.setSlug(faker.helpers.slugify(title));
+			pageDetailPage.load().screenshot();
+			cy.wait(1000);
+			pageDetailPage.contentContainer().contains(title).should('be.visible');
+			pageDetailPage.contentContainer().contains(content).should('be.visible');
+			cy.screenshot();
+		});
+	});
+
+	it('should create a page and publish it with valid data (pseudo-aleatorio)', () => {
+		const page = generateValidPage();
+		const title = page.title;
+		// @ts-ignore
+		const content = page.content.content;
+		pagesPage.load().screenshot();
+		pagesPage.newPageButton().click();
+		pagesEditPage.createPage(title, content, true);
+
+		cy.wait(1000).screenshot();
+		pagesPage.load().screenshot();
+		cy.wait(1000);
+		pagesPage.pageListContainer().contains(title).should('be.visible');
+
+		pageDetailPage.setSlug(faker.helpers.slugify(title));
+		pageDetailPage.load().screenshot();
+		cy.wait(1000);
+		pageDetailPage.contentContainer().contains(title).should('be.visible');
+		pageDetailPage.contentContainer().contains(content).should('be.visible');
+		cy.screenshot();
+	});
+
+	it('should create a page and publish it with invalid data border cases (pseudo-aleatorio)', () => {
+		const pagesWithBorderCases = generateManyInvalidPages(10).pagesWithBorderCases;
+		const randomPage = pagesWithBorderCases[Math.floor(Math.random() * pagesWithBorderCases.length)];
+		const title = randomPage.title;
+		// @ts-ignore
+		const content = randomPage.content.content;
+		pagesPage.load().screenshot();
+		pagesPage.newPageButton().click();
+		pagesEditPage.createPage(<string>title, content, true);
+
+		cy.wait(1000).screenshot();
+		pagesPage.load().screenshot();
+		cy.wait(1000);
+		pagesPage.pageListContainer().contains(<string>title).should('be.visible');
+
+		pageDetailPage.setSlug(faker.helpers.slugify(<string>title));
+		pageDetailPage.load().screenshot();
+		cy.wait(1000);
+		pageDetailPage.contentContainer().contains(<string>title).should('be.visible');
+		pageDetailPage.contentContainer().contains(content).should('be.visible');
+		cy.screenshot();
+	});
+
+	it('should create a page and publish it with invalid types (pseudo-aleatorio)', () => {
+		const pageWithInvalidTypesPerField = generateManyInvalidPages(10).pageWithInvalidTypesPerField;
+		const randomPage = pageWithInvalidTypesPerField[Math.floor(Math.random() * pageWithInvalidTypesPerField.length)];
+		const title = randomPage.title;
+		// @ts-ignore
+		const content = randomPage.content.content;
+		cy.log(content);
+		pagesPage.load().screenshot();
+		pagesPage.newPageButton().click();
+		pagesEditPage.createPage(<string>title, content, true);
+
+		cy.wait(1000).screenshot();
+		pagesPage.load().screenshot();
+		cy.wait(1000);
+		pagesPage.pageListContainer().contains(<string>title).should('be.visible');
+
+		pageDetailPage.setSlug(faker.helpers.slugify(<string>title));
+		pageDetailPage.load().screenshot();
+		cy.wait(1000);
+		pageDetailPage.contentContainer().contains(<string>title).should('be.visible');
+		pageDetailPage.contentContainer().contains(content).should('be.visible');
+		cy.screenshot();
+	});
+
+	it('should create a page and let it draft with valid data (aleatorio)', () => {
 		const title = faker.lorem.words();
 		const content = faker.lorem.paragraph();
 		pagesPage.load().screenshot();
@@ -53,22 +178,70 @@ describe.skip('create_page', () => {
 			.should('equal', 404);
 		cy.screenshot();
 	});
-	it('should create a page and schedule its publication', () => {
-		const title = faker.lorem.words();
-		const content = faker.lorem.paragraph();
-		pagesPage.load().screenshot();
-		pagesPage.newPageButton().click();
-		pagesEditPage.createPage(title, content, {scheduled: true});
 
-		cy.wait(1000).screenshot();
-		pagesPage.load().screenshot();
-		cy.wait(1000);
-		pagesPage.pageListContainer().contains(title).should('be.visible');
+	it('should create a page and let it draft with valid data (a-priori)', () => {
+		cy.fixture('data-pool').then(({pages}) => {
+			const randomPage = pages.valid[Math.floor(Math.random() * pages.valid.length)];
 
-		pageDetailPage.setSlug(faker.helpers.slugify(title));
-		cy.request({url: pageDetailPage.getUrl(), failOnStatusCode: false})
-			.its('status')
-			.should('equal', 404);
-		cy.screenshot();
+			const title = randomPage.title;
+			const content = randomPage.content.content;
+			pagesPage.load().screenshot();
+			pagesPage.newPageButton().click();
+			pagesEditPage.createPage(title, content);
+
+			cy.wait(1000).screenshot();
+			pagesPage.load().screenshot();
+			cy.wait(1000);
+			pagesPage.pageListContainer().contains(title).should('be.visible');
+
+			pageDetailPage.setSlug(faker.helpers.slugify(title));
+			cy.request({url: pageDetailPage.getUrl(), failOnStatusCode: false})
+				.its('status')
+				.should('equal', 404);
+			cy.screenshot();
+		});
 	});
+
+	it.only('should create a page and let it draft with invalid data (a-priori)', () => {
+		cy.fixture('data-pool').then(({pages}) => {
+			const randomPage = pages.invalid.pagesWithBorderCases[Math.floor(Math.random() * pages.invalid.pagesWithBorderCases.length)];
+
+			const title = randomPage.title;
+			const content = randomPage.content.content;
+			pagesPage.load().screenshot();
+			pagesPage.newPageButton().click();
+			pagesEditPage.createPage(title, content);
+
+			cy.wait(1000).screenshot();
+			pagesPage.load().screenshot();
+			cy.wait(1000);
+			pagesPage.pageListContainer().contains(title).should('be.visible');
+
+			pageDetailPage.setSlug(faker.helpers.slugify(title));
+			cy.request({url: pageDetailPage.getUrl(), failOnStatusCode: false})
+				.its('status')
+				.should('equal', 404);
+			cy.screenshot();
+		});
+	});
+
+
+	// it('should create a page and schedule its publication', () => {
+	// 	const title = faker.lorem.words();
+	// 	const content = faker.lorem.paragraph();
+	// 	pagesPage.load().screenshot();
+	// 	pagesPage.newPageButton().click();
+	// 	pagesEditPage.createPage(title, content, {scheduled: true});
+	//
+	// 	cy.wait(1000).screenshot();
+	// 	pagesPage.load().screenshot();
+	// 	cy.wait(1000);
+	// 	pagesPage.pageListContainer().contains(title).should('be.visible');
+	//
+	// 	pageDetailPage.setSlug(faker.helpers.slugify(title));
+	// 	cy.request({url: pageDetailPage.getUrl(), failOnStatusCode: false})
+	// 		.its('status')
+	// 		.should('equal', 404);
+	// 	cy.screenshot();
+	// });
 });

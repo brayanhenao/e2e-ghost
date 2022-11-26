@@ -1,4 +1,5 @@
 import {BasePage, baseUrl} from './basePage';
+
 class pagesEditPage implements BasePage {
 	private _route = `${baseUrl}/ghost/#/editor/page`;
 
@@ -33,10 +34,11 @@ class pagesEditPage implements BasePage {
 	createPage(
 		title: string,
 		content: string,
-		publish: {scheduled: boolean} | boolean = false
+		publish: {scheduled: boolean} | boolean = false,
 	) {
-		this.titleInput().type(title).screenshot();
-		this.contentInput().type(content).screenshot();
+		this.titleInput().type(title, {parseSpecialCharSequences: false}).screenshot();
+		this.contentInput().type(content, {parseSpecialCharSequences: false}).screenshot();
+		cy.wait(4000);
 
 		if (publish) {
 			this.publishButton().click();
