@@ -17,6 +17,7 @@ describe.only('create_page', () => {
 		});
 	});
 
+	// SC1
 	it('should create a page and publish it with valid data (aleatorio)', () => {
 		const title = faker.lorem.words();
 		const content = faker.lorem.paragraph();
@@ -160,6 +161,7 @@ describe.only('create_page', () => {
 		cy.screenshot();
 	});
 
+	// SC2
 	it('should create a page and let it draft with valid data (aleatorio)', () => {
 		const title = faker.lorem.words();
 		const content = faker.lorem.paragraph();
@@ -202,7 +204,7 @@ describe.only('create_page', () => {
 		});
 	});
 
-	it.only('should create a page and let it draft with invalid data (a-priori)', () => {
+	it('should create a page and let it draft with invalid data (a-priori)', () => {
 		cy.fixture('data-pool').then(({pages}) => {
 			const randomPage = pages.invalid.pagesWithBorderCases[Math.floor(Math.random() * pages.invalid.pagesWithBorderCases.length)];
 
@@ -225,23 +227,205 @@ describe.only('create_page', () => {
 		});
 	});
 
+	it('should create a page and let it draft with valid data (pseudo-aleatorio)', () => {
+		const randomPage = generateValidPage();
 
-	// it('should create a page and schedule its publication', () => {
-	// 	const title = faker.lorem.words();
-	// 	const content = faker.lorem.paragraph();
-	// 	pagesPage.load().screenshot();
-	// 	pagesPage.newPageButton().click();
-	// 	pagesEditPage.createPage(title, content, {scheduled: true});
-	//
-	// 	cy.wait(1000).screenshot();
-	// 	pagesPage.load().screenshot();
-	// 	cy.wait(1000);
-	// 	pagesPage.pageListContainer().contains(title).should('be.visible');
-	//
-	// 	pageDetailPage.setSlug(faker.helpers.slugify(title));
-	// 	cy.request({url: pageDetailPage.getUrl(), failOnStatusCode: false})
-	// 		.its('status')
-	// 		.should('equal', 404);
-	// 	cy.screenshot();
-	// });
+		const title = randomPage.title;
+		// @ts-ignore
+		const content = randomPage.content.content;
+		pagesPage.load().screenshot();
+		pagesPage.newPageButton().click();
+		pagesEditPage.createPage(title, content);
+
+		cy.wait(1000).screenshot();
+		pagesPage.load().screenshot();
+		cy.wait(1000);
+		pagesPage.pageListContainer().contains(title).should('be.visible');
+
+		pageDetailPage.setSlug(faker.helpers.slugify(title));
+		cy.request({url: pageDetailPage.getUrl(), failOnStatusCode: false})
+			.its('status')
+			.should('equal', 404);
+		cy.screenshot();
+	});
+
+	it('should create a page and let it draft with invalid data border cases (pseudo-aleatorio)', () => {
+		const randomPages = generateManyInvalidPages(10).pagesWithBorderCases;
+		const randomPage = randomPages[Math.floor(Math.random() * randomPages.length)];
+
+		const title = randomPage.title;
+		// @ts-ignore
+		const content = randomPage.content.content;
+		pagesPage.load().screenshot();
+		pagesPage.newPageButton().click();
+		pagesEditPage.createPage(<string>title, content);
+
+		cy.wait(1000).screenshot();
+		pagesPage.load().screenshot();
+		cy.wait(1000);
+		pagesPage.pageListContainer().contains(<string>title).should('be.visible');
+
+		pageDetailPage.setSlug(faker.helpers.slugify(<string>title));
+		cy.request({url: pageDetailPage.getUrl(), failOnStatusCode: false})
+			.its('status')
+			.should('equal', 404);
+		cy.screenshot();
+	});
+
+	it('should create a page and let it draft with invalid types (pseudo-aleatorio)', () => {
+		const randomPages = generateManyInvalidPages(10).pageWithInvalidTypesPerField;
+		const randomPage = randomPages[Math.floor(Math.random() * randomPages.length)];
+
+		const title = randomPage.title;
+		// @ts-ignore
+		const content = randomPage.content.content;
+		pagesPage.load().screenshot();
+		pagesPage.newPageButton().click();
+		pagesEditPage.createPage(<string>title, content);
+
+		cy.wait(1000).screenshot();
+		pagesPage.load().screenshot();
+		cy.wait(1000);
+		pagesPage.pageListContainer().contains(<string>title).should('be.visible');
+
+		pageDetailPage.setSlug(faker.helpers.slugify(<string>title));
+		cy.request({url: pageDetailPage.getUrl(), failOnStatusCode: false})
+			.its('status')
+			.should('equal', 404);
+		cy.screenshot();
+	});
+
+	// SC3
+	it('should create a page and schedule its publication with valid data (aleatorio)', () => {
+		const title = faker.lorem.words();
+		const content = faker.lorem.paragraph();
+		pagesPage.load().screenshot();
+		pagesPage.newPageButton().click();
+		pagesEditPage.createPage(title, content, {scheduled: true});
+
+		cy.wait(1000).screenshot();
+		pagesPage.load().screenshot();
+		cy.wait(1000);
+		pagesPage.pageListContainer().contains(title).should('be.visible');
+
+		pageDetailPage.setSlug(faker.helpers.slugify(title));
+		cy.request({url: pageDetailPage.getUrl(), failOnStatusCode: false})
+			.its('status')
+			.should('equal', 404);
+		cy.screenshot();
+	});
+
+	it('should create a page and schedule its publication with valid data (a-priori)', () => {
+		cy.fixture('data-pool').then(({pages}) => {
+			const randomPage = pages.valid[Math.floor(Math.random() * pages.valid.length)];
+			const title = randomPage.title;
+			const content = randomPage.content.content;
+
+			pagesPage.load().screenshot();
+			pagesPage.newPageButton().click();
+			pagesEditPage.createPage(title, content, {scheduled: true});
+
+			cy.wait(1000).screenshot();
+			pagesPage.load().screenshot();
+			cy.wait(1000);
+			pagesPage.pageListContainer().contains(title).should('be.visible');
+
+			pageDetailPage.setSlug(faker.helpers.slugify(title));
+			cy.request({url: pageDetailPage.getUrl(), failOnStatusCode: false})
+				.its('status')
+				.should('equal', 404);
+			cy.screenshot();
+		});
+	});
+
+	it('should create a page and schedule its publication with invalid data (a-priori)', () => {
+		cy.fixture('data-pool').then(({pages}) => {
+			const randomPage = pages.invalid.pagesWithBorderCases[Math.floor(Math.random() * pages.invalid.pagesWithBorderCases.length)];
+			const title = randomPage.title;
+			const content = randomPage.content.content;
+
+			pagesPage.load().screenshot();
+			pagesPage.newPageButton().click();
+			pagesEditPage.createPage(title, content, {scheduled: true});
+
+			cy.wait(1000).screenshot();
+			pagesPage.load().screenshot();
+			cy.wait(1000);
+			pagesPage.pageListContainer().contains(title).should('be.visible');
+
+			pageDetailPage.setSlug(faker.helpers.slugify(title));
+			cy.request({url: pageDetailPage.getUrl(), failOnStatusCode: false})
+				.its('status')
+				.should('equal', 404);
+			cy.screenshot();
+		});
+	});
+
+	it('should create a page and schedule its publication with valid data (pseudo-aleatorio)', () => {
+		const randomPage = generateValidPage();
+
+		const title = randomPage.title;
+		// @ts-ignore
+		const content = randomPage.content.content;
+		pagesPage.load().screenshot();
+		pagesPage.newPageButton().click();
+		pagesEditPage.createPage(title, content, {scheduled: true});
+
+		cy.wait(1000).screenshot();
+		pagesPage.load().screenshot();
+		cy.wait(1000);
+		pagesPage.pageListContainer().contains(title).should('be.visible');
+
+		pageDetailPage.setSlug(faker.helpers.slugify(title));
+		cy.request({url: pageDetailPage.getUrl(), failOnStatusCode: false})
+			.its('status')
+			.should('equal', 404);
+		cy.screenshot();
+	});
+
+	it('should create a page and schedule its publication with invalid data border cases (pseudo-aleatorio)', () => {
+		const randomPages = generateManyInvalidPages(10).pagesWithBorderCases;
+		const randomPage = randomPages[Math.floor(Math.random() * randomPages.length)];
+
+		const title = randomPage.title;
+		// @ts-ignore
+		const content = randomPage.content.content;
+		pagesPage.load().screenshot();
+		pagesPage.newPageButton().click();
+		pagesEditPage.createPage(<string>title, content, {scheduled: true});
+
+		cy.wait(1000).screenshot();
+		pagesPage.load().screenshot();
+		cy.wait(1000);
+		pagesPage.pageListContainer().contains(<string>title).should('be.visible');
+
+		pageDetailPage.setSlug(faker.helpers.slugify(<string>title));
+		cy.request({url: pageDetailPage.getUrl(), failOnStatusCode: false})
+			.its('status')
+			.should('equal', 404);
+		cy.screenshot();
+	});
+
+	it('should create a page and schedule its publication with invalid types (pseudo-aleatorio)', () => {
+		const randomPages = generateManyInvalidPages(10).pageWithInvalidTypesPerField;
+		const randomPage = randomPages[Math.floor(Math.random() * randomPages.length)];
+
+		const title = randomPage.title;
+		// @ts-ignore
+		const content = randomPage.content.content;
+		pagesPage.load().screenshot();
+		pagesPage.newPageButton().click();
+		pagesEditPage.createPage(<string>title, content, {scheduled: true});
+
+		cy.wait(1000).screenshot();
+		pagesPage.load().screenshot();
+		cy.wait(1000);
+		pagesPage.pageListContainer().contains(<string>title).should('be.visible');
+
+		pageDetailPage.setSlug(faker.helpers.slugify(<string>title));
+		cy.request({url: pageDetailPage.getUrl(), failOnStatusCode: false})
+			.its('status')
+			.should('equal', 404);
+		cy.screenshot();
+	});
 });
