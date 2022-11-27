@@ -82,7 +82,7 @@ const generateInvalidInput = (
 		} else if (randomType === 'date') {
 			return faker.date.recent().toISOString().substring(0, 10);
 		} else if (randomType === 'time') {
-			return faker.date.recent().toISOString().substring(11, 19);
+			return faker.date.recent().toISOString().substring(11, 16);
 		} else if (randomType === 'date-time') {
 			return faker.date.recent().toISOString();
 		}
@@ -308,7 +308,7 @@ export const generateValidPost = (options?: Options<Post>): Post => {
 				? faker.date.recent().toISOString().substring(0, 10)
 				: undefined,
 			publishTime: publicationState
-				? faker.date.recent().toISOString().substring(11, 19)
+				? faker.date.recent().toISOString().substring(11, 16)
 				: undefined,
 			tags: faker.datatype.boolean()
 				? faker.lorem.words(faker.datatype.number(10)).split(' ')
@@ -639,7 +639,7 @@ export const generateValidPage = (options?: Options<Page>): Page => {
 				? faker.date.recent().toISOString().substring(0, 10)
 				: undefined,
 			publishTime: publicationState
-				? faker.date.recent().toISOString().substring(11, 19)
+				? faker.date.recent().toISOString().substring(11, 16)
 				: undefined,
 			tags: faker.datatype.boolean()
 				? faker.lorem.words(faker.datatype.number(10)).split(' ')

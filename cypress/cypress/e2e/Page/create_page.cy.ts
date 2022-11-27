@@ -3,9 +3,7 @@ import {generateInvalidPage, generateManyInvalidPages, generateValidPage} from '
 
 import {faker} from '@faker-js/faker';
 
-faker.seed(666); //set seed to keep data consistent
-
-describe.only('create_page', () => {
+describe('create_page', () => {
 	before(cy.clearData);
 
 	beforeEach(() => {
@@ -301,7 +299,10 @@ describe.only('create_page', () => {
 		const content = faker.lorem.paragraph();
 		pagesPage.load().screenshot();
 		pagesPage.newPageButton().click();
-		pagesEditPage.createPage(title, content, {scheduled: true});
+		const fakeFullDate = faker.date.future();
+		const fakeDate = fakeFullDate.toISOString().split('T')[0];
+		const fakeTime = fakeFullDate.toISOString().split('T')[1].split('.')[0].split(':').slice(0, 2).join(':');
+		pagesEditPage.createPage(title, content, true, {date: fakeDate, time: fakeTime});
 
 		cy.wait(1000).screenshot();
 		pagesPage.load().screenshot();
@@ -323,7 +324,10 @@ describe.only('create_page', () => {
 
 			pagesPage.load().screenshot();
 			pagesPage.newPageButton().click();
-			pagesEditPage.createPage(title, content, {scheduled: true});
+			pagesEditPage.createPage(title, content, true, {
+				date: randomPage.publishSettings.publishDate,
+				time: randomPage.publishSettings.publishTime,
+			});
 
 			cy.wait(1000).screenshot();
 			pagesPage.load().screenshot();
@@ -346,7 +350,10 @@ describe.only('create_page', () => {
 
 			pagesPage.load().screenshot();
 			pagesPage.newPageButton().click();
-			pagesEditPage.createPage(title, content, {scheduled: true});
+			pagesEditPage.createPage(title, content, true, {
+				date: randomPage.publishSettings.publishDate,
+				time: randomPage.publishSettings.publishTime,
+			});
 
 			cy.wait(1000).screenshot();
 			pagesPage.load().screenshot();
@@ -369,7 +376,10 @@ describe.only('create_page', () => {
 		const content = randomPage.content.content;
 		pagesPage.load().screenshot();
 		pagesPage.newPageButton().click();
-		pagesEditPage.createPage(title, content, {scheduled: true});
+		pagesEditPage.createPage(title, content, true, {
+			date: randomPage.publishSettings.publishDate,
+			time: randomPage.publishSettings.publishTime,
+		});
 
 		cy.wait(1000).screenshot();
 		pagesPage.load().screenshot();
@@ -392,7 +402,13 @@ describe.only('create_page', () => {
 		const content = randomPage.content.content;
 		pagesPage.load().screenshot();
 		pagesPage.newPageButton().click();
-		pagesEditPage.createPage(<string>title, content, {scheduled: true});
+
+		pagesEditPage.createPage(<string>title, content, true, {
+			// @ts-ignore
+			date: randomPage.publishSettings.publishDate,
+			// @ts-ignore
+			time: randomPage.publishSettings.publishTime,
+		});
 
 		cy.wait(1000).screenshot();
 		pagesPage.load().screenshot();
@@ -410,19 +426,24 @@ describe.only('create_page', () => {
 		const randomPages = generateManyInvalidPages(10).pageWithInvalidTypesPerField;
 		const randomPage = randomPages[Math.floor(Math.random() * randomPages.length)];
 
-		const title = randomPage.title;
+		const title = <string>randomPage.title;
 		// @ts-ignore
-		const content = randomPage.content.content;
+		const content = <string>randomPage.content.content;
 		pagesPage.load().screenshot();
 		pagesPage.newPageButton().click();
-		pagesEditPage.createPage(<string>title, content, {scheduled: true});
+		pagesEditPage.createPage(title, content, true, {
+			// @ts-ignore
+			date: randomPage.publishSettings.publishDate,
+			// @ts-ignore
+			time: randomPage.publishSettings.publishTime,
+		});
 
 		cy.wait(1000).screenshot();
 		pagesPage.load().screenshot();
 		cy.wait(1000);
 		pagesPage.pageListContainer().contains(<string>title).should('be.visible');
 
-		pageDetailPage.setSlug(faker.helpers.slugify(<string>title));
+		pageDetailPage.setSlug(title);
 		cy.request({url: pageDetailPage.getUrl(), failOnStatusCode: false})
 			.its('status')
 			.should('equal', 404);

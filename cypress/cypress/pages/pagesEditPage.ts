@@ -34,7 +34,11 @@ class pagesEditPage implements BasePage {
 	createPage(
 		title: string,
 		content: string,
-		publish: {scheduled: boolean} | boolean = false,
+		publish: boolean = false,
+		schedule: {
+			date: string;
+			time: string;
+		} | null = null,
 	) {
 		this.titleInput().type(title, {parseSpecialCharSequences: false}).screenshot();
 		this.contentInput().type(content, {parseSpecialCharSequences: false}).screenshot();
@@ -43,17 +47,28 @@ class pagesEditPage implements BasePage {
 		if (publish) {
 			this.publishButton().click();
 			cy.wait(1000);
-			if (typeof publish == 'object') {
+			if (typeof schedule == 'object') {
+				cy.log('Scheduling post');
+				cy.log(schedule.date);
+				cy.log(schedule.time);
 				cy.get('div[class*="gh-publish"] div div').last().parent().click();
 				cy.wait(500);
 				cy.get('div[class*="gh-publish"] div[class$="-radio "]')
 					.last()
 					.click()
 					.screenshot();
-				cy.get('div[class*="gh-publish"] .gh-date-time-picker')
-					.last()
-					.click()
-					.screenshot();
+
+				const datePicker = cy.get('.gh-date-time-picker-date > input');
+				datePicker.click();
+				datePicker.clear();
+				datePicker.type(schedule.date, { parseSpecialCharSequences: false });
+				datePicker.screenshot();
+
+				const timePicker = cy.get('.gh-date-time-picker-time > input');
+				timePicker.click();
+				timePicker.clear();
+				timePicker.type(schedule.time, { parseSpecialCharSequences: false });
+				timePicker.screenshot();
 
 				cy.wait(1000);
 			}
