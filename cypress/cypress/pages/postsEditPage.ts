@@ -37,7 +37,7 @@ class postsEditPage implements BasePage {
 		publish: {
 			date: string;
 			time: string;
-		} | boolean = true,
+		} | boolean = false,
 	) {
 		this.titleInput().type(title, {parseSpecialCharSequences: false}).screenshot();
 		this.contentInput().type(content, {parseSpecialCharSequences: false}).screenshot();
