@@ -602,6 +602,291 @@ describe('list_post', () => {
 				cy.wait(1000).screenshot();
 			});
 
+			adminPage.logout();
+		});
+
+		beforeEach(() => {
+			adminPage.load().screenshot();
+			cy.fixture('admin').then(({user, password}) => {
+				cy.log(user, password);
+				adminPage.login(user, password);
+				cy.wait(1000).screenshot();
+			});
+		});
+
+		// ESC3 - F2
+		it('should sort post by publish date  - oldest first, with valid data (a-priori)', () => {
+			cy.fixture('data-pool').then(({posts}) => {
+				// @ts-ignore
+				const indexes = [...new Set([...Array(3)].map(() => Math.floor(Math.random() * posts.valid.length)))];
+				const postsToCreate = indexes.map((index) => posts.valid[index]);
+
+
+				//published
+				postsPage.load().screenshot();
+				cy.wait(1000);
+				postTitle = postsToCreate[0].title;
+				const postContent = postsToCreate[0].content.content;
+				postsPage.newPostsButton().click();
+				postsEditPage.createPost(postTitle, postContent, true);
+				cy.wait(1000);
+
+				postsPage.load().screenshot();
+				cy.wait(1000);
+				postTitle2 = postsToCreate[1].title;
+				const postContent2 = postsToCreate[1].content.content;
+				postsPage.newPostsButton().click();
+				postsEditPage.createPost(postTitle2, postContent2, true);
+				cy.wait(1000);
+
+				postsPage.load().screenshot();
+				cy.wait(1000);
+				postTitle3 = postsToCreate[2].title;
+				const postContent3 = postsToCreate[2].content.content;
+				postsPage.newPostsButton().click();
+				postsEditPage.createPost(postTitle3, postContent3, true);
+				cy.wait(1000);
+
+				postsPage.load().screenshot();
+				cy.wait(1000);
+				postsPage.selectSortDate().click();
+				cy.screenshot();
+				postsPage.oldestFirstOption().click();
+				cy.screenshot();
+
+				postsPage
+					.postListContainer()
+					.children()
+					.each(($child, i) => {
+						cy.wrap($child)
+							.contains(i == 0 ? postTitle : i == 1 ? postTitle2 : postTitle3)
+							.should('be.visible');
+					});
+				cy.screenshot();
+
+			});
+
+		});
+
+		it('should sort post by publish date  - oldest first, with missing keys (a-priori)', () => {
+			cy.fixture('data-pool').then(({posts}) => {
+				// @ts-ignore
+				const indexes = [...new Set([...Array(3)].map(() => Math.floor(Math.random() * posts.invalid.postsWithMissingKeys.length)))];
+				const postsToCreate = indexes.map((index) => posts.invalid.postsWithMissingKeys[index]);
+
+				//published
+				postsPage.load().screenshot();
+				cy.wait(1000);
+				postTitle = postsToCreate[0].title?.toString();
+				const postContent = postsToCreate[0].content?.content.toString();
+				postsPage.newPostsButton().click();
+				postsEditPage.createPost(postTitle, postContent, true);
+				cy.wait(1000);
+
+				postsPage.load().screenshot();
+				cy.wait(1000);
+				postTitle2 = postsToCreate[1].title?.toString();
+				const postContent2 = postsToCreate[1].content?.content.toString();
+				postsPage.newPostsButton().click();
+				postsEditPage.createPost(postTitle2, postContent2, true);
+				cy.wait(1000);
+
+				postsPage.load().screenshot();
+				cy.wait(1000);
+				postTitle3 = postsToCreate[2].title?.toString();
+				const postContent3 = postsToCreate[2].content?.content.toString();
+				postsPage.newPostsButton().click();
+				postsEditPage.createPost(postTitle3, postContent3, true);
+				cy.wait(1000);
+
+				postsPage.load().screenshot();
+				cy.wait(1000);
+				postsPage.selectSortDate().click();
+				cy.screenshot();
+				postsPage.oldestFirstOption().click();
+				cy.screenshot();
+
+				postsPage
+					.postListContainer()
+					.children()
+					.each(($child, i) => {
+						cy.wrap($child)
+							.contains(i == 0 ? postTitle : i == 1 ? postTitle2 : postTitle3)
+							.should('be.visible');
+					});
+				cy.screenshot();
+
+			});
+
+		});
+
+		it('should sort post by publish date  - oldest first, with valid data (pseudo-aleatorio)', () => {
+			const randomPosts = generateManyValidPosts(100);
+			// @ts-ignore
+			const indexes = [...new Set([...Array(3)].map(() => Math.floor(Math.random() * randomPosts.length)))];
+			const postsToCreate = indexes.map((index) => randomPosts[index]);
+
+			//published
+			postsPage.load().screenshot();
+			cy.wait(1000);
+			postTitle = postsToCreate[0].title;
+			// @ts-ignore
+			const postContent = postsToCreate[0].content.content;
+			postsPage.newPostsButton().click();
+			// @ts-ignore
+			postsEditPage.createPost(postTitle1, postContent, true);
+			cy.wait(1000);
+
+			postsPage.load().screenshot();
+			cy.wait(1000);
+			postTitle2 = postsToCreate[1].title;
+			// @ts-ignore
+			const postContent2 = postsToCreate[1].content.content;
+			postsPage.newPostsButton().click();
+			// @ts-ignore
+			postsEditPage.createPost(postTitle2, postContent2, true);
+			cy.wait(1000);
+
+			postsPage.load().screenshot();
+			cy.wait(1000);
+			postTitle3 = postsToCreate[2].title;
+			// @ts-ignore
+			const postContent3 = postsToCreate[2].content.content;
+			postsPage.newPostsButton().click();
+			// @ts-ignore
+			postsEditPage.createPost(postTitle3, postContent3, true);
+			cy.wait(1000);
+
+			postsPage.load().screenshot();
+			cy.wait(1000);
+			postsPage.selectSortDate().click();
+			cy.screenshot();
+			postsPage.oldestFirstOption().click();
+			cy.screenshot();
+
+			postsPage
+				.postListContainer()
+				.children()
+				.each(($child, i) => {
+					cy.wrap($child)
+						.contains(i == 0 ? postTitle : i == 1 ? postTitle2 : postTitle3)
+						.should('be.visible');
+				});
+			cy.screenshot();
+		});
+
+		it('should sort post by publish date  - oldest first, with invalid data types (pseudo-aleatorio)', () => {
+			const randomPosts = generateManyInvalidPosts(100).postWithInvalidTypesPerField;
+			// @ts-ignore
+			const indexes = [...new Set([...Array(3)].map(() => Math.floor(Math.random() * randomPosts.length)))];
+			const postsToCreate = indexes.map((index) => randomPosts[index]);
+
+			//published
+			postsPage.load().screenshot();
+			cy.wait(1000);
+			postTitle = postsToCreate[0].title.toString();
+			// @ts-ignore
+			const postContent = postsToCreate[0].content.content.toString();
+			postsPage.newPostsButton().click();
+			// @ts-ignore
+			postsEditPage.createPost(postTitle, postContent, true);
+			cy.wait(1000);
+
+			postsPage.load().screenshot();
+			cy.wait(1000);
+			postTitle2 = postsToCreate[1].title.toString();
+			// @ts-ignore
+			const postContent2 = postsToCreate[1].content.content.toString();
+			postsPage.newPostsButton().click();
+			// @ts-ignore
+			postsEditPage.createPost(postTitle2, postContent2, true);
+			cy.wait(1000);
+
+			postsPage.load().screenshot();
+			cy.wait(1000);
+			postTitle3 = postsToCreate[2].title.toString();
+			// @ts-ignore
+			const postContent3 = postsToCreate[2].content.content.toString();
+			postsPage.newPostsButton().click();
+			// @ts-ignore
+			postsEditPage.createPost(postTitle3, postContent3, true);
+			cy.wait(1000);
+
+			postsPage.load().screenshot();
+			cy.wait(1000);
+			postsPage.selectSortDate().click();
+			cy.screenshot();
+			postsPage.oldestFirstOption().click();
+			cy.screenshot();
+
+			postsPage
+				.postListContainer()
+				.children()
+				.each(($child, i) => {
+					cy.wrap($child)
+						.contains(i == 0 ? postTitle : i == 1 ? postTitle2 : postTitle3)
+						.should('be.visible');
+				});
+			cy.screenshot();
+		});
+
+		it('should sort post by publish date  - oldest first, with invalid data - border cases (pseudo-aleatorio)', () => {
+			const randomPosts = generateManyInvalidPosts(100).postsWithBorderCases;
+			// @ts-ignore
+			const indexes = [...new Set([...Array(3)].map(() => Math.floor(Math.random() * randomPosts.length)))];
+			const postsToCreate = indexes.map((index) => randomPosts[index]);
+
+			//published
+			postsPage.load().screenshot();
+			cy.wait(1000);
+			postTitle = postsToCreate[0].title.toString();
+			// @ts-ignore
+			const postContent = postsToCreate[0].content.content.toString();
+			postsPage.newPostsButton().click();
+			// @ts-ignore
+			postsEditPage.createPost(postTitle, postContent, true);
+			cy.wait(1000);
+
+			postsPage.load().screenshot();
+			cy.wait(1000);
+			postTitle2 = postsToCreate[1].title.toString();
+			// @ts-ignore
+			const postContent2 = postsToCreate[1].content.content.toString();
+			postsPage.newPostsButton().click();
+			// @ts-ignore
+			postsEditPage.createPost(postTitle2, postContent2, true);
+			cy.wait(1000);
+
+			postsPage.load().screenshot();
+			cy.wait(1000);
+			postTitle3 = postsToCreate[2].title.toString();
+			// @ts-ignore
+			const postContent3 = postsToCreate[2].content.content.toString();
+			postsPage.newPostsButton().click();
+			// @ts-ignore
+			postsEditPage.createPost(postTitle3, postContent3, true);
+			cy.wait(1000);
+
+			postsPage.load().screenshot();
+			cy.wait(1000);
+			postsPage.selectSortDate().click();
+			cy.screenshot();
+			postsPage.oldestFirstOption().click();
+			cy.screenshot();
+
+			postsPage
+				.postListContainer()
+				.children()
+				.each(($child, i) => {
+					cy.wrap($child)
+						.contains(i == 0 ? postTitle : i == 1 ? postTitle2 : postTitle3)
+						.should('be.visible');
+				});
+			cy.screenshot();
+		});
+
+		it('should sort post by publish date  - oldest first, with valid data (aleatorio)', () => {
+			//published
 			postsPage.load().screenshot();
 			cy.wait(1000);
 			postTitle = faker.lorem.words();
@@ -626,19 +911,7 @@ describe('list_post', () => {
 			postsEditPage.createPost(postTitle3, postContent3, true);
 			cy.wait(1000);
 
-			adminPage.logout();
-		});
 
-		beforeEach(() => {
-			adminPage.load().screenshot();
-			cy.fixture('admin').then(({user, password}) => {
-				cy.log(user, password);
-				adminPage.login(user, password);
-				cy.wait(1000).screenshot();
-			});
-		});
-
-		it('should sort post by publish date  - oldest first ', () => {
 			postsPage.load().screenshot();
 			cy.wait(1000);
 			postsPage.selectSortDate().click();
@@ -656,6 +929,7 @@ describe('list_post', () => {
 				});
 			cy.screenshot();
 		});
+
 		it('should sort post by publish date  - newest first ', () => {
 			postsPage.load().screenshot();
 			cy.wait(1000);
