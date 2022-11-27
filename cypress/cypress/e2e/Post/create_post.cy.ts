@@ -493,7 +493,229 @@ describe('create_post', () => {
 		adminPage.load().screenshot();
 	});
 
-	it('should create a post and schedule its publication', () => {
+	// ESC3 - F1
+	it('should create a valid post and schedule its publication (a-priori)', () => {
+		cy.fixture('data-pool').then(({posts}) => {
+			const post = Math.floor(Math.random() * (posts.valid.length));
+			const postTitle = posts.valid[post].title;
+			const postContent = posts.valid[post].content.content;
+			dashboardPage.postsOption().click();
+			cy.wait(1000).screenshot();
+			postsPage.newPostsButton().click();
+			cy.screenshot();
+			postsEditPage.createPost(postTitle, postContent, {scheduled: true});
+			cy.wait(1000);
+
+			postsPage.load().screenshot();
+
+			postsPage.publishedPostsOption().click();
+			postsPage
+				.postListContainer()
+				.screenshot()
+				.contains(postTitle)
+				.should('not.exist');
+			cy.wait(1000);
+			postsPage.draftPostsOption().click();
+			postsPage
+				.postListContainer()
+				.screenshot()
+				.contains(postTitle)
+				.should('not.exist');
+			postsPage.scheduledPostsOption().click();
+			postsPage
+				.postListContainer()
+				.screenshot()
+				.contains(postTitle)
+				.should('be.visible');
+
+			cy.wait(1000);
+
+			homePage.load().screenshot();
+			cy.wait(1000);
+
+			homePage.feedContainer().contains(postTitle).should('not.exist');
+			cy.screenshot();
+		});
+	});
+
+	it('should create an invalid post with missing keys and schedule its publication (a-priori)', () => {
+		cy.fixture('data-pool').then(({posts}) => {
+			const post = Math.floor(Math.random() * (posts.invalid.postsWithMissingKeys.length));
+			const postTitle = posts.invalid.postsWithMissingKeys[post].title;
+			const postContent = posts.invalid.postsWithMissingKeys[post].content.content;
+			dashboardPage.postsOption().click();
+			cy.wait(1000).screenshot();
+			postsPage.newPostsButton().click();
+			cy.screenshot();
+			postsEditPage.createPost(postTitle, postContent, {scheduled: true});
+			cy.wait(1000);
+
+			postsPage.load().screenshot();
+
+			postsPage.publishedPostsOption().click();
+			postsPage
+				.postListContainer()
+				.screenshot()
+				.contains(postTitle)
+				.should('not.exist');
+			cy.wait(1000);
+			postsPage.draftPostsOption().click();
+			postsPage
+				.postListContainer()
+				.screenshot()
+				.contains(postTitle)
+				.should('not.exist');
+			postsPage.scheduledPostsOption().click();
+			postsPage
+				.postListContainer()
+				.screenshot()
+				.contains(postTitle)
+				.should('be.visible');
+
+			cy.wait(1000);
+
+			homePage.load().screenshot();
+			cy.wait(1000);
+
+			homePage.feedContainer().contains(postTitle).should('not.exist');
+			cy.screenshot();
+		});
+	});
+
+	it('should create a valid post and schedule its publication (pseudo-aleatorio)', () => {
+		dashboardPage.postsOption().click();
+		cy.wait(1000).screenshot();
+		const randomPosts = generateManyValidPosts(100);
+		const randomPost = Math.floor(Math.random() * (randomPosts.length));
+		const postTitle = randomPosts[randomPost].title;
+		// @ts-ignore
+		const postContent = randomPosts[randomPost].content.content; // si no accedo el content de esta manera, cypress me genera error.
+
+		postsPage.newPostsButton().click();
+		cy.screenshot();
+		postsEditPage.createPost(postTitle, postContent, {scheduled: true});
+		cy.wait(1000);
+
+		postsPage.load().screenshot();
+
+		postsPage.publishedPostsOption().click();
+		postsPage
+			.postListContainer()
+			.screenshot()
+			.contains(postTitle)
+			.should('not.exist');
+		cy.wait(1000);
+		postsPage.draftPostsOption().click();
+		postsPage
+			.postListContainer()
+			.screenshot()
+			.contains(postTitle)
+			.should('not.exist');
+		postsPage.scheduledPostsOption().click();
+		postsPage
+			.postListContainer()
+			.screenshot()
+			.contains(postTitle)
+			.should('be.visible');
+
+		cy.wait(1000);
+
+		homePage.load().screenshot();
+		cy.wait(1000);
+
+		homePage.feedContainer().contains(postTitle).should('not.exist');
+		cy.screenshot();
+	});
+
+	it('should create an invalid post with invalid types and schedule its publication (pseudo-aleatorio)', () => {
+		dashboardPage.postsOption().click();
+		cy.wait(1000).screenshot();
+		const randomPosts = generateManyInvalidPosts().postWithInvalidTypesPerField;
+		const randomPost = Math.floor(Math.random() * (randomPosts.length));
+		const postTitle = randomPosts[randomPost].title.toString();
+		// @ts-ignore
+		const postContent = randomPosts[randomPost].content.content.toString();
+		postsPage.newPostsButton().click();
+		cy.screenshot();
+		postsEditPage.createPost(postTitle, postContent, {scheduled: true});
+		cy.wait(1000);
+
+		postsPage.load().screenshot();
+
+		postsPage.publishedPostsOption().click();
+		postsPage
+			.postListContainer()
+			.screenshot()
+			.contains(postTitle)
+			.should('not.exist');
+		cy.wait(1000);
+		postsPage.draftPostsOption().click();
+		postsPage
+			.postListContainer()
+			.screenshot()
+			.contains(postTitle)
+			.should('not.exist');
+		postsPage.scheduledPostsOption().click();
+		postsPage
+			.postListContainer()
+			.screenshot()
+			.contains(postTitle)
+			.should('be.visible');
+
+		cy.wait(1000);
+
+		homePage.load().screenshot();
+		cy.wait(1000);
+
+		homePage.feedContainer().contains(postTitle).should('not.exist');
+		cy.screenshot();
+	});
+
+	it('should create an invalid post with border cases and schedule its publication (pseudo-aleatorio)', () => {
+		dashboardPage.postsOption().click();
+		cy.wait(1000).screenshot();
+		const randomPosts = generateManyInvalidPosts().postsWithBorderCases;
+		const randomPost = Math.floor(Math.random() * (randomPosts.length));
+		const postTitle = randomPosts[randomPost].title.toString();
+		// @ts-ignore
+		const postContent = randomPosts[randomPost].content.content.toString();
+		postsPage.newPostsButton().click();
+		cy.screenshot();
+		postsEditPage.createPost(postTitle, postContent, {scheduled: true});
+		cy.wait(1000);
+
+		postsPage.load().screenshot();
+
+		postsPage.publishedPostsOption().click();
+		postsPage
+			.postListContainer()
+			.screenshot()
+			.contains(postTitle)
+			.should('not.exist');
+		cy.wait(1000);
+		postsPage.draftPostsOption().click();
+		postsPage
+			.postListContainer()
+			.screenshot()
+			.contains(postTitle)
+			.should('not.exist');
+		postsPage.scheduledPostsOption().click();
+		postsPage
+			.postListContainer()
+			.screenshot()
+			.contains(postTitle)
+			.should('be.visible');
+
+		cy.wait(1000);
+
+		homePage.load().screenshot();
+		cy.wait(1000);
+
+		homePage.feedContainer().contains(postTitle).should('not.exist');
+		cy.screenshot();
+	});
+
+	it('should create a valid post and schedule its publication (aleatorio)', () => {
 		dashboardPage.postsOption().click();
 		cy.wait(1000).screenshot();
 		const postTitle = faker.lorem.words();
