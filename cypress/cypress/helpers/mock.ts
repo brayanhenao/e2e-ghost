@@ -11,6 +11,7 @@ import {
 	Tag,
 	CodeInjection,
 } from './interfaces';
+
 const types: InvalidOptionConfig['datatype'][] = [
 	'bigInt',
 	'boolean',
@@ -26,10 +27,10 @@ const types: InvalidOptionConfig['datatype'][] = [
 
 const generateInvalidInput = (
 	originalType: InvalidOptionConfig['datatype'],
-	option?: InvalidOptionConfig
+	option?: InvalidOptionConfig,
 ) => {
 	const generateRandomInputByType = (
-		type?: InvalidOptionConfig['datatype']
+		type?: InvalidOptionConfig['datatype'],
 	) => {
 		const randomType = type || faker.helpers.arrayElement(types);
 
@@ -54,7 +55,7 @@ const generateInvalidInput = (
 						return faker.internet.email(
 							undefined,
 							undefined,
-							faker.database.mongodbObjectId()
+							faker.database.mongodbObjectId(),
 						);
 					case 2:
 						return faker.internet.email().replace('@', '¢');
@@ -81,7 +82,7 @@ const generateInvalidInput = (
 		} else if (randomType === 'date') {
 			return faker.date.recent().toISOString().substring(0, 10);
 		} else if (randomType === 'time') {
-			return faker.date.recent().toISOString().substring(11, 19);
+			return faker.date.recent().toISOString().substring(11, 16);
 		} else if (randomType === 'date-time') {
 			return faker.date.recent().toISOString();
 		}
@@ -100,8 +101,8 @@ const generateInvalidInput = (
 	return option?.datatype
 		? generateRandomInputByType(option.datatype)
 		: option.preserveType
-		? generateRandomInputByType(originalType)
-		: generateRandomInputByType();
+			? generateRandomInputByType(originalType)
+			: generateRandomInputByType();
 };
 
 //Members
@@ -115,20 +116,20 @@ export const generateValidMember = (options?: Options<Member>): Member => {
 		subscribed: faker.datatype.boolean(),
 		labels: faker.datatype.boolean()
 			? faker.lorem
-					.words(
-						faker.datatype.number({
-							min: options?.labels?.min || 0,
-							max: options?.labels?.max || 10,
-						})
-					)
-					.split(' ')
+				.words(
+					faker.datatype.number({
+						min: options?.labels?.min || 0,
+						max: options?.labels?.max || 10,
+					}),
+				)
+				.split(' ')
 			: undefined,
 		note: faker.lorem.sentence(),
 	};
 };
 
 export const generateInvalidMember = (
-	options?: InvalidOptions<Member>
+	options?: InvalidOptions<Member>,
 ): Invalid<Member> => ({
 	name: generateInvalidInput('word', options?.name),
 	email: generateInvalidInput('email', options?.email),
@@ -158,7 +159,7 @@ export const generateManyInvalidMembers = (variantAmounts = 5) => {
 		(member, i) => {
 			delete member[Object.keys(member)[i]];
 			return member;
-		}
+		},
 	);
 
 	const membersWithInvalidTypesPerField: Invalid<Member>[] = [].concat.apply(
@@ -166,8 +167,8 @@ export const generateManyInvalidMembers = (variantAmounts = 5) => {
 		Object.entries(validTypes).map(([k, v]) =>
 			[...types]
 				.filter((t) => t !== v)
-				.map((type) => generateInvalidMember({[k]: {datatype: type}}))
-		)
+				.map((type) => generateInvalidMember({[k]: {datatype: type}})),
+		),
 	);
 
 	//border cases
@@ -179,7 +180,7 @@ export const generateManyInvalidMembers = (variantAmounts = 5) => {
 			labels: {preserveType: true},
 			note: {preserveType: true},
 			subscribed: {preserveType: true},
-		})
+		}),
 	);
 	membersWithBorderCases.push(
 		generateInvalidMember({
@@ -188,7 +189,7 @@ export const generateManyInvalidMembers = (variantAmounts = 5) => {
 			labels: {preserveType: true},
 			note: {preserveType: true},
 			subscribed: {preserveType: true},
-		})
+		}),
 	);
 	membersWithBorderCases.push(
 		generateInvalidMember({
@@ -197,7 +198,7 @@ export const generateManyInvalidMembers = (variantAmounts = 5) => {
 			labels: {preserveType: true},
 			note: {preserveType: true},
 			subscribed: {preserveType: true},
-		})
+		}),
 	);
 	membersWithBorderCases.push(
 		generateInvalidMember({
@@ -206,7 +207,7 @@ export const generateManyInvalidMembers = (variantAmounts = 5) => {
 			labels: {preserveType: true},
 			note: {preserveType: true},
 			subscribed: {preserveType: true},
-		})
+		}),
 	);
 	membersWithBorderCases.push(
 		generateInvalidMember({
@@ -215,7 +216,7 @@ export const generateManyInvalidMembers = (variantAmounts = 5) => {
 			labels: {preserveType: true},
 			note: {preserveType: true},
 			subscribed: {preserveType: true},
-		})
+		}),
 	);
 	membersWithBorderCases.push(
 		generateInvalidMember({
@@ -224,7 +225,7 @@ export const generateManyInvalidMembers = (variantAmounts = 5) => {
 			labels: {preserveType: true},
 			note: {preserveType: true},
 			subscribed: {preserveType: true},
-		})
+		}),
 	);
 	membersWithBorderCases.push(
 		generateInvalidMember({
@@ -233,7 +234,7 @@ export const generateManyInvalidMembers = (variantAmounts = 5) => {
 			labels: {preserveType: true, max: 9999}, // max labels 10000
 			note: {preserveType: true},
 			subscribed: {preserveType: true},
-		})
+		}),
 	);
 	membersWithBorderCases.push(
 		generateInvalidMember({
@@ -242,7 +243,7 @@ export const generateManyInvalidMembers = (variantAmounts = 5) => {
 			labels: {preserveType: true, max: 10000}, // max labels 10000
 			note: {preserveType: true},
 			subscribed: {preserveType: true},
-		})
+		}),
 	);
 	membersWithBorderCases.push(
 		generateInvalidMember({
@@ -251,7 +252,7 @@ export const generateManyInvalidMembers = (variantAmounts = 5) => {
 			labels: {preserveType: true, max: 10001}, // max labels 10000
 			note: {preserveType: true},
 			subscribed: {preserveType: true},
-		})
+		}),
 	);
 	membersWithBorderCases.push(
 		generateInvalidMember({
@@ -260,7 +261,7 @@ export const generateManyInvalidMembers = (variantAmounts = 5) => {
 			labels: {preserveType: true},
 			note: {preserveType: true, max: 499, randCase: 2}, // max note 500
 			subscribed: {preserveType: true},
-		})
+		}),
 	);
 	membersWithBorderCases.push(
 		generateInvalidMember({
@@ -269,7 +270,7 @@ export const generateManyInvalidMembers = (variantAmounts = 5) => {
 			labels: {preserveType: true},
 			note: {preserveType: true, max: 500, randCase: 2}, // max note 500
 			subscribed: {preserveType: true},
-		})
+		}),
 	);
 	membersWithBorderCases.push(
 		generateInvalidMember({
@@ -278,7 +279,7 @@ export const generateManyInvalidMembers = (variantAmounts = 5) => {
 			labels: {preserveType: true},
 			note: {preserveType: true, max: 501, randCase: 2}, // max note 500
 			subscribed: {preserveType: true},
-		})
+		}),
 	);
 
 	// variantAmount * 5 fields * 3 cases + (4 borders * fields with border )
@@ -307,7 +308,7 @@ export const generateValidPost = (options?: Options<Post>): Post => {
 				? faker.date.recent().toISOString().substring(0, 10)
 				: undefined,
 			publishTime: publicationState
-				? faker.date.recent().toISOString().substring(11, 19)
+				? faker.date.recent().toISOString().substring(11, 16)
 				: undefined,
 			tags: faker.datatype.boolean()
 				? faker.lorem.words(faker.datatype.number(10)).split(' ')
@@ -325,7 +326,7 @@ export const generateValidPost = (options?: Options<Post>): Post => {
 };
 
 export const generateInvalidPost = (
-	options?: InvalidOptions<Post>
+	options?: InvalidOptions<Post>,
 ): Invalid<Post> => ({
 	title: generateInvalidInput('word', options?.title),
 	content: {
@@ -335,22 +336,22 @@ export const generateInvalidPost = (
 	publishSettings: {
 		publicationState: generateInvalidInput(
 			'string',
-			options?.publishSettings?.publicationState
+			options?.publishSettings?.publicationState,
 		),
 		publishDate: generateInvalidInput(
 			'date',
-			options?.publishSettings?.publishDate
+			options?.publishSettings?.publishDate,
 		),
 		publishTime: generateInvalidInput(
 			'time',
-			options?.publishSettings?.publishTime
+			options?.publishSettings?.publishTime,
 		),
 		tags: generateInvalidInput(['string'], options?.publishSettings?.tags),
 		access: generateInvalidInput('string', options?.publishSettings?.access),
 		excerpt: generateInvalidInput('text', options?.publishSettings?.excerpt),
 		featured: generateInvalidInput(
 			'boolean',
-			options?.publishSettings?.featured
+			options?.publishSettings?.featured,
 		),
 	},
 });
@@ -364,11 +365,9 @@ export const generateManyValidPosts = (amount = 100) => {
 };
 
 export const generateManyInvalidPosts = (variantAmounts = 5) => {
-	const validTypes: Record<
-		keyof Post,
+	const validTypes: Record<keyof Post,
 		| InvalidOptionConfig['datatype']
-		| Record<string, InvalidOptionConfig['datatype']>
-	> = {
+		| Record<string, InvalidOptionConfig['datatype']>> = {
 		title: 'word',
 		content: {
 			content: 'text',
@@ -398,8 +397,8 @@ export const generateManyInvalidPosts = (variantAmounts = 5) => {
 		Object.entries(validTypes).map(([k, v]) =>
 			[...types]
 				.filter((t) => t !== v)
-				.map((type) => generateInvalidPost({[k]: {datatype: type}}))
-		)
+				.map((type) => generateInvalidPost({[k]: {datatype: type}})),
+		),
 	);
 
 	const invalidTypesPerFieldPublishSettings = [].concat.apply(
@@ -412,12 +411,12 @@ export const generateManyInvalidPosts = (variantAmounts = 5) => {
 						publishSettings: {
 							[k]: {datatype: type},
 						} as any,
-					})
-				)
-		)
+					}),
+				),
+		),
 	);
 	postWithInvalidTypesPerField = postWithInvalidTypesPerField.concat(
-		invalidTypesPerFieldPublishSettings
+		invalidTypesPerFieldPublishSettings,
 	);
 
 	// border cases
@@ -437,7 +436,7 @@ export const generateManyInvalidPosts = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	postsWithBorderCases.push(
 		generateInvalidPost({
@@ -453,7 +452,7 @@ export const generateManyInvalidPosts = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	postsWithBorderCases.push(
 		generateInvalidPost({
@@ -469,7 +468,7 @@ export const generateManyInvalidPosts = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	postsWithBorderCases.push(
 		generateInvalidPost({
@@ -485,7 +484,7 @@ export const generateManyInvalidPosts = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	postsWithBorderCases.push(
 		generateInvalidPost({
@@ -501,7 +500,7 @@ export const generateManyInvalidPosts = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	postsWithBorderCases.push(
 		generateInvalidPost({
@@ -517,7 +516,7 @@ export const generateManyInvalidPosts = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	postsWithBorderCases.push(
 		generateInvalidPost({
@@ -533,7 +532,7 @@ export const generateManyInvalidPosts = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	postsWithBorderCases.push(
 		generateInvalidPost({
@@ -549,7 +548,7 @@ export const generateManyInvalidPosts = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	postsWithBorderCases.push(
 		generateInvalidPost({
@@ -565,7 +564,7 @@ export const generateManyInvalidPosts = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	postsWithBorderCases.push(
 		generateInvalidPost({
@@ -581,7 +580,7 @@ export const generateManyInvalidPosts = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	postsWithBorderCases.push(
 		generateInvalidPost({
@@ -597,7 +596,7 @@ export const generateManyInvalidPosts = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	postsWithBorderCases.push(
 		generateInvalidPost({
@@ -613,7 +612,7 @@ export const generateManyInvalidPosts = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	return {
 		postsWithMissingKeys,
@@ -632,7 +631,7 @@ export const generateValidPage = (options?: Options<Page>): Page => {
 		title: faker.lorem.words(),
 		content: {
 			type: 'text',
-			content: faker.lorem.paragraphs(),
+			content: faker.lorem.paragraphs().replace(/\n/g, ' '),
 		},
 		publishSettings: {
 			publicationState,
@@ -640,7 +639,7 @@ export const generateValidPage = (options?: Options<Page>): Page => {
 				? faker.date.recent().toISOString().substring(0, 10)
 				: undefined,
 			publishTime: publicationState
-				? faker.date.recent().toISOString().substring(11, 19)
+				? faker.date.recent().toISOString().substring(11, 16)
 				: undefined,
 			tags: faker.datatype.boolean()
 				? faker.lorem.words(faker.datatype.number(10)).split(' ')
@@ -658,7 +657,7 @@ export const generateValidPage = (options?: Options<Page>): Page => {
 };
 
 export const generateInvalidPage = (
-	options?: InvalidOptions<Page>
+	options?: InvalidOptions<Page>,
 ): Invalid<Page> => ({
 	title: generateInvalidInput('word', options?.title),
 	content: {
@@ -668,22 +667,22 @@ export const generateInvalidPage = (
 	publishSettings: {
 		publicationState: generateInvalidInput(
 			'string',
-			options?.publishSettings?.publicationState
+			options?.publishSettings?.publicationState,
 		),
 		publishDate: generateInvalidInput(
 			'date',
-			options?.publishSettings?.publishDate
+			options?.publishSettings?.publishDate,
 		),
 		publishTime: generateInvalidInput(
 			'time',
-			options?.publishSettings?.publishTime
+			options?.publishSettings?.publishTime,
 		),
 		tags: generateInvalidInput(['string'], options?.publishSettings?.tags),
 		access: generateInvalidInput('string', options?.publishSettings?.access),
 		excerpt: generateInvalidInput('text', options?.publishSettings?.excerpt),
 		featured: generateInvalidInput(
 			'boolean',
-			options?.publishSettings?.featured
+			options?.publishSettings?.featured,
 		),
 	},
 });
@@ -697,11 +696,9 @@ export const generateManyValidPages = (amount = 100) => {
 };
 
 export const generateManyInvalidPages = (variantAmounts = 5) => {
-	const validTypes: Record<
-		keyof Page,
+	const validTypes: Record<keyof Page,
 		| InvalidOptionConfig['datatype']
-		| Record<string, InvalidOptionConfig['datatype']>
-	> = {
+		| Record<string, InvalidOptionConfig['datatype']>> = {
 		title: 'word',
 		content: {
 			content: 'text',
@@ -731,8 +728,8 @@ export const generateManyInvalidPages = (variantAmounts = 5) => {
 		Object.entries(validTypes).map(([k, v]) =>
 			[...types]
 				.filter((t) => t !== v)
-				.map((type) => generateInvalidPost({[k]: {datatype: type}}))
-		)
+				.map((type) => generateInvalidPost({[k]: {datatype: type}})),
+		),
 	);
 
 	const invalidTypesPerFieldPublishSettings = [].concat.apply(
@@ -745,12 +742,12 @@ export const generateManyInvalidPages = (variantAmounts = 5) => {
 						publishSettings: {
 							[k]: {datatype: type},
 						} as any,
-					})
-				)
-		)
+					}),
+				),
+		),
 	);
 	pageWithInvalidTypesPerField = pageWithInvalidTypesPerField.concat(
-		invalidTypesPerFieldPublishSettings
+		invalidTypesPerFieldPublishSettings,
 	);
 
 	// border cases
@@ -770,7 +767,7 @@ export const generateManyInvalidPages = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	pagesWithBorderCases.push(
 		generateInvalidPage({
@@ -786,7 +783,7 @@ export const generateManyInvalidPages = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	pagesWithBorderCases.push(
 		generateInvalidPage({
@@ -802,7 +799,7 @@ export const generateManyInvalidPages = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	pagesWithBorderCases.push(
 		generateInvalidPage({
@@ -818,7 +815,7 @@ export const generateManyInvalidPages = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	pagesWithBorderCases.push(
 		generateInvalidPage({
@@ -834,7 +831,7 @@ export const generateManyInvalidPages = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	pagesWithBorderCases.push(
 		generateInvalidPage({
@@ -850,7 +847,7 @@ export const generateManyInvalidPages = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	pagesWithBorderCases.push(
 		generateInvalidPage({
@@ -866,7 +863,7 @@ export const generateManyInvalidPages = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	pagesWithBorderCases.push(
 		generateInvalidPage({
@@ -882,7 +879,7 @@ export const generateManyInvalidPages = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	pagesWithBorderCases.push(
 		generateInvalidPage({
@@ -898,7 +895,7 @@ export const generateManyInvalidPages = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	pagesWithBorderCases.push(
 		generateInvalidPage({
@@ -914,7 +911,7 @@ export const generateManyInvalidPages = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	pagesWithBorderCases.push(
 		generateInvalidPage({
@@ -930,7 +927,7 @@ export const generateManyInvalidPages = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	pagesWithBorderCases.push(
 		generateInvalidPage({
@@ -946,7 +943,7 @@ export const generateManyInvalidPages = (variantAmounts = 5) => {
 				featured: {preserveType: true},
 				author: {preserveType: true},
 			},
-		})
+		}),
 	);
 	return {
 		pagesWithMissingKeys,
@@ -969,7 +966,7 @@ export const generateValidTag = (options?: Options<Tag>): Tag => {
 };
 
 export const generateInvalidTag = (
-	options?: InvalidOptions<Tag>
+	options?: InvalidOptions<Tag>,
 ): Invalid<Tag> => ({
 	name: generateInvalidInput('word', options?.name),
 	slug: generateInvalidInput('word', options?.slug),
@@ -1003,8 +1000,8 @@ export const generateManyInvalidTags = (variantAmounts = 5) => {
 		Object.entries(validTypes).map(([k, v]) =>
 			[...types]
 				.filter((t) => t !== v)
-				.map((type) => generateInvalidTag({[k]: {datatype: type}}))
-		)
+				.map((type) => generateInvalidTag({[k]: {datatype: type}})),
+		),
 	);
 
 	//border cases
@@ -1016,7 +1013,7 @@ export const generateManyInvalidTags = (variantAmounts = 5) => {
 			slug: {preserveType: true},
 			description: {preserveType: true},
 			color: {preserveType: true},
-		})
+		}),
 	);
 	tagsWithBorderCases.push(
 		generateInvalidTag({
@@ -1024,7 +1021,7 @@ export const generateManyInvalidTags = (variantAmounts = 5) => {
 			slug: {preserveType: true},
 			description: {preserveType: true},
 			color: {preserveType: true},
-		})
+		}),
 	);
 	tagsWithBorderCases.push(
 		generateInvalidTag({
@@ -1032,7 +1029,7 @@ export const generateManyInvalidTags = (variantAmounts = 5) => {
 			slug: {preserveType: true},
 			description: {preserveType: true},
 			color: {preserveType: true},
-		})
+		}),
 	);
 	tagsWithBorderCases.push(
 		generateInvalidTag({
@@ -1040,7 +1037,7 @@ export const generateManyInvalidTags = (variantAmounts = 5) => {
 			slug: {preserveType: true, max: 190, randCase: 2}, //slug 191
 			description: {preserveType: true},
 			color: {preserveType: true},
-		})
+		}),
 	);
 	tagsWithBorderCases.push(
 		generateInvalidTag({
@@ -1048,7 +1045,7 @@ export const generateManyInvalidTags = (variantAmounts = 5) => {
 			slug: {preserveType: true, max: 191, randCase: 2}, //slug 191
 			description: {preserveType: true},
 			color: {preserveType: true},
-		})
+		}),
 	);
 	tagsWithBorderCases.push(
 		generateInvalidTag({
@@ -1056,7 +1053,7 @@ export const generateManyInvalidTags = (variantAmounts = 5) => {
 			slug: {preserveType: true, max: 192, randCase: 2}, //slug 191
 			description: {preserveType: true},
 			color: {preserveType: true},
-		})
+		}),
 	);
 	tagsWithBorderCases.push(
 		generateInvalidTag({
@@ -1064,7 +1061,7 @@ export const generateManyInvalidTags = (variantAmounts = 5) => {
 			slug: {preserveType: true},
 			description: {preserveType: true, max: 499, randCase: 2}, // description 500
 			color: {preserveType: true},
-		})
+		}),
 	);
 	tagsWithBorderCases.push(
 		generateInvalidTag({
@@ -1072,7 +1069,7 @@ export const generateManyInvalidTags = (variantAmounts = 5) => {
 			slug: {preserveType: true},
 			description: {preserveType: true, max: 500, randCase: 2}, // description 500
 			color: {preserveType: true},
-		})
+		}),
 	);
 	tagsWithBorderCases.push(
 		generateInvalidTag({
@@ -1080,7 +1077,7 @@ export const generateManyInvalidTags = (variantAmounts = 5) => {
 			slug: {preserveType: true},
 			description: {preserveType: true, max: 501, randCase: 2}, // description 500
 			color: {preserveType: true},
-		})
+		}),
 	);
 
 	// variantAmount * 5 fields * 3 cases + (4 borders * fields with border )
@@ -1094,14 +1091,14 @@ export const generateManyInvalidTags = (variantAmounts = 5) => {
 // CodeInjection
 
 export const generateValidCodeInjection = (
-	options?: Options<CodeInjection>
+	options?: Options<CodeInjection>,
 ): CodeInjection => ({
 	header: faker.lorem.sentence(),
 	footer: faker.lorem.sentence(),
 });
 
 export const generateInvalidCodeInjection = (
-	options?: InvalidOptions<CodeInjection>
+	options?: InvalidOptions<CodeInjection>,
 ): Invalid<CodeInjection> => ({
 	header: generateInvalidInput('text', options?.header),
 	footer: generateInvalidInput('text', options?.footer),
@@ -1116,10 +1113,8 @@ export const generateManyValidCodeInjections = (amount = 100) => {
 };
 
 export const generateManyInvalidCodeInjections = (variantAmounts = 5) => {
-	const validTypes: Record<
-		keyof CodeInjection,
-		InvalidOptionConfig['datatype']
-	> = {
+	const validTypes: Record<keyof CodeInjection,
+		InvalidOptionConfig['datatype']> = {
 		header: 'text',
 		footer: 'text',
 	};
@@ -1128,7 +1123,7 @@ export const generateManyInvalidCodeInjections = (variantAmounts = 5) => {
 		(codeInjection, i) => {
 			delete codeInjection[Object.keys(codeInjection)[i]];
 			return codeInjection;
-		}
+		},
 	);
 
 	const codeInjectionsWithInvalidTypesPerField: Invalid<CodeInjection>[] =
@@ -1137,8 +1132,8 @@ export const generateManyInvalidCodeInjections = (variantAmounts = 5) => {
 			Object.entries(validTypes).map(([k, v]) =>
 				[...types]
 					.filter((t) => t !== v)
-					.map((type) => generateInvalidCodeInjection({[k]: {datatype: type}}))
-			)
+					.map((type) => generateInvalidCodeInjection({[k]: {datatype: type}})),
+			),
 		);
 
 	//border cases
@@ -1148,37 +1143,37 @@ export const generateManyInvalidCodeInjections = (variantAmounts = 5) => {
 		generateInvalidCodeInjection({
 			header: {preserveType: true, max: 65534, randCase: 2}, //header 65535
 			footer: {preserveType: true},
-		})
+		}),
 	);
 	codeInjectionsWithBorderCases.push(
 		generateInvalidCodeInjection({
 			header: {preserveType: true, max: 65535, randCase: 2}, //header 65535
 			footer: {preserveType: true},
-		})
+		}),
 	);
 	codeInjectionsWithBorderCases.push(
 		generateInvalidCodeInjection({
 			header: {preserveType: true, max: 65536, randCase: 2}, //header 65535
 			footer: {preserveType: true},
-		})
+		}),
 	);
 	codeInjectionsWithBorderCases.push(
 		generateInvalidCodeInjection({
 			header: {preserveType: true},
 			footer: {preserveType: true, max: 65534, randCase: 2}, //footer 65535
-		})
+		}),
 	);
 	codeInjectionsWithBorderCases.push(
 		generateInvalidCodeInjection({
 			header: {preserveType: true},
 			footer: {preserveType: true, max: 65535, randCase: 2}, //footer 65535
-		})
+		}),
 	);
 	codeInjectionsWithBorderCases.push(
 		generateInvalidCodeInjection({
 			header: {preserveType: true},
 			footer: {preserveType: true, max: 65536, randCase: 2}, //footer 65535
-		})
+		}),
 	);
 	// variantAmount * 5 fields * 3 cases + (4 borders * fields with border )
 	return {
