@@ -292,7 +292,7 @@ describe('create_post', () => {
 			cy.screenshot();
 
 			adminPage.load().screenshot();
-		})
+		});
 	});
 
 	it('should create an invalid post, with missing keys and leave it draft (a-priori)', () => {
@@ -332,7 +332,7 @@ describe('create_post', () => {
 			cy.screenshot();
 
 			adminPage.load().screenshot();
-		})
+		});
 	});
 
 	it('should create a valid post and leave it draft (pseudo-aleatorio)', () => {
@@ -499,11 +499,13 @@ describe('create_post', () => {
 			const post = Math.floor(Math.random() * (posts.valid.length));
 			const postTitle = posts.valid[post].title;
 			const postContent = posts.valid[post].content.content;
+			const publishDate = posts.valid[post].publishSettings.publishDate;
+			const publishTime = posts.valid[post].publishSettings.publishTime;
 			dashboardPage.postsOption().click();
 			cy.wait(1000).screenshot();
 			postsPage.newPostsButton().click();
 			cy.screenshot();
-			postsEditPage.createPost(postTitle, postContent, {scheduled: true});
+			postsEditPage.createPost(postTitle, postContent, {date: publishDate, time: publishTime});
 			cy.wait(1000);
 
 			postsPage.load().screenshot();
@@ -541,13 +543,15 @@ describe('create_post', () => {
 	it('should create an invalid post with missing keys and schedule its publication (a-priori)', () => {
 		cy.fixture('data-pool').then(({posts}) => {
 			const post = Math.floor(Math.random() * (posts.invalid.postsWithMissingKeys.length));
-			const postTitle = posts.invalid.postsWithMissingKeys[post].title;
-			const postContent = posts.invalid.postsWithMissingKeys[post].content.content;
+			const postTitle = posts.invalid.postsWithMissingKeys[post].title?.toString();
+			const postContent = posts.invalid.postsWithMissingKeys[post].content.content?.toString();
+			const publishDate = posts.invalid.postsWithMissingKeys[post].publishSettings.publishDate?.toString();
+			const publishTime = posts.invalid.postsWithMissingKeys[post].publishSettings.publishTime?.toString();
 			dashboardPage.postsOption().click();
 			cy.wait(1000).screenshot();
 			postsPage.newPostsButton().click();
 			cy.screenshot();
-			postsEditPage.createPost(postTitle, postContent, {scheduled: true});
+			postsEditPage.createPost(postTitle, postContent, {date: publishDate, time: publishTime});
 			cy.wait(1000);
 
 			postsPage.load().screenshot();
@@ -590,10 +594,11 @@ describe('create_post', () => {
 		const postTitle = randomPosts[randomPost].title;
 		// @ts-ignore
 		const postContent = randomPosts[randomPost].content.content; // si no accedo el content de esta manera, cypress me genera error.
-
+		const publishDate = randomPosts[randomPost].publishSettings.publishDate;
+		const publishTime = randomPosts[randomPost].publishSettings.publishTime;
 		postsPage.newPostsButton().click();
 		cy.screenshot();
-		postsEditPage.createPost(postTitle, postContent, {scheduled: true});
+		postsEditPage.createPost(postTitle, postContent, {date: publishDate, time:publishTime});
 		cy.wait(1000);
 
 		postsPage.load().screenshot();
@@ -632,12 +637,16 @@ describe('create_post', () => {
 		cy.wait(1000).screenshot();
 		const randomPosts = generateManyInvalidPosts().postWithInvalidTypesPerField;
 		const randomPost = Math.floor(Math.random() * (randomPosts.length));
-		const postTitle = randomPosts[randomPost].title.toString();
+		const postTitle = randomPosts[randomPost].title?.toString();
 		// @ts-ignore
 		const postContent = randomPosts[randomPost].content.content.toString();
+		// @ts-ignore
+		const publishDate = randomPosts[randomPost].publishSettings.publishDate?.toString();
+		// @ts-ignore
+		const publishTime = randomPosts[randomPost].publishSettings.publishTime?.toString();
 		postsPage.newPostsButton().click();
 		cy.screenshot();
-		postsEditPage.createPost(postTitle, postContent, {scheduled: true});
+		postsEditPage.createPost(postTitle, postContent, {date: publishDate, time: publishTime});
 		cy.wait(1000);
 
 		postsPage.load().screenshot();
@@ -679,9 +688,13 @@ describe('create_post', () => {
 		const postTitle = randomPosts[randomPost].title.toString();
 		// @ts-ignore
 		const postContent = randomPosts[randomPost].content.content.toString();
+		// @ts-ignore
+		const publishDate = randomPosts[randomPost].publishSettings.publishDate?.toString();
+		// @ts-ignore
+		const publishTime = randomPosts[randomPost].publishSettings.publishTime?.toString();
 		postsPage.newPostsButton().click();
 		cy.screenshot();
-		postsEditPage.createPost(postTitle, postContent, {scheduled: true});
+		postsEditPage.createPost(postTitle, postContent, {date: publishDate, time: publishTime});
 		cy.wait(1000);
 
 		postsPage.load().screenshot();
@@ -720,9 +733,11 @@ describe('create_post', () => {
 		cy.wait(1000).screenshot();
 		const postTitle = faker.lorem.words();
 		const postContent = faker.lorem.paragraphs();
+		const publishDate = faker.date.soon().toISOString().substring(0,10);
+		const publishTime = faker.date.soon().toISOString().substring(11,19);
 		postsPage.newPostsButton().click();
 		cy.screenshot();
-		postsEditPage.createPost(postTitle, postContent, {scheduled: true});
+		postsEditPage.createPost(postTitle, postContent, {date: publishDate, time: publishTime});
 		cy.wait(1000);
 
 		postsPage.load().screenshot();

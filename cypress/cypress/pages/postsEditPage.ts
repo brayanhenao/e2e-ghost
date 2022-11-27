@@ -1,4 +1,5 @@
 import {BasePage, baseUrl} from './basePage';
+
 class postsEditPage implements BasePage {
 	private _route = `${baseUrl}/ghost/#/posts/new`;
 
@@ -33,10 +34,13 @@ class postsEditPage implements BasePage {
 	createPost(
 		title: string,
 		content: string,
-		publish: {scheduled: boolean} | boolean = false
+		publish: {
+			date: string;
+			time: string;
+		} | boolean = false,
 	) {
-		this.titleInput().type(title, { parseSpecialCharSequences: false }).screenshot();
-		this.contentInput().type(content, { parseSpecialCharSequences: false }).screenshot();
+		this.titleInput().type(title, {parseSpecialCharSequences: false}).screenshot();
+		this.contentInput().type(content, {parseSpecialCharSequences: false}).screenshot();
 
 		if (publish) {
 			this.publishButton().click();
@@ -48,13 +52,23 @@ class postsEditPage implements BasePage {
 					.click()
 					.screenshot();
 				cy.get(
-					'.gh-publish-settings .gh-publish-setting-form .gh-date-time-picker'
+					'.gh-publish-settings .gh-publish-setting-form .gh-date-time-picker',
 				)
 					.last()
 					.click()
 					.screenshot();
-
 				cy.wait(1000);
+				const datePicker = cy.get('.gh-date-time-picker-date > input');
+				datePicker.click();
+				datePicker.clear();
+				datePicker.type(publish.date, { parseSpecialCharSequences: false });
+				datePicker.screenshot();
+
+				const timePicker = cy.get('.gh-date-time-picker-time > input');
+				timePicker.click();
+				timePicker.clear();
+				timePicker.type(publish.time, { parseSpecialCharSequences: false });
+				timePicker.screenshot();
 			}
 			cy.get('.gh-publish-cta').first().click();
 			cy.wait(1000).screenshot();
