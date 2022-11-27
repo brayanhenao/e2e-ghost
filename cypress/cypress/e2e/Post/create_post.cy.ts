@@ -1092,7 +1092,292 @@ describe('create_post', () => {
 		});
 		cy.screenshot();
 	});
-	it('should create a post and change the access to paid members only', () => {
+
+	// ESC5 - F1
+	it('should create a valid post and change the access to paid members only (a-priori)', () => {
+		cy.fixture('data-pool').then(({posts}) => {
+			const post = Math.floor(Math.random() * (posts.valid.length));
+			const postTitle = posts.valid[post].title;
+			const postContent = posts.valid[post].content.content;
+			dashboardPage.postsOption().click();
+			cy.wait(1000).screenshot();
+			postsPage.newPostsButton().click();
+			cy.screenshot();
+			cy.wait(1000);
+			postsEditPage.settingsButton().click();
+			postsEditPage.settingsPostAccessSelect().select('paid');
+			cy.wait(500);
+			postsEditPage.settingsButton().click();
+
+			postsEditPage.createPost(postTitle, postContent, true);
+			cy.wait(1000);
+
+			postsPage.load().screenshot();
+
+			postsPage.publishedPostsOption().click();
+			postsPage
+				.postListContainer()
+				.screenshot()
+				.contains(postTitle)
+				.should('be.visible');
+			cy.wait(1000);
+			postsPage.draftPostsOption().click();
+			postsPage
+				.postListContainer()
+				.screenshot()
+				.contains(postTitle)
+				.should('not.exist');
+
+			cy.wait(1000);
+
+			homePage.load().screenshot();
+
+			cy.wait(1000);
+
+			homePage.feedContainer().contains(postTitle).should('be.visible').click();
+
+			cy.fixture('messages').then(({paidSubscribersOnly}) => {
+				postDetailPage
+					.contentContainer()
+					.contains(paidSubscribersOnly)
+					.should('be.visible');
+				postDetailPage
+					.contentContainer()
+					.contains(postContent)
+					.should('not.exist');
+			});
+			cy.screenshot();
+		});
+	});
+
+	it('should create an invalid post and change the access to paid members only (a-priori)', () => {
+		cy.fixture('data-pool').then(({posts}) => {
+			const post = Math.floor(Math.random() * (posts.invalid.postsWithMissingKeys.length));
+			const postTitle = posts.valid[post].title;
+			const postContent = posts.valid[post].content.content;
+			dashboardPage.postsOption().click();
+			cy.wait(1000).screenshot();
+			postsPage.newPostsButton().click();
+			cy.screenshot();
+			cy.wait(1000);
+			postsEditPage.settingsButton().click();
+			postsEditPage.settingsPostAccessSelect().select('paid');
+			cy.wait(500);
+			postsEditPage.settingsButton().click();
+
+			postsEditPage.createPost(postTitle, postContent, true);
+			cy.wait(1000);
+
+			postsPage.load().screenshot();
+
+			postsPage.publishedPostsOption().click();
+			postsPage
+				.postListContainer()
+				.screenshot()
+				.contains(postTitle)
+				.should('be.visible');
+			cy.wait(1000);
+			postsPage.draftPostsOption().click();
+			postsPage
+				.postListContainer()
+				.screenshot()
+				.contains(postTitle)
+				.should('not.exist');
+
+			cy.wait(1000);
+
+			homePage.load().screenshot();
+
+			cy.wait(1000);
+
+			homePage.feedContainer().contains(postTitle).should('be.visible').click();
+
+			cy.fixture('messages').then(({paidSubscribersOnly}) => {
+				postDetailPage
+					.contentContainer()
+					.contains(paidSubscribersOnly)
+					.should('be.visible');
+				postDetailPage
+					.contentContainer()
+					.contains(postContent)
+					.should('not.exist');
+			});
+			cy.screenshot();
+		});
+	});
+
+	it('should create a valid post and change the access to paid members only (pseudo-aleatorio)', () => {
+		dashboardPage.postsOption().click();
+		cy.wait(1000).screenshot();
+		const randomPosts = generateManyValidPosts(100);
+		const randomPost = Math.floor(Math.random() * (randomPosts.length));
+		const postTitle = randomPosts[randomPost].title;
+		// @ts-ignore
+		const postContent = randomPosts[randomPost].content.content; // si no accedo el content de esta manera, cypress me genera error.
+
+		postsPage.newPostsButton().click();
+		cy.screenshot();
+		cy.wait(1000);
+		postsEditPage.settingsButton().click();
+		postsEditPage.settingsPostAccessSelect().select('paid');
+		cy.wait(500);
+		postsEditPage.settingsButton().click();
+
+		postsEditPage.createPost(postTitle, postContent, true);
+		cy.wait(1000);
+
+		postsPage.load().screenshot();
+
+		postsPage.publishedPostsOption().click();
+		postsPage
+			.postListContainer()
+			.screenshot()
+			.contains(postTitle)
+			.should('be.visible');
+		cy.wait(1000);
+		postsPage.draftPostsOption().click();
+		postsPage
+			.postListContainer()
+			.screenshot()
+			.contains(postTitle)
+			.should('not.exist');
+
+		cy.wait(1000);
+
+		homePage.load().screenshot();
+
+		cy.wait(1000);
+
+		homePage.feedContainer().contains(postTitle).should('be.visible').click();
+
+		cy.fixture('messages').then(({paidSubscribersOnly}) => {
+			postDetailPage
+				.contentContainer()
+				.contains(paidSubscribersOnly)
+				.should('be.visible');
+			postDetailPage
+				.contentContainer()
+				.contains(postContent)
+				.should('not.exist');
+		});
+		cy.screenshot();
+	});
+
+	it('should create an invalid post with invalid types and change the access to paid members only (pseudo-aleatorio)', () => {
+		dashboardPage.postsOption().click();
+		cy.wait(1000).screenshot();
+		const randomPosts = generateManyInvalidPosts().postWithInvalidTypesPerField;
+		const randomPost = Math.floor(Math.random() * (randomPosts.length));
+		const postTitle = randomPosts[randomPost].title.toString();
+		// @ts-ignore
+		const postContent = randomPosts[randomPost].content.content; // si no accedo el content de esta manera, cypress me genera error.
+
+		postsPage.newPostsButton().click();
+		cy.screenshot();
+		cy.wait(1000);
+		postsEditPage.settingsButton().click();
+		postsEditPage.settingsPostAccessSelect().select('paid');
+		cy.wait(500);
+		postsEditPage.settingsButton().click();
+
+		postsEditPage.createPost(postTitle, postContent, true);
+		cy.wait(1000);
+
+		postsPage.load().screenshot();
+
+		postsPage.publishedPostsOption().click();
+		postsPage
+			.postListContainer()
+			.screenshot()
+			.contains(postTitle)
+			.should('be.visible');
+		cy.wait(1000);
+		postsPage.draftPostsOption().click();
+		postsPage
+			.postListContainer()
+			.screenshot()
+			.contains(postTitle)
+			.should('not.exist');
+
+		cy.wait(1000);
+
+		homePage.load().screenshot();
+
+		cy.wait(1000);
+
+		homePage.feedContainer().contains(postTitle).should('be.visible').click();
+
+		cy.fixture('messages').then(({paidSubscribersOnly}) => {
+			postDetailPage
+				.contentContainer()
+				.contains(paidSubscribersOnly)
+				.should('be.visible');
+			postDetailPage
+				.contentContainer()
+				.contains(postContent)
+				.should('not.exist');
+		});
+		cy.screenshot();
+	});
+
+	it('should create an invalid post with border cases and change the access to paid members only (pseudo-aleatorio)', () => {
+		dashboardPage.postsOption().click();
+		cy.wait(1000).screenshot();
+		const randomPosts = generateManyInvalidPosts().postsWithBorderCases;
+		const randomPost = Math.floor(Math.random() * (randomPosts.length));
+		const postTitle = randomPosts[randomPost].title.toString();
+		// @ts-ignore
+		const postContent = randomPosts[randomPost].content.content; // si no accedo el content de esta manera, cypress me genera error.
+
+		postsPage.newPostsButton().click();
+		cy.screenshot();
+		cy.wait(1000);
+		postsEditPage.settingsButton().click();
+		postsEditPage.settingsPostAccessSelect().select('paid');
+		cy.wait(500);
+		postsEditPage.settingsButton().click();
+
+		postsEditPage.createPost(postTitle, postContent, true);
+		cy.wait(1000);
+
+		postsPage.load().screenshot();
+
+		postsPage.publishedPostsOption().click();
+		postsPage
+			.postListContainer()
+			.screenshot()
+			.contains(postTitle)
+			.should('be.visible');
+		cy.wait(1000);
+		postsPage.draftPostsOption().click();
+		postsPage
+			.postListContainer()
+			.screenshot()
+			.contains(postTitle)
+			.should('not.exist');
+
+		cy.wait(1000);
+
+		homePage.load().screenshot();
+
+		cy.wait(1000);
+
+		homePage.feedContainer().contains(postTitle).should('be.visible').click();
+
+		cy.fixture('messages').then(({paidSubscribersOnly}) => {
+			postDetailPage
+				.contentContainer()
+				.contains(paidSubscribersOnly)
+				.should('be.visible');
+			postDetailPage
+				.contentContainer()
+				.contains(postContent)
+				.should('not.exist');
+		});
+		cy.screenshot();
+	});
+
+	it('should create a valid post and change the access to paid members only (aleatorio)', () => {
 		dashboardPage.postsOption().click();
 		cy.wait(1000).screenshot();
 		const postTitle = faker.lorem.words();
