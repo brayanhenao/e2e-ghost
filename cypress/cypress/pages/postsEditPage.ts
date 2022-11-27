@@ -35,8 +35,8 @@ class postsEditPage implements BasePage {
 		content: string,
 		publish: {scheduled: boolean} | boolean = false
 	) {
-		this.titleInput().type(title).screenshot();
-		this.contentInput().type(content).screenshot();
+		this.titleInput().type(title, { parseSpecialCharSequences: false }).screenshot();
+		this.contentInput().type(content, { parseSpecialCharSequences: false }).screenshot();
 
 		if (publish) {
 			this.publishButton().click();
