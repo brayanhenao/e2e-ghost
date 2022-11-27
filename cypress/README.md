@@ -41,7 +41,7 @@ con los screenshots de cada escenario.
 ------
 
 ## Generación de Datos
-Se añaden 3 estrategias de generación de datos (i) pool de datos a-priori, (ii) pool de datos (pseudo) aleatorio dinámico y (iii) escenario aleatorio. mediante le uso de faker.js así como de [herramientas](cypress/helpers/) para la generación automática de datos basado en las entidades requeridas en las suites de pruebas establecidas.
+Se añaden 3 estrategias de generación de datos (i) pool de datos a-priori, (ii) pool de datos (pseudo) aleatorio dinámico y (iii) escenario aleatorio, mediante el uso de faker.js así como de [herramientas](cypress/helpers/) para la generación automática de datos basado en las entidades requeridas en las suites de pruebas establecidas.
 
 ### Generación de datos a-priori
 Para ejecutar las pruebas con datos apriori es necesario ejecutar el siguiente comando, el cual generará el archivo [data-pool.json](/cypress/fixtures/data-pool.json)
@@ -53,10 +53,10 @@ Para ejecutar las pruebas con datos apriori es necesario ejecutar el siguiente c
 ### Pool de datos (pseudo) aleatorio dinámico
 Para esta estrategia se crearon 2 funciones por cada interfaz: `generateManyValidEntity` y `generateManyInvalidValidEntity` (donde `Entity` corresponde al nombre de cada entidad), el primero recibe cómo parámetro la cantidad de entradas validas que se desean generar mientras que el segundo retorna todas las posibles combinaciones de datos invalidos de la siguiente manera:
 
-- Validos: Para esta estrategia se generaron funciones que retornan instancias de cada entidad con sus datos generados semialeatoriamente, usando como valores de referencia sus otros valores asignados
-- Invalidos:
-  - Tipos de datos incorrectos: Itera por cada una de los atributos de cada entidad asignandole cada uno de los 8 tipos disponibles en el generador: (`bigInt`,`boolean`,`email`,`null`,`number`,`json`,`string`,`text`,`word` y `date`) asignando todos los que no correspondan al tipo correcto
-  - Ausensia de atributos: Itera por cada uno de los atributos e cada entidad eliminando cada una de ellas creando así nuevas entradas pero con 1 atributo eliminado
+- Válidos: Para esta estrategia se generaron funciones que retornan instancias de cada entidad con sus datos generados semialeatoriamente, usando como valores de referencia sus otros valores asignados
+- Inválidos:
+  - Tipos de datos incorrectos: Itera por cada una de los atributos de cada entidad asignándole cada uno de los 8 tipos disponibles en el generador: (`bigInt`,`boolean`,`email`,`null`,`number`,`json`,`string`,`text`,`word` y `date`) asignando todos los que no correspondan al tipo correcto
+  - Ausencia de atributos: Itera por cada uno de los atributos en cada entidad, eliminando cada una de ellos, creando así nuevas entradas pero con 1 atributo eliminado
   - Casos de borde: itera por cada uno de los campos que tienen valores máximos (`m`) y retorna los casos para `m-1`, `m` y `m+1`
 
 
