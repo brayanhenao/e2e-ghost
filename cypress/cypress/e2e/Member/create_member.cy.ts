@@ -2701,7 +2701,7 @@ describe('create_member', () => {
 		cy.screenshot();
 	});
 	
-	it.only('should filter by email and name with invalid data with invalid types (pseudo-aleatorio)', () => {
+	it('should filter by email and name with invalid data with invalid types (pseudo-aleatorio)', () => {
 		const membersWithInvalidTypesPerField =
 			generateManyInvalidMembers(10).membersWithInvalidTypesPerField;
 		const memberObj: Invalid<Member> =
@@ -2727,7 +2727,7 @@ describe('create_member', () => {
 			membersWithInvalidTypesPerField2[
 				Math.floor(Math.random() * membersWithInvalidTypesPerField2.length)
 			];
-		memberName2 = memberObj2.name;
+		memberName2 = memberObj2?.name?.toString();;
 		lastName = memberObj2.name;
 		let memberEmail2 = memberObj2?.email?.toString();
 
