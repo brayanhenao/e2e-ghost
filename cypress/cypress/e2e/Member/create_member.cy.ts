@@ -2708,7 +2708,7 @@ describe('create_member', () => {
 			membersWithInvalidTypesPerField[
 				Math.floor(Math.random() * membersWithInvalidTypesPerField.length)
 			];
-		memberName = memberObj.name;
+		memberName = memberObj?.name?.toString();
 		let lastName = memberObj.name;
 		memberEmail = memberObj?.email?.toString();
 
